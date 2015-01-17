@@ -10,19 +10,12 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
     @connection = Faraday.new(url: url, ssl: { verify: false })
   end
 
-  def ns_stat(url=nil)
-    call('stat',url)
-  end
-
-  def ns_config(url=nil)
-    call('config',url)
-  end
-
-  def call(type, url=nil)
-    result = connection.get("/nitro/v1/#{type}#{url}")
+  def call(url=nil)
+    result = connection.get("/nitro/v1#{url}")
+    type = url.split('/')[1]
     output = JSON.parse(result.body)
-    if url
-      output[url.split('/')[1]]
+    if url.split('/')[2]
+      output[url.split('/')[2]]
     elsif output["#{type}objects"]
       output["#{type}objects"]['objects']
     end
@@ -31,7 +24,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   end
 
   def failure?(result)
-    unless result.status == 200
+    unless result.status == 200 or result.status == 201
       fail("REST failure: HTTP status code #{result.status} detected.  Body of failure is: #{result.body}")
     end
   end
@@ -39,7 +32,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   def post(url, json)
     if valid_json?(json)
       result = connection.post do |req|
-        req.url url
+        req.url "/nitro/v1#{url}"
         req.headers['Content-Type'] = 'application/json'
         req.body = json
       end
@@ -53,7 +46,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   def put(url, json)
     if valid_json?(json)
       result = connection.put do |req|
-        req.url url
+        req.url "/nitro/v1#{url}"
         req.headers['Content-Type'] = 'application/json'
         req.body = json
       end
@@ -77,31 +70,31 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
     return false
   end
 
-  # Given a string containing objects matching /Partition/Object, return an
-  # array of all found objects.
-  def find_monitors(string)
-    return nil if string.nil?
-    if string == "default"
-      ["default"]
-    elsif string == "/Common/none"
-      ["none"]
-    else
-      string.scan(/(\/\S+)/).flatten
-    end
-  end
+  ## Given a string containing objects matching /Partition/Object, return an
+  ## array of all found objects.
+  #def find_monitors(string)
+  #  return nil if string.nil?
+  #  if string == "default"
+  #    ["default"]
+  #  elsif string == "/Common/none"
+  #    ["none"]
+  #  else
+  #    string.scan(/(\/\S+)/).flatten
+  #  end
+  #end
 
-  # Monitoring:  Parse out the availability integer.
-  def find_availability(string)
-    return nil if string.nil?
-    if string == "default" or string == "none"
-      return nil
-    end
-    # Look for integers within the string.
-    matches = string.match(/min\s(\d+)/)
-    if matches
-      matches[1]
-    else
-      "all"
-    end
-  end
+  ## Monitoring:  Parse out the availability integer.
+  #def find_availability(string)
+  #  return nil if string.nil?
+  #  if string == "default" or string == "none"
+  #    return nil
+  #  end
+  #  # Look for integers within the string.
+  #  matches = string.match(/min\s(\d+)/)
+  #  if matches
+  #    matches[1]
+  #  else
+  #    "all"
+  #  end
+  #end
 end
