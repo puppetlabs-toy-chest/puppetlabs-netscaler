@@ -8,6 +8,12 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   def initialize(url, _options = {})
     require 'faraday'
     @connection = Faraday.new(url: url, ssl: { verify: false })
+    @connection.request :retry, {
+      :max                 => 10,
+      :interval            => 0.05,
+      :interval_randomness => 0.5,
+      :backoff_factor      => 2,
+    }
   end
 
   def call(url=nil)

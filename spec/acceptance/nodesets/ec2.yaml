@@ -1,0 +1,26 @@
+AMI:
+  "debian-wheezy":
+    :image:
+      :ebs_pv: "ami-68006058"
+    :region: "us-west-2"
+  "amzn-201409":
+    :image:
+      :ebs_pv: "ami-55a7ea65"
+      :instance_pv: "ami-5ba7ea6b"
+    :region: "us-west-2"
+  "amzn-201409-instance-pv":
+    :image:
+      :foss: "ami-5ba7ea6b"
+    :region: "us-west-2"
+  "centos-6-x86-64-west":
+    :image:
+      :foss: "ami-42fb6e72"
+    :region: "us-west-2"
+  "centos-7-x86-64-west":
+    :image:
+      :foss: "ami-bd420e8d"
+    :region: "us-west-2"
+  "netscaler-standard-10.5-10mb":
+    :image:
+      :default: "ami-39396a09"
+    :region: "us-west-2"
