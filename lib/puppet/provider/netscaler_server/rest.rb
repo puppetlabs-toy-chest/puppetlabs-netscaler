@@ -2,16 +2,6 @@ require 'puppet/provider/netscaler'
 require 'json'
 
 Puppet::Type.type(:netscaler_server).provide(:rest, parent: Puppet::Provider::Netscaler) do
-  def initialize(value={})
-    super(value)
-    if value.is_a? Hash
-      @original_values = value.clone
-    else
-      @original_values = Hash.new
-    end
-    @create_elements = false
-  end
-
   def self.instances
     instances = []
     servers = Puppet::Provider::Netscaler.call('/config/server')
@@ -35,113 +25,50 @@ Puppet::Type.type(:netscaler_server).provide(:rest, parent: Puppet::Provider::Ne
     instances
   end
 
-  def self.prefetch(resources)
-    nodes = instances
-    resources.keys.each do |name|
-      if provider = nodes.find { |node| node.name == name }
-        resources[name].provider = provider
-      end
-    end
-  end
-
-  def exists?
-    @property_hash[:ensure] == :present
-  end
-
-  def create
-    @create_elements = true
-    result = Puppet::Provider::Netscaler.post("/config/server", message(resource))
-    @property_hash.clear
-
-    return result
-  end
-
-  def destroy
-    result = Puppet::Provider::Netscaler.delete("/config/server/#{resource}")
-    @property_flush[:ensure] = :absent
-  end
-
-  def flush
-    if @property_hash != {}
-      result = Puppet::Provider::Netscaler.put("/config/server/#{resource[:name]}", message(@property_hash))
-      # We have to update the state in a separate call.
-      if @property_hash[:state] != @original_values[:state] and (result.status == 200 or result.status == 201)
-        set_state(@property_hash[:state])
-      end
-    end
-    return result
-  end
-
   mk_resource_methods
 
-  # I don't want to use `def state=` because that will be called before flush
-  def set_state(value)
-    case value
-    when "ENABLED", "DISABLED"
-      state = value.downcase.chop
-      Puppet::Provider::Netscaler.post("/config/server/#{resource[:name]}?action=#{state}", {
-        :server => {:name => resource[:name],}
-      }.to_json)
-    else
-      raise ArgumentError, "Incorrect state: #{value}"
-    end
-  end
-
-  def message(object)
-    message = object.clone.to_hash
-
-    # Map for conversion in the message.
-    map = {
+  # Map for conversion in the message.
+  def property_to_rest_mapping
+    {
       :traffic_domain_id      => :td,
       :translation_ip_address => :translationip,
-      :translation_mask       => :translationmask,
       :resolve_retry          => :domainresolveretry,
       :ipv6_domain            => :ipv6address,
       :comments               => :comment,
       :address                => :ipaddress
     }
+  end
 
-    # Detect immutable properties
+  def immutable_properties
+    [
+      :ipv6_domain,
+      :traffic_domain_id,
+    ]
+  end
+  def per_provider_munge(message)
     if ! @create_elements
-      [:traffic_domain_id, :ipv6_domain].each do |property|
-        if message[property] != @original_values[property]
-          raise ArgumentError, "Cannot update #{property} after creation"
-        end
-      end
-      # Only domain names are immutable.
-      if ! self.class.is_ip_address(message[:address])
+      # Only ip addresses are mutable.
+      if self.class.is_ip_address(message[:address])
+        #If :domain is in the @property_hash, that means the resource is
+        #a domain resource. If the user passed in an IP as :address, bad
+        #things will happen, but we'll go ahead and try the rest call
+        #anyway...
+        message.delete(:domain)
+      else
         if message[:address] != @original_values[:address]
           raise ArgumentError, "Cannot change a domain address after creation."
         end
+        message[:domain] = message[:address]
+        message.delete(:address)
       end
     end
 
-    # Detect if the address is an IP or a domain name
-    if ! self.class.is_ip_address(message[:address])
-      message[:domain] = message[:address]
-      message.delete(:address)
-    end
-
-    # Delete some properties if the resource already exists, since we can only
-    # pass them on create. Otherwise we have to call #<property>=
-    if ! @create_elements
-      message.delete(:state)
-      message.delete(:traffic_domain_id)
-      message.delete(:ipv6_domain)
-      message.delete(:domain)
-    end
-
     # The netscaler must be explicitly told if the address is IPv4 or IPv6
+    #XXX is this true?
     #if message[:address].match(Resolv::IPv6::Regex)
     #  message[:ipv6address]
     #end
 
-    message = strip_nil_values(message)
-    message = rename_keys(map, message)
-    message = create_message(message)
-    message = { :server => message }
-
-    message = message.to_json
     message
   end
 end
