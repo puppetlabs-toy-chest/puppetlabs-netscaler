@@ -28,21 +28,21 @@ class Puppet::Provider::Netscaler < Puppet::Provider
 
   def create
     @create_elements = true
-    result = Puppet::Provider::Netscaler.post("/config/#{netscaler_type}", message(resource))
+    result = Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}", message(resource))
     @property_hash.clear
 
     return result
   end
 
   def destroy
-    Puppet::Provider::Netscaler.delete("/config/#{netscaler_type}/#{resource}")
+    Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{resource}")
     @property_flush[:ensure] = :absent
   end
 
   def flush
     if @property_hash != {}
       #handle_unbinds('service', @original_values['binds'] - message['binds']) if ! @create_elements
-      result = Puppet::Provider::Netscaler.put("/config/#{netscaler_type}/#{resource[:name]}", message(@property_hash))
+      result = Puppet::Provider::Netscaler.put("/config/#{netscaler_api_type}/#{resource[:name]}", message(@property_hash))
       #handle_binds('service', message['binds'] - @original_values['binds']) if ! @create_elements
       # We have to update the state in a separate call.
       if @property_hash[:state] != @original_values[:state] and (result.status == 200 or result.status == 201)
@@ -91,9 +91,10 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   end
 
   # A helper to get the kind of netscaler thing we're managing; ie
-  # service, server, monitor, etc.
-  def netscaler_type
-    resource.type.to_s.split('_')[1].to_sym
+  # service, lbvserver, lbmonitor, etc.
+  def netscaler_api_type
+    # Each provider must implement this
+    raise RuntimeError "Unimplemented method #netscaler_api_type"
   end
 
   # I don't want to use `def state=` because that will be called before flush
@@ -101,8 +102,8 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     case value
     when "ENABLED", "DISABLED"
       state = value.downcase.chop
-      Puppet::Provider::Netscaler.post("/config/#{netscaler_type}/#{resource[:name]}?action=#{state}", {
-        netscaler_type => {:name => resource[:name],}
+      Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}/#{resource[:name]}?action=#{state}", {
+        netscaler_api_type => {:name => resource[:name],}
       }.to_json)
     else
       raise ArgumentError, "Incorrect state: #{value}"
@@ -144,7 +145,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     message = rename_keys(property_to_rest_mapping, message)
     message = remove_underscores(message)
     message = create_message(message)
-    message = { netscaler_type => message }
+    message = { netscaler_api_type => message }
 
     message
   end
