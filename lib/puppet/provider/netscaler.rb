@@ -35,7 +35,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   end
 
   def destroy
-    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_type}/#{resource}")
+    Puppet::Provider::Netscaler.delete("/config/#{netscaler_type}/#{resource}")
     @property_flush[:ensure] = :absent
   end
 
@@ -121,7 +121,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
 
   def per_provider_munge(message)
     # Each provider must implement this
-    raise RuntimeError "Unimplemented method #local_provider_munge"
+    raise RuntimeError "Unimplemented method #per_provider_munge"
   end
 
   def global_provider_munge(message)
