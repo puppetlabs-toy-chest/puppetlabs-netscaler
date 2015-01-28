@@ -2,6 +2,10 @@ require 'puppet/provider/netscaler'
 require 'json'
 
 Puppet::Type.type(:netscaler_lbmonitor).provide(:rest, parent: Puppet::Provider::Netscaler) do
+  def netscaler_api_type
+    "lbmonitor"
+  end
+
   def self.instances
     instances = []
     monitors = Puppet::Provider::Netscaler.call('/config/lbmonitor')

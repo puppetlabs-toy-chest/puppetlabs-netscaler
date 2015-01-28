@@ -2,6 +2,10 @@ require 'puppet/provider/netscaler'
 require 'json'
 
 Puppet::Type.type(:netscaler_server).provide(:rest, parent: Puppet::Provider::Netscaler) do
+  def netscaler_api_type
+    "server"
+  end
+
   def self.instances
     instances = []
     servers = Puppet::Provider::Netscaler.call('/config/server')
