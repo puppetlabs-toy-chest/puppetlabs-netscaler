@@ -6,6 +6,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   attr_reader :connection
 
   def initialize(url, _options = {})
+    require 'uri'
     require 'faraday'
     @connection = Faraday.new(url: url, ssl: { verify: false }) do |builder| 
       builder.request :retry, {
@@ -25,6 +26,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   end
 
   def call(url=nil)
+    url = URI.escape(url) if url
     result = connection.get("/nitro/v1#{url}")
     type = url.split('/')[1]
     output = JSON.parse(result.body)
@@ -44,6 +46,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   end
 
   def post(url, json)
+    url = URI.escape(url) if url
     if valid_json?(json)
       result = connection.post do |req|
         req.url "/nitro/v1#{url}"
@@ -58,6 +61,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   end
 
   def put(url, json)
+    url = URI.escape(url) if url
     if valid_json?(json)
       result = connection.put do |req|
         req.url "/nitro/v1#{url}"
@@ -72,6 +76,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   end
 
   def delete(url)
+    url = URI.escape(url) if url
     result = connection.delete(url)
     failure?(result)
     return result
