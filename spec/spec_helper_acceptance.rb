@@ -34,29 +34,32 @@ def run_resource(resource_type, resource_title=nil)
 end
 
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
-  hosts.each do |host|
-    if host['platform'] =~ /^el-7/
-      install_puppet_from_rpm host, {:release => '7', :family => 'el'}
-    elsif host['platform'].match(/^(deb|ubu)/)
-      install_puppet_from_deb host, {}
+  if default.is_pe?
+    install_pe #takes forever
+  else
+    hosts.each do |host|
+      if host['platform'] =~ /^el-7/
+        install_puppet_from_rpm host, {:release => '7', :family => 'el'}
+      elsif host['platform'].match(/^(deb|ubu)/)
+        install_puppet_from_deb host, {}
+      end
     end
+    pp=<<-EOS
+    $pkg = $::osfamily ? {
+      'Debian' => 'puppetmaster',
+      'RedHat' => 'puppet-server',
+    }
+    package { $pkg: ensure => present, }
+    -> service { 'puppetmaster': ensure => running, }
+    EOS
+    apply_manifest_on(master,pp)
+    agents.each do |host|
+      sign_certificate_for(host)
+    end
+    #on master, "service firewalld stop"
+    #foss_opts = { :default_action => 'gem_install' }
+    #install_puppet(foss_opts) #installs on all hosts
   end
-  pp=<<-EOS
-  $pkg = $::osfamily ? {
-    'Debian' => 'puppetmaster',
-    'RedHat' => 'puppet-server',
-  }
-  package { $pkg: ensure => present, }
-  -> service { 'puppetmaster': ensure => running, }
-  EOS
-  apply_manifest_on(master,pp)
-  agents.each do |host|
-    sign_certificate_for(host)
-  end
-  #on master, "service firewalld stop"
-  #foss_opts = { :default_action => 'gem_install' }
-  #install_puppet(foss_opts) #installs on all hosts
-  #install_pe #takes forever
 end
 
 RSpec.configure do |c|
