@@ -1,7 +1,7 @@
 require 'puppet/provider/netscaler'
 require 'json'
 
-Puppet::Type.type(:netscaler_lbmonitor).provide(:rest, parent: Puppet::Provider::Netscaler) do
+Puppet::Type.type(:netscaler_lb_monitor).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
     "lbmonitor"
   end
