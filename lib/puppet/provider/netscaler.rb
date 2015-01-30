@@ -42,6 +42,10 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   def flush
     if @property_hash != {}
       #handle_unbinds('service', @original_values['binds'] - message['binds']) if ! @create_elements
+
+      # We need to remove values from property hash that aren't specified in the Puppet resource
+      @property_hash = @property_hash.reject { |k, v| !(resource[k]) }
+
       result = Puppet::Provider::Netscaler.put("/config/#{netscaler_api_type}/#{resource[:name]}", message(@property_hash))
       #handle_binds('service', message['binds'] - @original_values['binds']) if ! @create_elements
       # We have to update the state in a separate call.
