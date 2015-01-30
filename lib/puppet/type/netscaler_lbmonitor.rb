@@ -2,7 +2,7 @@ require 'puppet/parameter/netscaler_name'
 require 'puppet/property/netscaler_truthy'
 require 'puppet/property/netscaler_traffic_domain'
 
-Puppet::Type.newtype(:netscaler_lb_monitor) do
+Puppet::Type.newtype(:netscaler_lbmonitor) do
   @doc = 'Manage service on the NetScaler appliance. If the service is domain based, before you create the service, create the server entry by using the add server command. Then, in this command, specify the Server parameter.'
 
   apply_to_device
