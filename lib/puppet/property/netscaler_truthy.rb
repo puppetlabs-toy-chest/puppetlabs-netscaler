@@ -13,9 +13,9 @@ class Puppet::Property::NetscalerTruthy < Puppet::Property
     end
     munge do |value|
       case value.to_s.to_sym
-      when :true, :enabled, :yes, :ENABLED, :YES
+      when :true, :enabled, :yes, :ENABLED, :YES, :ON, :on
         trueval
-      when :false, :disabled, :no, :DISABLED, :NO
+      when :false, :disabled, :no, :DISABLED, :NO, :OFF, :off
         falseval
       end
     end
