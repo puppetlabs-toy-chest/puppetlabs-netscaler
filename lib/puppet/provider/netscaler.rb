@@ -94,7 +94,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   # service, lbvserver, lbmonitor, etc.
   def netscaler_api_type
     # Each provider must implement this
-    raise RuntimeError "Unimplemented method #netscaler_api_type"
+    raise RuntimeError, "Unimplemented method #netscaler_api_type"
   end
 
   # I don't want to use `def state=` because that will be called before flush
@@ -112,17 +112,17 @@ class Puppet::Provider::Netscaler < Puppet::Provider
 
   def property_to_rest_mapping
     # Each provider must implement this
-    raise RuntimeError "Unimplemented method #property_to_rest_mapping"
+    raise RuntimeError, "Unimplemented method #property_to_rest_mapping"
   end
 
   def immutable_properties
     # Each provider must implement this
-    raise RuntimeError "Unimplemented method #immutable_properties"
+    raise RuntimeError, "Unimplemented method #immutable_properties"
   end
 
   def per_provider_munge(message)
     # Each provider must implement this
-    raise RuntimeError "Unimplemented method #per_provider_munge"
+    raise RuntimeError, "Unimplemented method #per_provider_munge"
   end
 
   def global_provider_munge(message)
