@@ -106,7 +106,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
         netscaler_api_type => {:name => resource[:name],}
       }.to_json)
     else
-      raise ArgumentError, "Incorrect state: #{value}"
+      err "Incorrect state: #{value}"
     end
   end
 
@@ -129,7 +129,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     if ! @create_elements
       immutable_properties.each do |property|
         if message[property] and message[property] != @original_values[property]
-          raise ArgumentError, "Cannot update #{property} after creation"
+          err "Cannot update #{property} after creation"
         end
       end
       # Delete some properties if the resource already exists, since we can only

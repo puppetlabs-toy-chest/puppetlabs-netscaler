@@ -2,6 +2,10 @@ require 'puppet/provider/netscaler'
 require 'json'
 
 Puppet::Type.type(:netscaler_responderaction).provide(:rest, parent: Puppet::Provider::Netscaler) do
+  def netscaler_api_type
+    "responderaction"
+  end
+
   def self.instances
     instances = []
     responderactions = Puppet::Provider::Netscaler.call('/config/responderaction')
@@ -13,7 +17,7 @@ Puppet::Type.type(:netscaler_responderaction).provide(:rest, parent: Puppet::Pro
         :name                   => responderaction['name'],
         :type                   => responderaction['type'],
         :target                 => responderaction['target'],
-        :bypassSafetyCheck      => responderaction['bypasssafetycheck'],
+        :bypasssafetycheck      => responderaction['bypasssafetycheck'],
         :comments               => responderaction['comment'],
       )
     end
@@ -30,15 +34,13 @@ Puppet::Type.type(:netscaler_responderaction).provide(:rest, parent: Puppet::Pro
     }
   end
 
- # def immutable_properties
- #   [
- #     :ipv6_domain,
- #     :traffic_domain_id,
- #   ]
- # end
+  def immutable_properties
+    [
+      :type
+    ]
+  end
+
   def per_provider_munge(message)
-    if ! @create_elements
-     message
-    end
+    message
   end
 end
