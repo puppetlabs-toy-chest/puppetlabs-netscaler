@@ -38,7 +38,7 @@ Puppet::Type.newtype(:netscaler_responderaction) do
   #end
 
   #linked with :respondwidth :redirect
-  newproperty(:bypassSafetyCheck, :parent => Puppet::Property::NetscalerTruthy) do
+  newproperty(:bypasssafetycheck, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Bypass the safety check, allowing potentially unsafe expressions.", "YES", "NO")
   end
 
