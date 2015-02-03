@@ -36,7 +36,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
 
   def destroy
     Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{resource}")
-    @property_flush[:ensure] = :absent
+    @property_hash[:ensure] = :absent
   end
 
   def flush
@@ -86,8 +86,8 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     transport.put(url, message)
   end
 
-  def self.delete(url)
-    transport.delete(url)
+  def self.delete(url,args=nil)
+    transport.delete(url,args)
   end
 
   def basename

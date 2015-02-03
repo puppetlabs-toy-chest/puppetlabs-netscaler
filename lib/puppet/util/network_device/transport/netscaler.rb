@@ -8,6 +8,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   def initialize(url, _options = {})
     require 'uri'
     require 'faraday'
+    require 'puppet/util/network_device/transport/do_not_encoder'
     @connection = Faraday.new(url: url, ssl: { verify: false }) do |builder| 
       builder.request :retry, {
         :max                 => 10,
@@ -22,6 +23,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
         ],
       }
       builder.adapter :net_http
+      builder.options.params_encoder = Puppet::Util::NetworkDevice::Transport::DoNotEncoder
     end
   end
 
@@ -75,9 +77,13 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
     end
   end
 
-  def delete(url)
+  def delete(url,args={})
     url = URI.escape(url) if url
-    result = connection.delete(url)
+    result = connection.delete do |req|
+      # https://github.com/lostisland/faraday/issues/465
+      #req.options.params_encoder = Puppet::Util::NetworkDevice::Transport::DoNotEncoder
+      req.url "/nitro/v1#{url}", args
+    end
     failure?(result)
     return result
   end
