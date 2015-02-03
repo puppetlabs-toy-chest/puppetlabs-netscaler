@@ -11,7 +11,7 @@ Puppet::Type.type(:netscaler_service_lbmonitor_bind).provide(:rest, parent: Pupp
     return [] if services.nil?
 
     services.each do |service|
-      binds = Puppet::Provider::Netscaler.call("/config/service_lbmonitor_binding/#{service['name']}")
+      binds = Puppet::Provider::Netscaler.call("/config/service_lbmonitor_binding/#{service['name']}") || []
       binds.each do |bind|
         instances << new(
           :ensure => :present,

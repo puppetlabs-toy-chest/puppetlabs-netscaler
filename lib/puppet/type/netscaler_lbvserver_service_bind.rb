@@ -1,7 +1,7 @@
 require 'puppet/property/netscaler_truthy'
 
 Puppet::Type.newtype(:netscaler_lbvserver_service_bind) do
-  @doc = 'Manage a binding between a loadbalanceing vserver and a service.'
+  @doc = 'Manage a binding between a loadbalancing vserver and a service.'
 
   apply_to_device
   ensurable
