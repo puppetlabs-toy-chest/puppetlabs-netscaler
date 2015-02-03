@@ -14,13 +14,13 @@ Puppet::Type.type(:netscaler_responderpolicy).provide(:rest, parent: Puppet::Pro
     responderpolicys.each do |responderpolicy|
       instances << new(
         :ensure                 => :present,
-        :name                   => responderaction['name'],
-        :rule                   => responderaction['rule'],
-        :action                 => responderaction['action'],
-        :undefaction            => responderaction['undefaction'],
-        :comments               => responderaction['comment'],
-        :logaction              => responderaction['logaction'],
-        :appflowaction          => responderaction['appflowaction'],
+        :name                   => responderpolicy['name'],
+        :rule                   => responderpolicy['rule'],
+        :action                 => responderpolicy['action'],
+        :undefaction            => responderpolicy['undefaction'],
+        :comments               => responderpolicy['comment'],
+        :logaction              => responderpolicy['logaction'],
+        :appflowaction          => responderpolicy['appflowaction'],
       )
     end
 

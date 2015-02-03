@@ -16,11 +16,12 @@ Puppet::Type.newtype(:netscaler_responderpolicy) do
     desc "Default syntax expression that the policy uses to determine whether to respond to the specified request."
   end
 
+  #requires the creation of an "Responder action" or NOOP, RESET, DROP
   newproperty(:action) do
     desc "Name of the responder action to perform if the request matches this responder policy."
   end
 
-  newproperty(:undefaction) do
+  newproperty(:undefaction) do 
     desc "Action to perform if the result of policy evaluation is undefined"
   end
 
@@ -28,10 +29,12 @@ Puppet::Type.newtype(:netscaler_responderpolicy) do
     desc "Any type of information about this responder policy."
   end
 
+  #requires the creation of an "Audit message action"
   newproperty(:logaction) do
     desc "Name of the messagelog action to use for requests that match this policy."
   end
 
+  #requires the creation of an "AppFlow action", and subsequently an "Appflow collector"
   newproperty(:appflowaction) do
     desc "AppFlow action to invoke for requests that match this policy."
   end
