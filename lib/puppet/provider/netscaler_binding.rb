@@ -8,6 +8,15 @@ class Puppet::Provider::NetscalerBinding < Puppet::Provider::Netscaler
     end
   end
 
+  def destroy
+    toname, fromname = resource.name.split('/')
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}",{'args'=>"policyname:#{fromname}"})
+    @property_hash.clear
+
+    return result
+  end
+
+
   def immutable_properties
     []
   end
