@@ -75,7 +75,7 @@ RSpec.configure do |c|
     #puppet_module_install_on(master, {:source => proj_root, :module_name => 'f5'}) #This doesn't seem to work?
     hosts.each do |host|
       if ! host['platform'].match(/netscaler/)
-        scp_to host, proj_root, "#{host['distmoduledir']}/netscaler"
+        scp_to host, proj_root, "#{host['distmoduledir']}/netscaler", {:ignore => [".bundle"]}
         on host, puppet('plugin','download','--server',master.to_s)
       end
     end
