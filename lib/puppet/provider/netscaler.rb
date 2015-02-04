@@ -35,7 +35,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   end
 
   def destroy
-    Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{resource}")
+    Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{resource[:name]}")
     @property_hash[:ensure] = :absent
   end
 
