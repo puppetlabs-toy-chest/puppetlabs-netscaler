@@ -8,7 +8,7 @@ Puppet::Type.type(:netscaler_responderpolicylabel).provide(:rest, parent: Puppet
 
   def self.instances
     instances = []
-    responderactions = Puppet::Provider::Netscaler.call('/config/responderpolicylabel')
+    responderpolicylabels = Puppet::Provider::Netscaler.call('/config/responderpolicylabel')
     return [] if responderpolicylabels.nil?
 
     responderpolicylabels.each do |responderpolicylabel|
