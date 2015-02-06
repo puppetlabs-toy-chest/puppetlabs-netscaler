@@ -6,6 +6,11 @@ Puppet::Type.newtype(:netscaler_responderglobal) do
   apply_to_device
   ensurable
 
+  newparam(:name, :namevar => true) do
+    desc "Name of the responder policy."
+  end
+
+
   newproperty(:priority) do
     desc "Specifies the priority of the policy.
 
@@ -17,13 +22,9 @@ Puppet::Type.newtype(:netscaler_responderglobal) do
     end
   end
 
-  newproperty(:policyname) do
-    desc "Name of the responder policy."
-  end
-
-  newproperty(:labelname) do
-    desc "Name of the policy label to invoke. If the current policy evaluates to TRUE, the invoke parameter is set, and Label Type is policylabel."
-  end
+#  newproperty(:labelname) do
+#    desc "Name of the policy label to invoke. If the current policy evaluates to TRUE, the invoke parameter is set, and Label Type is policylabel."
+#  end
 
   newproperty(:gotopriorityexpression) do
     desc "Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE."
@@ -62,6 +63,22 @@ Puppet::Type.newtype(:netscaler_responderglobal) do
   newproperty(:labeltype) do
     desc "Type of invocation, Available settings function as follows: * vserver - Forward the request to the specified virtual server. * policylabel - Invoke the specified policy label.
 Possible values = vserver, policylabel."
+    validate do |value|
+      if ! [
+        :vserver,
+        :policylabel,
+      ].include? value.to_sym
+        fail ArgumentError, "Valid Options: vserver, policylabel"
+      end
+    end 
+  end
+
+  autorequire(:netscaler_policylabel) do
+    self[:name].split('/')[0]
+  end
+
+  autorequire(:netscaler_policy) do
+    self[:name].split('/')[1]
   end
 
 end
