@@ -62,9 +62,13 @@ Puppet::Type.type(:netscaler_server).provide(:rest, parent: Puppet::Provider::Ne
         if message[:address] != @original_values[:address]
           raise ArgumentError, "Cannot change a domain address after creation."
         end
-        message[:domain] = message[:address]
-        message.delete(:address)
       end
+    end
+
+    # Detect if the address is an IP or a domain name
+    if ! self.class.is_ip_address(message[:address])
+      message[:domain] = message[:address]
+      message.delete(:address)
     end
 
     # The netscaler must be explicitly told if the address is IPv4 or IPv6
