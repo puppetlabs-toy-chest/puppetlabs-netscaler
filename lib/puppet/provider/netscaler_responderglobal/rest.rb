@@ -54,7 +54,7 @@ Puppet::Type.type(:netscaler_responderglobal).provide(:rest, parent: Puppet::Pro
   end
 
   def destroy
-    result = Puppet::Provider::Netscaler.delete("/config/responderglobal_responderpolicy_binding/",{'args'=>"policyname:#{resource.name}"})
+    result = Puppet::Provider::Netscaler.delete("/config/responderglobal_responderpolicy_binding",{'args'=>"policyname:#{resource.name}"})
     @property_hash.clear
 
     return result
