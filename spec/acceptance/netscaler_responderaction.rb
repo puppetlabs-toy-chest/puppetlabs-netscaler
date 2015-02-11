@@ -58,7 +58,7 @@ netscaler_responderaction { 'delete':
     run_device(:allow_changes => false)
 
     pp2=<<-EOS
-netscaler_responderaction { 'edit':
+netscaler_responderaction { 'delete':
   ensure            => 'absent',
 }
     EOS
