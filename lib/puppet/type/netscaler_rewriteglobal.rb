@@ -44,7 +44,15 @@ Puppet::Type.newtype(:netscaler_rewriteglobal) do
   end
 
   autorequire(:netscaler_rewritepolicy) do
-    self[:name].split('/')[1]
+    self[:name]
+  end
+
+  autorequire(:netscaler_lbvserver) do
+    self[:invoke_vserver_label]
+  end
+
+  autorequire(:netscaler_csvserver) do
+    self[:invoke_vserver_label]
   end
 
   validate do
