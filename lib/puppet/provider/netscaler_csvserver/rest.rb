@@ -111,6 +111,7 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, parent: Puppet::Provider:
   end
 
   def per_provider_munge(message)
+    message.delete(:purge_bindings)
     message
   end
 
