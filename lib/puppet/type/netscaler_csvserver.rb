@@ -10,6 +10,8 @@ Puppet::Type.newtype(:netscaler_csvserver) do
 
   newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
 
+  newparam(:purge_bindings)
+
   newproperty(:traffic_domain) do
     desc "Integer value that uniquely identifies the traffic domain in which you want to configure the entity. If you do not specify an ID, the entity becomes part of the default traffic domain, which has an ID of 0.
 Minimum value = 0
@@ -390,6 +392,27 @@ Minimum length = 1"
   newproperty(:authentication_profile_name) do
     desc "TName of the authentication profile to be used when authentication is turned on."
 
+  end
+
+  def generate
+    return [] unless value(:purge_bindings) == true
+
+    system_resources = []
+
+    # gather a list of all relevant bindings present on the system
+    system_resources += Puppet::Type.type(:netscaler_csvserver_rewritepolicy_bind).instances
+    system_resources += Puppet::Type.type(:netscaler_csvserver_responderpolicy_bind).instances
+
+    # Reject all resources that are in the catalog
+    system_resources.delete_if { |res| catalog.resource_refs.include? res.ref }
+
+    # Keep only our own bindings
+    system_resources.delete_if { |res| (res[:name].split('/')[0] != value(:name)) }
+
+    # We mark all remaining resources for deletion
+    system_resources.each {|res| res[:ensure] = :absent}
+
+    system_resources
   end
 
 end
