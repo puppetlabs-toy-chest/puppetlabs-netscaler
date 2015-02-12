@@ -36,11 +36,11 @@ class Puppet::Provider::Netscaler < Puppet::Provider
 
   def destroy
     Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{resource[:name]}")
-    @property_hash[:ensure] = :absent
+    @property_hash.clear
   end
 
   def flush
-    if @property_hash != {}
+    if @property_hash and ! @property_hash.empty?
       #handle_unbinds('service', @original_values['binds'] - message['binds']) if ! @create_elements
 
       # We need to remove values from property hash that aren't specified in the Puppet resource
