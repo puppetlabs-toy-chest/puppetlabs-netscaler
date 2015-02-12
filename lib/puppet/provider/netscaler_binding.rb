@@ -9,7 +9,7 @@ class Puppet::Provider::NetscalerBinding < Puppet::Provider::Netscaler
   end
 
   def destroy
-    toname, fromname = resource.name.split('/')
+    toname, fromname = resource.name.split('/').map { |n| URI.escape(n) }
     result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}",{'args'=>"policyname:#{fromname}"})
     @property_hash.clear
 
