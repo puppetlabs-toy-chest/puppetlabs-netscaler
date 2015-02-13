@@ -8,6 +8,12 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, parent: Puppet::Provider:
     return [] if cs_vservers.nil?
 
     cs_vservers.each do |cs_vserver|
+
+      lbvserver_binds = Puppet::Provider::Netscaler.call("/config/csvserver_lbvserver_binding/#{cs_vserver['name']}") || []
+      if !lbvserver_binds.empty?
+        default_lbvserver = lbvserver_binds[0]['lbvserver']
+      end
+
       instances << new(
         :ensure                             => :present,
         :name                               => cs_vserver['name'],
@@ -63,6 +69,7 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, parent: Puppet::Provider:
         :icmp_virtual_server_response       => cs_vserver['icmpvsrresponse'],
         :rhi_state                          => cs_vserver['rhistate'],
         :authentication_profile_name        => cs_vserver['authnprofile'],
+        :default_lbvserver                  => default_lbvserver ? default_lbvserver : nil,
       )
     end
 
@@ -112,11 +119,71 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, parent: Puppet::Provider:
 
   def per_provider_munge(message)
     message.delete(:purge_bindings)
+    message.delete(:default_lbvserver)
     message
   end
 
   def netscaler_api_type
     "csvserver"
+  end
+
+  def create
+    @create_elements = true
+    result = Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}", message(resource))
+
+    # Handle csvserver->lbvserver binding
+    if (resource[:default_lbvserver])
+      binding_property_hash = { :name => resource[:name], :lbvserver => resource[:default_lbvserver] }
+      Puppet::Provider::Netscaler.post("/config/csvserver_lbvserver_binding", message_custom(binding_property_hash, "csvserver_lbvserver_binding"))
+    end
+
+    @property_hash.clear
+
+    return result
+  end
+
+  def flush
+    if @property_hash and ! @property_hash.empty?
+
+      # We need to remove values from property hash that aren't specified in the Puppet resource
+      @property_hash = @property_hash.reject { |k, v| !(resource[k]) }
+
+      result = Puppet::Provider::Netscaler.put("/config/#{netscaler_api_type}/#{resource[:name]}", message(@property_hash))
+
+      # Additional REST calls
+      if  result.status == 200 or result.status == 201
+
+        # We have to update the state in a separate call.
+        if @property_hash[:state] != @original_values[:state]
+          set_state(@property_hash[:state])
+        end
+
+        # If csvservr->lbserver binding has not been created yet
+        if (!@original_values[:default_lbvserver] and resource[:default_lbvserver])
+          binding_property_hash = { :name => resource[:name], :lbvserver => resource[:default_lbvserver] }
+          Puppet::Provider::Netscaler.post("/config/csvserver_lbvserver_binding", message_custom(binding_property_hash, "csvserver_lbvserver_binding"))
+
+        # # If csvservr->lbserver binding needs deleted
+        # elsif (!resource[:default_lbvserver] and @original_values[:default_lbvserver])
+        #   #TODO?
+
+        # If csvservr->lbserver binding needs updated
+        elsif (resource[:default_lbvserver] and resource[:default_lbvserver] != @original_values[:default_lbvserver])
+          Puppet::Provider::Netscaler.delete("/config/csvserver_lbvserver_binding/#{resource[:name]}",{'args'=>"lbvserver:#{@original_values[:default_lbvserver]}"})
+          binding_property_hash = { :name => resource[:name], :lbvserver => resource[:default_lbvserver] }
+          Puppet::Provider::Netscaler.post("/config/csvserver_lbvserver_binding", message_custom(binding_property_hash, "csvserver_lbvserver_binding"))
+        end
+      end
+    end
+
+    return result
+  end
+
+  def message_custom(object, api_type)
+    message = object.clone.to_hash
+    message = { api_type => message }
+    message = message.to_json
+    message
   end
 
 end

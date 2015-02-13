@@ -390,7 +390,12 @@ Minimum length = 1"
   end
 
   newproperty(:authentication_profile_name) do
-    desc "TName of the authentication profile to be used when authentication is turned on."
+    desc "Name of the authentication profile to be used when authentication is turned on."
+
+  end
+
+  newproperty(:default_lbvserver) do
+    desc "The virtual server name to which content will be switched."
 
   end
 
@@ -413,6 +418,10 @@ Minimum length = 1"
     system_resources.each {|res| res[:ensure] = :absent}
 
     system_resources
+  end
+
+  autorequire(:netscaler_lbvserver) do
+    self[:default_lbvserver]
   end
 
 end
