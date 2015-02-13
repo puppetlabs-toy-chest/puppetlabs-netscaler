@@ -4,11 +4,11 @@ describe 'rewritepolicy' do
   it 'makes a rewritepolicy' do
     pp=<<-EOS
 netscaler_rewritepolicy { 'rewritepolicy_test1':
-  ensure      => 'present',
-  action      => 'NOREWRITE',
-  comments    => 'comment',
-  rule        => 'HTTP.REQ.URL.SUFFIX.EQ("")',
-  undef_action => 'DROP',
+  ensure                  => 'present',
+  action                  => 'NOREWRITE',
+  comments                => 'comment',
+  expression              => 'HTTP.REQ.URL.SUFFIX.EQ("")',
+  undefined_result_action => 'DROP',
 }
     EOS
     make_site_pp(pp)
@@ -19,17 +19,17 @@ netscaler_rewritepolicy { 'rewritepolicy_test1':
   it 'makes and deletes a rewritepolicy' do
     pp=<<-EOS
 netscaler_rewritepolicy { 'rewritepolicy_test2':
-  ensure      => 'present',
-  action      => 'NOREWRITE',
-  comments    => 'comment',
-  rule        => 'HTTP.REQ.URL.SUFFIX.EQ("")',
-  undef_action => 'DROP',
+  ensure                  => 'present',
+  action                  => 'NOREWRITE',
+  comments                => 'comment',
+  expression              => 'HTTP.REQ.URL.SUFFIX.EQ("")',
+  undefined_result_action => 'DROP',
 }
     EOS
 
     pp2=<<-EOS
 netscaler_rewritepolicy { 'rewritepolicy_test2':
-  ensure      => 'absent',
+  ensure => 'absent',
 }
     EOS
 

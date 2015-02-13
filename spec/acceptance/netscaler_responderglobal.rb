@@ -11,9 +11,9 @@ netscaler_lbvserver { 'lbvirtualserver1':
   state                            => 'ENABLED',
 }
 netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
-  ensure      => 'present',
-  priority    => '100',
-  gotopriorityexpression => 'END',
+  ensure               => 'present',
+  priority             => '100',
+  goto_expression      => 'END',
   invoke_vserver_label => 'lbvirtualserver1',
 }
     EOS
@@ -25,16 +25,16 @@ netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
   it 'edit a responderglobal' do
     pp=<<-EOS
 netscaler_lbvserver { 'lbvirtualserver1':
-  ensure                           => 'present',
-  ip_address                       => '10.0.0.1',
-  port                             => '80',
-  service_type                     => 'HTTP',
-  state                            => 'ENABLED',
+  ensure       => 'present',
+  ip_address   => '10.0.0.1',
+  port         => '80',
+  service_type => 'HTTP',
+  state        => 'ENABLED',
 }
 netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
-  ensure      => 'present',
-  priority    => '100',
-  gotopriorityexpression => 'END',
+  ensure               => 'present',
+  priority             => '100',
+  goto_expression      => 'END',
   invoke_vserver_label => 'lbvirtualserver1',
 }
     EOS
@@ -43,9 +43,9 @@ netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
     run_device(:allow_changes => false)
     pp=<<-EOS
 netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
-  ensure      => 'present',
-  priority    => '110',
-  gotopriorityexpression => 'END',
+  ensure               => 'present',
+  priority             => '110',
+  goto_expression      => 'END',
   invoke_vserver_label => 'lbvirtualserver1',
 }
     EOS
@@ -56,16 +56,16 @@ netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
  it 'delete a responderglobal' do
     pp=<<-EOS
 netscaler_lbvserver { 'lbvirtualserver1':
-  ensure                           => 'present',
-  ip_address                       => '10.0.0.1',
-  port                             => '80',
-  service_type                     => 'HTTP',
-  state                            => 'ENABLED',
+  ensure       => 'present',
+  ip_address   => '10.0.0.1',
+  port         => '80',
+  service_type => 'HTTP',
+  state        => 'ENABLED',
 }
 netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
-  ensure      => 'present',
-  priority    => '100',
-  gotopriorityexpression => 'END',
+  ensure               => 'present',
+  priority             => '100',
+  goto_expression      => 'END',
   invoke_vserver_label => 'lbvirtualserver1',
 }
     EOS
@@ -75,7 +75,7 @@ netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
 
     pp2=<<-EOS
 netscaler_responderglobal { 'Top_URL_CLIENTS_CSVSERVER':
-  ensure            => 'absent',
+  ensure => 'absent',
 }
     EOS
     make_site_pp(pp2)

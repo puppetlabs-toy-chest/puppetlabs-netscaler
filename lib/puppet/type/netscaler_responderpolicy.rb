@@ -12,7 +12,7 @@ Puppet::Type.newtype(:netscaler_responderpolicy) do
   #XXX Validat with the below
   #ensure: change from absent to present failed: Could not set 'present' on ensure: REST failure: HTTP status code 400 detected.  Body of failure is: { "errorcode": 1075, "message": "Invalid name; names must begin with an alphanumeric character or underscore and must contain only alphanumerics, '_', '#', '.', ' ', ':', '@', '=' or '-' [name, hunner's website]", "severity": "ERROR" } at 55:/etc/puppetlabs/puppet/environments/produc
 
-  newproperty(:rule) do
+  newproperty(:expression) do
     desc "Default syntax expression that the policy uses to determine whether to respond to the specified request."
   end
 
@@ -21,7 +21,7 @@ Puppet::Type.newtype(:netscaler_responderpolicy) do
     desc "Name of the responder action to perform if the request matches this responder policy."
   end
 
-  newproperty(:undefaction) do 
+  newproperty(:undefined_result_action) do 
     desc "Action to perform if the result of policy evaluation is undefined"
   end
 
@@ -30,12 +30,12 @@ Puppet::Type.newtype(:netscaler_responderpolicy) do
   end
 
   #requires the creation of an "Audit message action"
-  newproperty(:logaction) do
+  newproperty(:log_action) do
     desc "Name of the messagelog action to use for requests that match this policy."
   end
 
   #requires the creation of an "AppFlow action", and subsequently an "Appflow collector"
-  newproperty(:appflowaction) do
+  newproperty(:appflow_action) do
     desc "AppFlow action to invoke for requests that match this policy."
   end
 end

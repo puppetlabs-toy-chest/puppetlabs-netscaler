@@ -58,7 +58,7 @@ describe 'lbvserver tests' do
 
     pp=<<-EOS
     netscaler_lbvserver { 'lbvserver3':
-      ensure  => 'absent',
+      ensure => 'absent',
     }
     EOS
     make_site_pp(pp)

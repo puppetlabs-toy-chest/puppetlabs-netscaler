@@ -21,7 +21,7 @@ Puppet::Type.newtype(:netscaler_responderglobal) do
     end
   end
 
-  newproperty(:gotopriorityexpression) do
+  newproperty(:goto_expression) do
     desc "Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE."
   end
 

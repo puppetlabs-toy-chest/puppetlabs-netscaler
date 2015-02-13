@@ -4,11 +4,11 @@ describe 'csvserver tests' do
   it 'makes a csvserver' do
     pp=<<-EOS
     netscaler_csvserver { 'csvserver1':
-      ensure        => 'present',
-      service_type  => 'DNS',
-      state         => true,
-      ip_address    => '9.9.9.9',
-      port          => '8080',
+      ensure       => 'present',
+      service_type => 'DNS',
+      state        => true,
+      ip_address   => '9.9.9.9',
+      port         => '8080',
     }
     EOS
     make_site_pp(pp)
@@ -60,7 +60,7 @@ describe 'csvserver tests' do
 
     pp=<<-EOS
     netscaler_csvserver { 'csvserver3':
-      ensure  => 'absent',
+      ensure => 'absent',
     }
     EOS
     make_site_pp(pp)

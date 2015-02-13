@@ -13,14 +13,14 @@ Puppet::Type.type(:netscaler_responderpolicy).provide(:rest, parent: Puppet::Pro
 
     responderpolicys.each do |responderpolicy|
       instances << new(
-        :ensure                 => :present,
-        :name                   => responderpolicy['name'],
-        :rule                   => responderpolicy['rule'],
-        :action                 => responderpolicy['action'],
-        :undefaction            => responderpolicy['undefaction'],
-        :comments               => responderpolicy['comment'],
-        :logaction              => responderpolicy['logaction'],
-        :appflowaction          => responderpolicy['appflowaction'],
+        :ensure                  => :present,
+        :name                    => responderpolicy['name'],
+        :expression              => responderpolicy['rule'],
+        :action                  => responderpolicy['action'],
+        :undefined_result_action => responderpolicy['undefaction'],
+        :comments                => responderpolicy['comment'],
+        :log_action              => responderpolicy['logaction'],
+        :appflow_action          => responderpolicy['appflowaction'],
       )
     end
 
@@ -32,7 +32,9 @@ Puppet::Type.type(:netscaler_responderpolicy).provide(:rest, parent: Puppet::Pro
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :comments               => :comment,
+      :expression              => :rule,
+      :undefined_result_action => :undefaction,
+      :comments                => :comment,
     }
   end
 

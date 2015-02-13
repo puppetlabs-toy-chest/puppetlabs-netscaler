@@ -4,54 +4,54 @@ describe 'responderpolicy' do
   it 'makes a responderpolicy' do
     pp=<<-EOS
 netscaler_responderpolicy { 'jim':
-  ensure      => 'present',
-  policy      => 'NOOP',
-  comments    => 'comment',
-  rule        => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
-  undefpolicy => 'NOOP',
-}
-    EOS
-    make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
-end
-
-   it 'edit a responderpolicy' do
-    pp=<<-EOS
-netscaler_responderpolicy { 'edit':
-  ensure      => 'present',
-  policy      => 'NOOP',
-  comments    => 'comment',
-  rule        => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
-  undefpolicy => 'NOOP',
-}
-    EOS
-    make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
-
-    pp2=<<-EOS
-netscaler_responderpolicy { 'edit':
-  ensure      => 'present',
-  policy      => 'NOOP',
-  comments    => 'update',
-  rule        => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
-  undefpolicy => 'NOOP',
-}
-    EOS
-    make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    ensure                  => 'present',
+    action                  => 'NOOP',
+    comments                => 'comment',
+    expression              => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
+    undefined_result_action => 'NOOP',
+  }
+      EOS
+      make_site_pp(pp)
+      run_device(:allow_changes => true)
+      run_device(:allow_changes => false)
   end
 
- it 'delete a responderpolicy' do
-    pp=<<-EOS
-netscaler_responderpolicy { 'delete':
-  ensure      => 'present',
-  policy      => 'NOOP',
-  comments    => 'comment',
-  rule        => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
-  undefpolicy => 'NOOP',
+     it 'edit a responderpolicy' do
+      pp=<<-EOS
+  netscaler_responderpolicy { 'edit':
+    ensure                  => 'present',
+    action                  => 'NOOP',
+    comments                => 'comment',
+    expression              => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
+    undefined_result_action => 'NOOP',
+  }
+      EOS
+      make_site_pp(pp)
+      run_device(:allow_changes => true)
+      run_device(:allow_changes => false)
+
+      pp2=<<-EOS
+  netscaler_responderpolicy { 'edit':
+    ensure                  => 'present',
+    action                  => 'NOOP',
+    comments                => 'update',
+    expression              => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
+    undefined_result_action => 'NOOP',
+  }
+      EOS
+      make_site_pp(pp2)
+      run_device(:allow_changes => true)
+      run_device(:allow_changes => false)
+    end
+
+   it 'delete a responderpolicy' do
+      pp=<<-EOS
+  netscaler_responderpolicy { 'delete':
+    ensure                  => 'present',
+    action                  => 'NOOP',
+    comments                => 'comment',
+    expression              => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
+    undefined_result_action => 'NOOP',
 }
     EOS
     make_site_pp(pp)
@@ -60,7 +60,7 @@ netscaler_responderpolicy { 'delete':
 
     pp2=<<-EOS
 netscaler_responderpolicy { 'delete':
-  ensure            => 'absent',
+  ensure => 'absent',
 }
     EOS
     make_site_pp(pp2)
