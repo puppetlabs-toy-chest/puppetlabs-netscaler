@@ -1,12 +1,14 @@
 require 'spec_helper_acceptance'
 
-describe 'lbvserver tests' do
-  it 'makes a lbvserver' do
+describe 'csvserver tests' do
+  it 'makes a csvserver' do
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver1':
+    netscaler_csvserver { 'csvserver1':
       ensure       => 'present',
       service_type => 'DNS',
       state        => true,
+      ip_address   => '9.9.9.9',
+      port         => '8080',
     }
     EOS
     make_site_pp(pp)
@@ -14,9 +16,9 @@ describe 'lbvserver tests' do
     run_device(:allow_changes => false)
   end
 
-  it 'makes and edits a lbvserver' do
+  it 'makes and edits a csvserver' do
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver2':
+    netscaler_csvserver { 'csvserver2':
       ensure       => 'present',
       service_type => 'HTTP',
       ip_address   => '8.8.8.8',
@@ -29,7 +31,7 @@ describe 'lbvserver tests' do
     run_device(:allow_changes => false)
 
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver2':
+    netscaler_csvserver { 'csvserver2':
       ensure       => 'present',
       service_type => 'HTTP',
       ip_address   => '8.8.8.9',
@@ -42,9 +44,9 @@ describe 'lbvserver tests' do
     run_device(:allow_changes => false)
   end
 
-  it 'makes and deletes a lbvserver' do
+  it 'makes and deletes a csvserver' do
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver3':
+    netscaler_csvserver { 'csvserver3':
       ensure       => 'present',
       service_type => 'HTTP',
       ip_address   => '8.8.8.10',
@@ -57,8 +59,8 @@ describe 'lbvserver tests' do
     run_device(:allow_changes => false)
 
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver3':
-      ensure  => 'absent',
+    netscaler_csvserver { 'csvserver3':
+      ensure => 'absent',
     }
     EOS
     make_site_pp(pp)

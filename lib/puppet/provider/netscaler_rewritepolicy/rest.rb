@@ -13,13 +13,13 @@ Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, parent: Puppet::Provi
 
     rewritepolicies.each do |rewritepolicy|
     instances << new(
-        :ensure       => :present,
-        :name         => rewritepolicy['name'],
-        :rule         => rewritepolicy['rule'],
-        :action       => rewritepolicy['action'],
-        :undef_action => rewritepolicy['undefaction'],
-        :comments     => rewritepolicy['comment'],
-        :log_action   => rewritepolicy['logaction'],
+        :ensure                  => :present,
+        :name                    => rewritepolicy['name'],
+        :expression              => rewritepolicy['rule'],
+        :action                  => rewritepolicy['action'],
+        :undefined_result_action => rewritepolicy['undefaction'],
+        :comments                => rewritepolicy['comment'],
+        :log_action              => rewritepolicy['logaction'],
     )
     end
 
@@ -31,9 +31,8 @@ Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, parent: Puppet::Provi
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :undef_action => :undefaction,
-      :log_action   => :logaction,
-      :comments     => :comment,
+      :undefined_result_action => :undefaction,
+      :comments                => :comment,
     }
   end
 

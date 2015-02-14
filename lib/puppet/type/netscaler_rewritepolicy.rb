@@ -10,7 +10,7 @@ Puppet::Type.newtype(:netscaler_rewritepolicy) do
 
   newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
 
-  newproperty(:rule) do
+  newproperty(:expression) do
     desc "Expression to be used by rewrite policy. It has to be a boolean PI rule expression."
 
   end
@@ -20,7 +20,7 @@ Puppet::Type.newtype(:netscaler_rewritepolicy) do
 
   end
 
-  newproperty(:undef_action) do
+  newproperty(:undefined_result_action) do
     desc "A rewrite action, to be used by the policy when the rule evaluation turns out to be undefined. The undef action can be NOREWRITE, RESET or DROP"
 
     validate do |value|

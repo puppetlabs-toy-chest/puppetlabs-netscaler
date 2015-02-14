@@ -10,7 +10,7 @@ Puppet::Type.newtype(:netscaler_rewriteglobal) do
     desc "Name of the rewrite policy."
   end
 
-  newproperty(:type) do
+  newproperty(:connection_type) do
     desc "The bindpoint to which to policy is bound. Valid options: REQ_OVERRIDE, REQ_DEFAULT, RES_OVERRIDE, RES_DEFAULT, OTHERTCP_REQ_OVERRIDE, OTHERTCP_REQ_DEFAULT, OTHERTCP_RES_OVERRIDE, OTHERTCP_RES_DEFAULT, SIPUDP_REQ_OVERRIDE, SIPUDP_REQ_DEFAULT, SIPUDP_RES_OVERRIDE, SIPUDP_RES_DEFAULT."
 
     validate do |value|
@@ -31,7 +31,7 @@ Puppet::Type.newtype(:netscaler_rewriteglobal) do
     end
   end
 
-  newproperty(:gotopriorityexpression) do
+  newproperty(:goto_expression) do
     desc "Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE."
   end
 

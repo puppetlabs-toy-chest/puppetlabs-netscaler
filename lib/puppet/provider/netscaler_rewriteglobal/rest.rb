@@ -23,12 +23,12 @@ Puppet::Type.type(:netscaler_rewriteglobal).provide(:rest, parent: Puppet::Provi
           policylabel = bind['labelname']
         end
         instances << new(
-          :ensure                 => :present,
-          :name                   => bind['name'],
-          :type                   => bind['type'],
-          :priority               => bind['priority'],
-          :gotopriorityexpression => bind['gotopriorityexpression'],
-          :invoke_policy_label    => policylabel,
+          :ensure               => :present,
+          :name                 => bind['name'],
+          :connection_type      => bind['type'],
+          :priority             => bind['priority'],
+          :goto_expression      => bind['gotopriorityexpression'],
+          :invoke_policy_label  => policylabel,
           :invoke_vserver_label => lbvserverlabel || csvserverlabel,
         )
       end
@@ -41,16 +41,14 @@ Puppet::Type.type(:netscaler_rewriteglobal).provide(:rest, parent: Puppet::Provi
 
   def property_to_rest_mapping
     {
+      :connection_type => :type,
     }
   end
 
   def immutable_properties
     [
       :priority,
-      :gotopriorityexpression,
-      :labelType,
-      :labelname,
-      :policyname,
+      :goto_expression,
     ]
   end
 

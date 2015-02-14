@@ -28,7 +28,7 @@ Puppet::Type.newtype(:netscaler_responderaction) do
 
   end
 
-  newproperty(:target) do
+  newproperty(:expression) do
     desc "Expression specifying what to respond with. Typically a URL for redirect policies or a default-syntax expression."
   end
 
@@ -38,7 +38,7 @@ Puppet::Type.newtype(:netscaler_responderaction) do
   #end
 
   #linked with :respondwidth :redirect
-  newproperty(:bypasssafetycheck, :parent => Puppet::Property::NetscalerTruthy) do
+  newproperty(:bypass_safety_check, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Bypass the safety check, allowing potentially unsafe expressions.", "YES", "NO")
   end
 

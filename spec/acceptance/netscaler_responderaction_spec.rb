@@ -4,11 +4,11 @@ describe 'responderaction' do
   it 'makes a responderaction' do
     pp=<<-EOS
 netscaler_responderaction { 'monkey':
-  ensure            => 'present',
-  comments          => 'banana',
-  target            => 'bla',
-  type              => 'sqlresponse_ok',
-  bypasssafetycheck => 'YES',
+  ensure              => 'present',
+  comments            => 'banana',
+  expression          => 'bla',
+  type                => 'sqlresponse_ok',
+  bypass_safety_check => 'YES',
 }
     EOS
     make_site_pp(pp)
@@ -19,11 +19,11 @@ netscaler_responderaction { 'monkey':
   it 'edit a responderaction' do
     pp=<<-EOS
 netscaler_responderaction { 'edit':
-  ensure            => 'present',
-  comments          => 'first',
-  target            => 'first',
-  type              => 'sqlresponse_ok',
-  bypasssafetycheck => 'YES',
+  ensure              => 'present',
+  comments            => 'first',
+  expression          => 'first',
+  type                => 'sqlresponse_ok',
+  bypass_safety_check => 'YES',
 }
     EOS
     make_site_pp(pp)
@@ -32,10 +32,10 @@ netscaler_responderaction { 'edit':
 
     pp2=<<-EOS
 netscaler_responderaction { 'edit':
-  ensure            => 'present',
-  comments          => 'second',
-  target            => 'second',
-  bypasssafetycheck => 'NO',
+  ensure              => 'present',
+  comments            => 'second',
+  expression          => 'second',
+  bypass_safety_check => 'NO',
 }
     EOS
     make_site_pp(pp2)
@@ -46,11 +46,11 @@ netscaler_responderaction { 'edit':
  it 'delete a responderaction' do
     pp=<<-EOS
 netscaler_responderaction { 'delete':
-  ensure            => 'present',
-  comments          => 'first',
-  target            => 'first',
-  type              => 'sqlresponse_ok',
-  bypasssafetycheck => 'YES',
+  ensure              => 'present',
+  comments            => 'first',
+  expression          => 'first',
+  type                => 'sqlresponse_ok',
+  bypass_safety_check => 'YES',
 }
     EOS
     make_site_pp(pp)
@@ -59,7 +59,7 @@ netscaler_responderaction { 'delete':
 
     pp2=<<-EOS
 netscaler_responderaction { 'delete':
-  ensure            => 'absent',
+  ensure => 'absent',
 }
     EOS
     make_site_pp(pp2)
