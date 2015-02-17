@@ -33,6 +33,7 @@ Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, parent: Puppet::Provi
     {
       :undefined_result_action => :undefaction,
       :comments                => :comment,
+      :expression              => :rule,
     }
   end
 
