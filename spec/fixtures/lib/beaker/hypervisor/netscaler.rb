@@ -17,7 +17,7 @@ module Beaker
 
       # Wait for each node's status checks to be :ok, otherwise the netscaler
       # application (mcpd) may not be started yet
-      wait_for_status_checks("ok")
+      #wait_for_status_checks("ok")
 
       # Add metadata tags to each instance
       add_tags()
