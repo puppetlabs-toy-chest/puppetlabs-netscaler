@@ -1,14 +1,14 @@
 require 'spec_helper_acceptance'
 
-describe 'rewritepolicy' do
+describe 'csvserver-rewritepolicy-binding' do
   it 'makes a csvserver-rewritepolicy-binding' do
     pp=<<-EOS
 netscaler_rewritepolicy { 'rewritepolicy_test1':
-  ensure      => 'present',
-  action      => 'NOREWRITE',
-  comments    => 'comment',
-  rule        => 'HTTP.REQ.URL.SUFFIX.EQ("")',
-  undef_action => 'DROP',
+  ensure                  => 'present',
+  action                  => 'NOREWRITE',
+  comments                => 'comment',
+  expression              => 'HTTP.REQ.URL.SUFFIX.EQ("")',
+  undefined_result_action => 'DROP',
 }
 
 netscaler_csvserver { 'csvserver_test1':
@@ -20,9 +20,10 @@ netscaler_csvserver { 'csvserver_test1':
 }
 
 netscaler_csvserver_rewritepolicy_bind { 'csvserver_test1/rewritepolicy_test1':
-  ensure    => present,
-  priority  => 1,
-  bind_point => 'REQUEST',
+  ensure               => present,
+  priority             => 1,
+  invoke_vserver_label => 'csvserver_test1',
+  choose_type          => 'Request',
 }
 EOS
     make_site_pp(pp)
@@ -33,11 +34,11 @@ EOS
   it 'makes and deletes a csvserver-rewritepolicy-binding' do
     pp=<<-EOS
 netscaler_rewritepolicy { 'rewritepolicy_test2':
-  ensure      => 'present',
-  action      => 'NOREWRITE',
-  comments    => 'comment',
-  rule        => 'HTTP.REQ.URL.SUFFIX.EQ("")',
-  undef_action => 'DROP',
+  ensure                  => 'present',
+  action                  => 'NOREWRITE',
+  comments                => 'comment',
+  expression              => 'HTTP.REQ.URL.SUFFIX.EQ("")',
+  undefined_result_action => 'DROP',
 }
 
 netscaler_csvserver { 'csvserver_test2':
@@ -49,9 +50,10 @@ netscaler_csvserver { 'csvserver_test2':
 }
 
 netscaler_csvserver_rewritepolicy_bind { 'csvserver_test2/rewritepolicy_test2':
-  ensure    => present,
-  priority  => 1,
-  bind_point => 'REQUEST',
+  ensure               => present,
+  priority             => 1,
+  invoke_vserver_label => 'csvserver_test2',
+  choose_type          => 'Request',
 }
 EOS
 
