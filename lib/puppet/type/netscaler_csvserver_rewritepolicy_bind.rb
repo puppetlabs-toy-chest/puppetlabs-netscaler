@@ -10,6 +10,16 @@ Puppet::Type.newtype(:netscaler_csvserver_rewritepolicy_bind) do
     desc "csvserver_name/policy_name"
   end
 
+  newproperty(:choose_type) do
+    desc "Type of invocation when invoking a vserver. Available settings functions are Request and Response. This property is not applicable for use in conjunction with invoking a Policy Label." 
+
+    validate do |value|
+      if ! [:Request,:Response,].include? value.to_sym
+        fail ArgumentError, "Valid options: Request, Response"
+      end
+    end
+  end
+
   newproperty(:priority) do
     desc "The priority of the policy binding.
 
@@ -29,39 +39,38 @@ Max = 2147483647"
     desc "Label of policy to invoke if the bound policy evaluates to true."
   end
 
-  newproperty(:invoke_lbvserver_label) do
-    desc "Label of lbvserver to invoke if the bound policy evaluates to true."
-  end
-
-  newproperty(:invoke_csvserver_label) do
+  newproperty(:invoke_vserver_label) do
     desc "Label of csvserver to invoke if the bound policy evaluates to true."
   end
 
-  newproperty(:bind_point) do
-    desc "The bindpoint to which the policy is bound. Valid options: REQUEST, RESPONSE."
-
-    validate do |value|
-      if ! [:REQUEST,:RESPONSE,].include? value.to_sym
-        fail ArgumentError, "Valid options: REQUEST, RESPONSE"
-      end
-    end
-
-  end
-
   autorequire(:netscaler_csvserver) do
-    self[:name].split('/')[0]
+    [self[:name].split('/')[0],self[:invoke_vserver_label]]
   end
+
   autorequire(:netscaler_rewritepolicy) do
     self[:name].split('/')[1]
+  end
+
+  autorequire(:netscaler_lbvserver) do
+    self[:invoke_vserver_label]
+  end
+
+  autorequire(:netscaler_rewritepolicylabel) do
+    self[:invoke_policy_label]
   end
 
   validate do
     if [
       self[:invoke_policy_label],
-      self[:invoke_lbvserver_label],
-      self[:invoke_csvserver_label],
+      self[:invoke_vserver_label],
     ].compact.length > 1
-      err "Only one of invoke_policy_label, invoke_csvserver_label, or invoke_csvserver_label may be specified per bind."
+      fail "Only one of invoke_policy_label or invoke_vserver_label may be specified per bind."
+    end
+  end
+
+  validate do
+    if !self[:choose_type] and !(self[:ensure] == :absent)
+      fail "choose_type must be specified."
     end
   end
 end

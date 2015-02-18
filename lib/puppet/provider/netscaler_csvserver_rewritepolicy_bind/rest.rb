@@ -14,22 +14,23 @@ Puppet::Type.type(:netscaler_csvserver_rewritepolicy_bind).provide(:rest, parent
       binds = Puppet::Provider::Netscaler.call("/config/csvserver_rewritepolicy_binding/#{csvserver['name']}") || []
       binds.each do |bind|
         case bind['labeltype']
-        when 'reqvserver'
-          csvserverlabel = bind['labelname']
-        when 'resvserver'
-          lbvserverlabel = bind['labelname']
-        when 'policylabel'
-          policylabel = bind['labelname']
+          when 'reqvserver'
+            vserverlabel = bind['labelname']
+            labeltype = "Request"
+          when 'resvserver'
+            vserverlabel = bind['labelname']
+            labeltype = "Response"
+          when 'policylabel'
+            policylabel = bind['labelname']
         end
         instances << new(
           :ensure                 => :present,
           :name                   => "#{bind['name']}/#{bind['policyname']}",
+          :choose_type            => labeltype,
           :priority               => bind['priority'],
           :goto_expression        => bind['gotopriorityexpression'],
-          :bind_point             => bind['bindpoint'],
           :invoke_policy_label    => policylabel,
-          :invoke_lbvserver_label => csvserverlabel,
-          :invoke_csvserver_label => csvserverlabel,
+          :invoke_vserver_label   => vserverlabel,
         )
       end
     end
@@ -42,29 +43,37 @@ Puppet::Type.type(:netscaler_csvserver_rewritepolicy_bind).provide(:rest, parent
   def property_to_rest_mapping
     {
       :goto_expression => :gotopriorityexpression,
-      :bind_point      => :bindpoint,
     }
   end
 
   def per_provider_munge(message)
     message[:name], message[:policyname] = message[:name].split('/')
 
+    case message[:choose_type]
+      when 'Request'
+        message[:bindpoint] = "REQUEST"
+      when 'Response'
+        message[:bindpoint] = "RESPONSE"
+    end
+
     if message[:invoke_policy_label]
       message[:labeltype] = 'policylabel'
       message[:labelname] = message[:invoke_policy_label]
       message[:invoke] = 'true'
       message.delete(:invoke_policy_label)
-    elsif message[:invoke_lbvserver_label]
-      message[:labeltype] = 'resvserver'
-      message[:labelname] = message[:invoke_lbvserver_label]
+    elsif message[:invoke_vserver_label]
+      case message[:choose_type]
+        when 'Request'
+          message[:labeltype] = 'reqvserver'
+        when 'Response'
+          message[:labeltype] = 'resvserver'
+      end
+      message[:labelname] = message[:invoke_vserver_label]
       message[:invoke] = 'true'
-      message.delete(:invoke_lbvserver_label)
-    elsif message[:invoke_csvserver_label]
-      message[:labeltype] = 'reqvserver'
-      message[:labelname] = message[:invoke_csvserver_label]
-      message[:invoke] = 'true'
-      message.delete(:invoke_csvserver_label)
+      message.delete(:invoke_vserver_label)
     end
+
+      message.delete(:choose_type)
 
     message
   end
