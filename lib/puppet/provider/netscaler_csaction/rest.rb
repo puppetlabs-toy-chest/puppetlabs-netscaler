@@ -41,9 +41,9 @@ Puppet::Type.type(:netscaler_csaction).provide(:rest, parent: Puppet::Provider::
   end
 
   def per_provider_munge(message)
-    if message[:target_lb_expression] and @original_values[:target_lbvserver] or
-       message[:target_lbvserver] and @original_values[:target_lb_expression]
-      err "Cannot change csaction resource from a target lbvserver to a target lb expression or vice versa."
+    if (message[:target_lb_expression] and @original_values[:target_lbvserver]) or
+      (message[:target_lbvserver] and @original_values[:target_lb_expression])
+      fail "Cannot change csaction resource from a target lbvserver to a target lb expression or vice versa."
     end
     message
   end
