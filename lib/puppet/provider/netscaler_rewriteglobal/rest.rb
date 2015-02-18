@@ -15,21 +15,23 @@ Puppet::Type.type(:netscaler_rewriteglobal).provide(:rest, parent: Puppet::Provi
 
       binds.each do |bind|
         case bind['labeltype']
-        when 'reqvserver'
-          csvserverlabel = bind['labelname']
-        when 'resvserver'
-          lbvserverlabel = bind['labelname']
-        when 'policylabel'
-          policylabel = bind['labelname']
+          when 'reqvserver'
+            vserverlabel = bind['labelname']
+            labeltype = "Request"
+          when 'resvserver'
+            vserverlabel = bind['labelname']
+            labeltype = "Response"
+          when 'policylabel'
+            policylabel = bind['labelname']
         end
         instances << new(
           :ensure               => :present,
           :name                 => bind['name'],
-          :connection_type      => bind['type'],
+          :connection_type      => labeltype,
           :priority             => bind['priority'],
           :goto_expression      => bind['gotopriorityexpression'],
           :invoke_policy_label  => policylabel,
-          :invoke_vserver_label => lbvserverlabel || csvserverlabel,
+          :invoke_vserver_label => vserverlabel,
         )
       end
     end
@@ -41,7 +43,7 @@ Puppet::Type.type(:netscaler_rewriteglobal).provide(:rest, parent: Puppet::Provi
 
   def property_to_rest_mapping
     {
-      :connection_type => :type,
+      :goto_expression => :gotopriorityexpression,
     }
   end
 
@@ -67,13 +69,19 @@ Puppet::Type.type(:netscaler_rewriteglobal).provide(:rest, parent: Puppet::Provi
       message[:invoke] = 'true'
       message.delete(:invoke_policy_label)
     elsif message[:invoke_vserver_label]
-      message[:labeltype] = 'reqvserver'
+      case message[:connection_type]
+        when 'Request'
+          message[:labeltype] = 'reqvserver'
+        when 'Response'
+          message[:labeltype] = 'resvserver'
+      end
       message[:labelname] = message[:invoke_vserver_label]
       message[:invoke] = 'true'
       message.delete(:invoke_vserver_label)
     end
     
     message.delete(:name)
+    message.delete(:connection_type)
     message
   end
 end

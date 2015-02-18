@@ -11,14 +11,10 @@ Puppet::Type.newtype(:netscaler_rewriteglobal) do
   end
 
   newproperty(:connection_type) do
-    desc "The bindpoint to which to policy is bound. Valid options: REQ_OVERRIDE, REQ_DEFAULT, RES_OVERRIDE, RES_DEFAULT, OTHERTCP_REQ_OVERRIDE, OTHERTCP_REQ_DEFAULT, OTHERTCP_RES_OVERRIDE, OTHERTCP_RES_DEFAULT, SIPUDP_REQ_OVERRIDE, SIPUDP_REQ_DEFAULT, SIPUDP_RES_OVERRIDE, SIPUDP_RES_DEFAULT."
-
-    validate do |value|
-      if ! [:REQ_OVERRIDE, :REQ_DEFAULT, :RES_OVERRIDE, :RES_DEFAULT, :OTHERTCP_REQ_OVERRIDE, :OTHERTCP_REQ_DEFAULT, :OTHERTCP_RES_OVERRIDE, :OTHERTCP_RES_DEFAULT, :SIPUDP_REQ_OVERRIDE, :SIPUDP_REQ_DEFAULT, :SIPUDP_RES_OVERRIDE, :SIPUDP_RES_DEFAULT].include? value.to_sym
-        fail ArgumentError, "Valid options: REQ_OVERRIDE, REQ_DEFAULT, RES_OVERRIDE, RES_DEFAULT, OTHERTCP_REQ_OVERRIDE, OTHERTCP_REQ_DEFAULT, OTHERTCP_RES_OVERRIDE, OTHERTCP_RES_DEFAULT, SIPUDP_REQ_OVERRIDE, SIPUDP_REQ_DEFAULT, SIPUDP_RES_OVERRIDE, SIPUDP_RES_DEFAULT"
-      end
-    end
-
+    desc "Type of invocation when invoking a vserver. Available settings function as follows: 
+      * Request - Forward the request to the specified request virtual server. 
+      * Response - Forward the response to the specified response virtual server.
+      This property is not applicable for use in conjunction with invoking a Policy Label." 
   end
 
   newproperty(:priority) do
@@ -55,12 +51,30 @@ Puppet::Type.newtype(:netscaler_rewriteglobal) do
     self[:invoke_vserver_label]
   end
 
+  autorequire(:netscaler_rewritepolicylabel) do
+    self[:invoke_policy_label]
+  end
+
   validate do
     if [
       self[:invoke_policy_label],
       self[:invoke_vserver_label],
     ].compact.length > 1
-      err "Only one of invoke_policy_label or invoke_vserver_label may be specified per bind."
+      fail "Only one of invoke_policy_label or invoke_vserver_label may be specified per bind."
+    end
+
+    if [
+      self[:invoke_policy_label],
+      self[:connection_type],
+    ].compact.length > 1
+      fail "connection_type cannot be set when invoking a policy label."
+    end
+
+    if [
+      self[:invoke_vserver_label],
+      self[:connection_type],
+    ].compact.length == 1
+      fail "When invoking a vserver, a connection type must be specified, and vice versa."
     end
   end
 
