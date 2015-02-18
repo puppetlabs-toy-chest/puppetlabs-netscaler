@@ -13,16 +13,16 @@ Puppet::Type.type(:netscaler_rewriteaction).provide(:rest, parent: Puppet::Provi
 
     rewriteactions.each do |rewriteaction|
     instances << new(
-        :ensure => :present,
-        :name => rewriteaction['name'],
-        :type => rewriteaction['type'],
-        :target_expression => rewriteaction['target'],
-        :content_expression => rewriteaction['stringbuilderexpr'],
-        :pattern => rewriteaction['pattern'],
-        :search => rewriteaction['search'],
+        :ensure              => :present,
+        :name                => rewriteaction['name'],
+        :type                => rewriteaction['type'],
+        :target_expression   => rewriteaction['target'],
+        :content_expression  => rewriteaction['stringbuilderexpr'],
+        :pattern             => rewriteaction['pattern'],
+        :search              => rewriteaction['search'],
         :bypass_safety_check => rewriteaction['bypasssafetycheck'],
-        :refine_search => rewriteaction['refinesearch'],
-        :comments => rewriteaction['comment'],
+        :refine_search       => rewriteaction['refinesearch'],
+        :comments            => rewriteaction['comment'],
     )
 end
 
@@ -34,11 +34,11 @@ end
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :content_expression => :stringbuilderexpr,
-      :target_expression => :target,
+      :content_expression  => :stringbuilderexpr,
+      :target_expression   => :target,
       :bypass_safety_check => :bypasssafetycheck,
-      :refine_search => :refinesearch,
-      :comments => :comment,
+      :refine_search       => :refinesearch,
+      :comments            => :comment,
     }
   end
 
