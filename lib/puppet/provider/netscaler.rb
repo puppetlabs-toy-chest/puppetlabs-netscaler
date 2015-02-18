@@ -124,6 +124,13 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     raise RuntimeError, "Unimplemented method #immutable_properties"
   end
 
+  def required_properties
+    # Each provider must implement this
+    #raise RuntimeError, "Unimplemented method #requried_properties"
+    # Actually, I'm just going to assume there are none
+    []
+  end
+
   def per_provider_munge(message)
     # Each provider must implement this
     raise RuntimeError, "Unimplemented method #per_provider_munge"
@@ -139,7 +146,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
       # Delete some properties if the resource already exists, since we can only
       # pass them on create. Otherwise we have to call #<property>=
       message = message.reject do |key, value|
-        immutable_properties.include? key
+        immutable_properties.include? key and ! required_properties.include? key
       end
       # And also...
       message.delete(:state)

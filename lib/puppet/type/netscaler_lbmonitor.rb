@@ -425,19 +425,19 @@ Possible values: NO_INBAND_SECURITY, TLS"
     desc "Host-IP-Address value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers. If Host-IP-Address is not specified, the appliance inserts the mapped IP (MIP) address or subnet IP (SNIP) address from which the CER request (the monitoring probe) is sent."
   end
 
-  newproperty(:authentication_application_ids) do
+  newproperty(:authentication_application_ids, :array_matching => :all) do
     desc "List of Auth-Application-Id attribute value pairs (AVPs) for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers. A maximum of eight of these AVPs are supported in a monitoring CER message.
 
 Maximum value: 4294967295"
   end
 
-  newproperty(:account_application_ids) do
+  newproperty(:account_application_ids, :array_matching => :all) do
     desc "List of Acct-Application-Id attribute value pairs (AVPs) for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers. A maximum of eight of these AVPs are supported in a monitoring message.
 
 Maximum value: 4294967295"
   end
 
-  newproperty(:supported_vendor_ids) do
+  newproperty(:supported_vendor_ids, :array_matching => :all) do
     desc "List of Supported-Vendor-Id attribute value pairs (AVPs) for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers. A maximum eight of these AVPs are supported in a monitoring message.
 
 Minimum value: 1
@@ -445,7 +445,7 @@ Minimum value: 1
 Maximum value: 4294967295"
   end
 
-  newproperty(:vendor_specific_vendor_id) do
+  newproperty(:vendor_specific_vendor_id, :array_matching => :all) do
     desc "Vendor-Id to use in the Vendor-Specific-Application-Id grouped attribute-value pair (AVP) in the monitoring CER message. To specify Auth-Application-Id or Acct-Application-Id in Vendor-Specific-Application-Id, use vendorSpecificAuthApplicationIds or vendorSpecificAcctApplicationIds, respectively. Only one Vendor-Id is supported for all the Vendor-Specific-Application-Id AVPs in a CER monitoring message.
 
 Minimum value: 1"
@@ -575,8 +575,8 @@ Possible values: YES, NO
 Default value: YES"
   end
 
-  newproperty(:check_backend_services) do
-    desc "This option will enable monitoring of services running on storefront server. Storefront services are monitored by probing to a Windows service that runs on the Storefront server and exposes details of which storefront services are running."
+  newproperty(:check_backend_services, :parent => Puppet::Property::NetscalerTruthy) do
+    truthy_property("This option will enable monitoring of services running on storefront server. Storefront services are monitored by probing to a Windows service that runs on the Storefront server and exposes details of which storefront services are running.", "YES","NO")
   end
 
   ###

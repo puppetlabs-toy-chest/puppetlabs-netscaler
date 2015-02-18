@@ -175,6 +175,12 @@ Puppet::Type.type(:netscaler_lbmonitor).provide(:rest, parent: Puppet::Provider:
     ]
   end
 
+  def required_properties
+    [
+      :type,
+    ]
+  end
+
   def per_provider_munge(message)
     # The netscaler must be explicitly told if the address is IPv4 or IPv6
     #if message[:address].match(Resolv::IPv6::Regex)
