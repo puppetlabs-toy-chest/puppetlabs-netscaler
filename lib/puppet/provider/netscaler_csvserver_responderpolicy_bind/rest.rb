@@ -14,12 +14,10 @@ Puppet::Type.type(:netscaler_csvserver_responderpolicy_bind).provide(:rest, pare
       binds = Puppet::Provider::Netscaler.call("/config/csvserver_responderpolicy_binding/#{csvserver['name']}") || []
       binds.each do |bind|
         case bind['labeltype']
-        when 'reqvserver'
-          csvserverlabel = bind['labelname']
-        when 'resvserver'
-          lbvserverlabel = bind['labelname']
-        when 'policylabel'
-          policylabel = bind['labelname']
+          when 'reqvserver'
+            vserverlabel = bind['labelname']
+          when 'policylabel'
+            policylabel = bind['labelname']
         end
         instances << new(
           :ensure                 => :present,
@@ -27,8 +25,7 @@ Puppet::Type.type(:netscaler_csvserver_responderpolicy_bind).provide(:rest, pare
           :priority               => bind['priority'],
           :goto_expression        => bind['gotopriorityexpression'],
           :invoke_policy_label    => policylabel,
-          :invoke_lbvserver_label => csvserverlabel,
-          :invoke_csvserver_label => csvserverlabel,
+          :invoke_vserver_label   => vserverlabel,
         )
       end
     end
@@ -52,16 +49,11 @@ Puppet::Type.type(:netscaler_csvserver_responderpolicy_bind).provide(:rest, pare
       message[:labelname] = message[:invoke_policy_label]
       message[:invoke] = 'true'
       message.delete(:invoke_policy_label)
-    elsif message[:invoke_lbvserver_label]
-      message[:labeltype] = 'resvserver'
-      message[:labelname] = message[:invoke_lbvserver_label]
-      message[:invoke] = 'true'
-      message.delete(:invoke_lbvserver_label)
-    elsif message[:invoke_csvserver_label]
+    elsif message[:invoke_vserver_label]
       message[:labeltype] = 'reqvserver'
-      message[:labelname] = message[:invoke_csvserver_label]
+      message[:labelname] = message[:invoke_vserver_label]
       message[:invoke] = 'true'
-      message.delete(:invoke_csvserver_label)
+      message.delete(:invoke_vserver_label)
     end
 
     message
