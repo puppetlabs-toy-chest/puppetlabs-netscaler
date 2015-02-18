@@ -1,14 +1,14 @@
 require 'spec_helper_acceptance'
 
 describe 'responderpolicy' do
-  it 'makes a csvserver-responderpolicy-binding' do
+  it 'makes a csvserver-responderpolicy-binding (no invoke)' do
     pp=<<-EOS
 netscaler_responderpolicy { 'responderpolicy_test1':
-  ensure      => 'present',
-  action      => 'NOOP',
-  comments    => 'comment',
-  rule        => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
-  undefaction => 'NOOP',
+  ensure                  => 'present',
+  action                  => 'NOOP',
+  comments                => 'comment',
+  expression              => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
+  undefined_result_action => 'NOOP',
 }
 
 netscaler_csvserver { 'csvserver_test1':
@@ -29,14 +29,14 @@ EOS
     run_device(:allow_changes => false)
   end
 
-  it 'makes and deletes a csvserver-responderpolicy-binding' do
+  it 'makes and deletes a csvserver-responderpolicy-binding (no invoke)' do
     pp=<<-EOS
 netscaler_responderpolicy { 'responderpolicy_test2':
-  ensure      => 'present',
-  action      => 'NOOP',
-  comments    => 'comment',
-  rule        => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
-  undefaction => 'NOOP',
+  ensure                  => 'present',
+  action                  => 'NOOP',
+  comments                => 'comment',
+  expression              => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
+  undefined_result_action => 'NOOP',
 }
 
 netscaler_csvserver { 'csvserver_test2':
@@ -62,6 +62,43 @@ EOS
     make_site_pp(pp)
     run_device(:allow_changes => true)
     make_site_pp(pp2)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+  end
+
+  it 'makes a csvserver-responderpolicy-binding (resvserver)' do
+    pp=<<-EOS
+netscaler_responderpolicy { 'responderpolicy_test3':
+  ensure                  => 'present',
+  action                  => 'NOOP',
+  comments                => 'comment',
+  expression              => 'ANALYTICS.STREAM("Top_CLIENTS").COLLECT_STATS',
+  undefined_result_action => 'NOOP',
+}
+
+netscaler_csvserver { 'csvserver_test3':
+  ensure        => 'present',
+  service_type  => 'HTTP',
+  state         => true,
+  ip_address    => '9.9.9.11',
+  port          => '8080',
+}
+
+netscaler_lbvserver { 'lbvserver_test3':
+  ensure        => 'present',
+  service_type  => 'HTTP',
+  state         => true,
+  ip_address    => '9.9.10.11',
+  port          => '8080',
+}
+
+netscaler_csvserver_responderpolicy_bind { 'csvserver_test3/responderpolicy_test3':
+  ensure               => present,
+  priority             => 1,
+  invoke_vserver_label => 'lbvserver_test3',
+}
+EOS
+    make_site_pp(pp)
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
