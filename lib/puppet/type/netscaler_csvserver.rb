@@ -27,9 +27,13 @@ Maximum value = 4094"
     desc "The service type of the virtual server. Valid options: HTTP, SSL, TCP, FTP, RTSP, SSL_TCP, UDP, DNS, SIP_UDP, ANY, RADIUS, RDP, MYSQL, MSSQL, DIAMETER, SSL_DIAMETER."
 
     validate do |value|
-      if ! [:HTTP,:SSL,:TCP,:FTP,:RTSP,:SSL_TCP,:UDP,:DNS,:SIP_UDP,:ANY,:RADIUS,:RDP,:MYSQL,:MSSQL,:DIAMETER,:SSL_DIAMETER,].include? value.to_sym
+      if ! [:HTTP,:SSL,:TCP,:FTP,:RTSP,:SSL_TCP,:UDP,:DNS,:SIP_UDP,:ANY,:RADIUS,:RDP,:MYSQL,:MSSQL,:DIAMETER,:SSL_DIAMETER,].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: HTTP, SSL, TCP, FTP, RTSP, SSL_TCP, UDP, DNS, SIP_UDP, ANY, RADIUS, RDP, MYSQL, MSSQL, DIAMETER, SSL_DIAMETER"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
@@ -105,9 +109,13 @@ Maximum value = 4094"
   Also, this precedence can be used if some content (such as images) is the same for all clients, but other content (such as text) is different for different clients. In this case, the images will be served to all clients, but the text will be served to specific clients based on specific attributes, such as Accept-Language. Valid options: RULE, URL."
 
     validate do |value|
-      if ! [:RULE,:URL,].include? value.to_sym
+      if ! [:RULE,:URL,].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: RULE, URL"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
@@ -123,9 +131,13 @@ Maximum value = 4094"
     desc "The spillover factor. When traffic on the main virtual server reaches this threshold, additional traffic is sent to the backupvserver. Valid options: CONNECTION, DYNAMICCONNECTION, BANDWIDTH, HEALTH, NONE."
 
     validate do |value|
-      if ! [:CONNECTION,:DYNAMICCONNECTION,:BANDWIDTH,:HEALTH,:NONE,].include? value.to_sym
+      if ! [:CONNECTION,:DYNAMICCONNECTION,:BANDWIDTH,:HEALTH,:NONE,].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: CONNECTION, DYNAMICCONNECTION, BANDWIDTH, HEALTH, NONE"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
@@ -151,9 +163,13 @@ Maximum value = 4094"
 Valid options: DROP, ACCEPT, REDIRECT"
 
     validate do |value|
-      if ! [:DROP,:ACCEPT,:REDIRECT,].include? value.to_sym
+      if ! [:DROP,:ACCEPT,:REDIRECT,].any?{ |s| s.casecmp(value.to_sym) == 0 }
           fail ArgumentError, "Valid options: DROP, ACCEPT, REDIRECT"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
@@ -185,9 +201,13 @@ Valid options: DROP, ACCEPT, REDIRECT"
     V6TOV4MAPPING - Header contains the mapped IPv4 address that corresponds to the IPv6 address of the vserver and the port number. An IPv6 address can be mapped to a user-specified IPv4 address using the set ns ip6 command."
 
     validate do |value|
-      if ! [:OFF,:VIPADDR,:V6TOV4MAPPING,].include? value.to_sym
+      if ! [:OFF,:VIPADDR,:V6TOV4MAPPING,].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: OFF, VIPADDR, V6TOV4MAPPING"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
@@ -280,9 +300,13 @@ Minimum length = 1"
     desc "Oracle server version. Valid options: 10G, 11G."
 
     validate do |value|
-      if ! [:'10G',:'11G',].include? value.to_sym
+      if ! [:'10G',:'11G',].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: 10G, 11G"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
@@ -296,9 +320,13 @@ Minimum length = 1"
     desc "The version of the MSSQL server. Valid options: 70, 2000, 2000SP1, 2005, 2008, 2008R2."
 
     validate do |value|
-      if ! [:'70',:'2000',:'2000SP1',:'2005',:'2008',:'2008R2',].include? value.to_sym
+      if ! [:'70',:'2000',:'2000SP1',:'2005',:'2008',:'2008R2',].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: 70, 2000, 2000SP1, 2005, 2008, 2008R2"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
@@ -354,9 +382,13 @@ Minimum length = 1"
     desc "Can be active or passive. Valid options: PASSIVE, ACTIVE."
 
     validate do |value|
-      if ! [:PASSIVE,:ACTIVE,].include? value.to_sym
+      if ! [:PASSIVE,:ACTIVE,].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: PASSIVE, ACTIVE"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
@@ -382,9 +414,13 @@ Minimum length = 1"
     desc "A host route is injected according to the setting on the virtual servers * If set to PASSIVE on all the virtual servers that share the IP address, the appliance always injects the hostroute. * If set to ACTIVE on all the virtual servers that share the IP address, the appliance injects even if one virtual server is UP. * If set to ACTIVE on some virtual servers and PASSIVE on the others, the appliance, injects even if one virtual server set to ACTIVE is UP. Valid options: PASSIVE, ACTIVE"
 
     validate do |value|
-      if ! [:PASSIVE,:ACTIVE,].include? value.to_sym
+      if ! [:PASSIVE,:ACTIVE,].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: PASSIVE, ACTIVE"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
