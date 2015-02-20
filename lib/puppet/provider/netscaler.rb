@@ -49,7 +49,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
       result = Puppet::Provider::Netscaler.put("/config/#{netscaler_api_type}/#{resource[:name]}", message(@property_hash))
       #handle_binds('service', message['binds'] - @original_values['binds']) if ! @create_elements
       # We have to update the state in a separate call.
-      if @property_hash[:state] != @original_values[:state] and (result.status == 200 or result.status == 201)
+      if @property_hash[:state] and ((@property_hash[:state] != @original_values[:state]) and (result.status == 200 or result.status == 201))
         set_state(@property_hash[:state])
       end
     end
@@ -109,6 +109,8 @@ class Puppet::Provider::Netscaler < Puppet::Provider
       Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}/#{resource[:name]}?action=#{state}", {
         netscaler_api_type => {:name => resource[:name],}
       }.to_json)
+    when nil
+      # Do nothing
     else
       err "Incorrect state: #{value}"
     end
