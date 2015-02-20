@@ -4,14 +4,16 @@ describe 'csaction' do
   before(:all) do
     pp = <<-EOS
 netscaler_lbvserver { 'csaction_lbvs1':
-  ensure  => present,
-  address => '15.14.13.12',
-  port    => '80',
+  ensure       => present,
+  service_type => 'http',
+  ip_address   => '15.14.13.12',
+  port         => '80',
 }
 netscaler_lbvserver { 'csaction_lbvs2':
-  ensure  => present,
-  address => '15.14.13.12',
-  port    => '81',
+  ensure       => present,
+  service_type => 'http',
+  ip_address   => '15.14.13.12',
+  port         => '81',
 }
     EOS
     make_site_pp(pp)
@@ -39,7 +41,7 @@ netscaler_csaction { 'tolbvs':
     pp=<<-EOS
 netscaler_csaction { 'testexpr':
   ensure               => present,
-  target_lb_expression => 'http.REQ.IS_VALID',
+  target_lb_expression => '"mylb_" + HTTP.REQ.URL.SUFFIX',
 }
 netscaler_csaction { 'tolbvs':
   ensure           => present,

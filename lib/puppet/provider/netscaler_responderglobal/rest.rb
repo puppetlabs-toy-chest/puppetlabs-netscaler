@@ -11,7 +11,7 @@ Puppet::Type.type(:netscaler_responderglobal).provide(:rest, parent: Puppet::Pro
     return [] if responderpolicies.nil?
 
     responderpolicies.each do |policy|
-      binds = Puppet::Provider::Netscaler.call("/config/responderpolicy_responderglobal_binding#{policy['name']}") || []
+      binds = Puppet::Provider::Netscaler.call("/config/responderpolicy_responderglobal_binding/#{policy['name']}") || []
 
       binds.each do |bind|
         case bind['labeltype']
