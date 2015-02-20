@@ -47,11 +47,11 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
     end
   end
 
-  def post(url, json)
+  def post(url, json, args={})
     url = URI.escape(url) if url
     if valid_json?(json)
       result = connection.post do |req|
-        req.url "/nitro/v1#{url}"
+        req.url "/nitro/v1#{url}", args
         req.headers['Content-Type'] = 'application/json'
         req.body = json
       end
