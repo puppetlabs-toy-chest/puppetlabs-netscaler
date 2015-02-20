@@ -24,9 +24,13 @@ Puppet::Type.newtype(:netscaler_rewritepolicy) do
     desc "A rewrite action, to be used by the policy when the rule evaluation turns out to be undefined. The undef action can be NOREWRITE, RESET or DROP"
 
     validate do |value|
-      if ! [:NOREWRITE,:RESET,:DROP].include? value.to_sym
+      if ! [:NOREWRITE,:RESET,:DROP].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: NOREWRITE, RESET, DROP"
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
