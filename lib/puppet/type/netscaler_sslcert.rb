@@ -28,10 +28,15 @@ Puppet::Type.newtype(:netscaler_sslcert) do
         :INTM_CERT,
         :CLNT_CERT,
         :SRVR_CERT,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: ROOT_CERT, INTM_CERT, CLNT_CERT, SRVR_CERT" 
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
   
   newproperty(:keyfile) do
@@ -44,10 +49,15 @@ Puppet::Type.newtype(:netscaler_sslcert) do
       if ! [
         :PEM, 
         :DER,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: PEM, DER" 
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
  
   newproperty(:pempassphrase) do
@@ -64,10 +74,15 @@ Puppet::Type.newtype(:netscaler_sslcert) do
       if ! [
         :PEM, 
         :DER,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: PEM, DER" 
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
  
   newproperty(:cacert) do
@@ -80,10 +95,15 @@ Puppet::Type.newtype(:netscaler_sslcert) do
       if ! [
         :PEM, 
         :DER,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: PEM, DER" 
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
  
   newproperty(:cakey) do
@@ -96,10 +116,15 @@ Puppet::Type.newtype(:netscaler_sslcert) do
       if ! [
         :PEM, 
         :DER,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: PEM, DER" 
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
 
   newproperty(:caserial) do
