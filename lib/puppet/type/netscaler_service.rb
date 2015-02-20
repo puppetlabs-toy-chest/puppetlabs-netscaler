@@ -52,10 +52,15 @@ Puppet::Type.newtype(:netscaler_service) do
         :DIAMETER,
         :SSL_DIAMETER,
         :TFTP,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: HTTP, FTP, TCP, UDP, SSL, SSL_BRIDGE, SSL_TCP, DTLS, NNTP, RPCSVR, DNS, ADNS, SNMP, RTSP, DHCPRA, ANY, SIP_UDP, DNS_TCP, ADNS_TCP, MYSQL, MSSQL, ORACLE, RADIUS, RDP, DIAMETER, SSL_DIAMETER, TFTP"
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
 
   newproperty(:state, :parent => Puppet::Property::NetscalerTruthy) do
@@ -125,10 +130,15 @@ Minimum value: 1"
         :TRANSPARENT,
         :REVERSE,
         :FORWARD,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: SERVER, TRANSPARENT, REVERSE, FORWARD"
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
 
   newproperty(:cacheable, :parent => Puppet::Property::NetscalerTruthy) do

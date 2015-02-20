@@ -43,10 +43,15 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
         :TCP,
         :TFTP,
         :UDP,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: HTTP, FTP, TCP, UDP, SSL, SSL_BRIDGE, SSL_TCP, DTLS, NNTP, RPCSVR, DNS, ADNS, SNMP, RTSP, DHCPRA, ANY, SIP_UDP, DNS_TCP, ADNS_TCP, MYSQL, MSSQL, ORACLE, RADIUS, RDP, DIAMETER, SSL_DIAMETER, TFTP"
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
 
   newproperty(:traffic_domain_id, :parent => Puppet::Property::NetscalerTrafficDomain)
@@ -59,10 +64,15 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
         :TRANSPARENT,
         :REVERSE,
         :FORWARD,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: SERVER, TRANSPARENT, REVERSE, FORWARD"
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
 
   newproperty(:autoscale_mode) do
@@ -72,10 +82,15 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
         :DISABLED,
         :DNS,
         :POLICY,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: DISABLED, DNS, POLICY"
       end
     end
+
+    munge do |value|
+      value.upcase
+    end
+
   end
 
   newproperty(:member_port) do
