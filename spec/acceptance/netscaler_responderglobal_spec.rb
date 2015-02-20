@@ -5,7 +5,7 @@ describe 'responderglobal' do
     pp=<<-EOS
 netscaler_lbvserver { 'lbvirtualserver1':
   ensure                           => 'present',
-  ip_address                       => '10.0.0.1',
+  ip_address                       => '2.8.1.1',
   port                             => '80',
   service_type                     => 'HTTP',
   state                            => 'ENABLED',
@@ -26,7 +26,7 @@ netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
     pp=<<-EOS
 netscaler_lbvserver { 'lbvirtualserver1':
   ensure       => 'present',
-  ip_address   => '10.0.0.1',
+  ip_address   => '2.8.2.1',
   port         => '80',
   service_type => 'HTTP',
   state        => 'ENABLED',
@@ -57,7 +57,7 @@ netscaler_responderglobal {'Top_URL_CLIENTS_CSVSERVER':
     pp=<<-EOS
 netscaler_lbvserver { 'lbvirtualserver1':
   ensure       => 'present',
-  ip_address   => '10.0.0.1',
+  ip_address   => '2.8.3.1',
   port         => '80',
   service_type => 'HTTP',
   state        => 'ENABLED',

@@ -3,7 +3,7 @@ require 'spec_helper_acceptance'
 describe 'rewriteaction' do
   it 'makes a rewriteaction 1' do
     pp=<<-EOS
-netscaler_rewriteaction { 'rewriteaction_test1':
+netscaler_rewriteaction { '2_9_rewriteaction_test1':
   ensure              => 'present',
   type                => 'insert_http_header',
   target_expression   => 'This is the header name',
@@ -19,7 +19,7 @@ netscaler_rewriteaction { 'rewriteaction_test1':
 
   it 'makes a rewriteaction 2' do
     pp=<<-EOS
-netscaler_rewriteaction { 'rewriteaction_test2':
+netscaler_rewriteaction { '2_9_rewriteaction_test2':
   ensure              => 'present',
   type                => 'insert_after',
   target_expression   => 'HTTP.REQ.HEADER("host")',
@@ -35,7 +35,7 @@ netscaler_rewriteaction { 'rewriteaction_test2':
 
   it 'makes a rewriteaction 3' do
     pp=<<-EOS
-netscaler_rewriteaction { 'rewriteaction_test3':
+netscaler_rewriteaction { '2_9_rewriteaction_test3':
   ensure              => 'present',
   type                => 'insert_before_all',
   target_expression   => 'HTTP.RES.BODY(1000)',
@@ -53,7 +53,7 @@ netscaler_rewriteaction { 'rewriteaction_test3':
 
   it 'makes a rewriteaction 4' do
     pp=<<-EOS
-netscaler_rewriteaction { 'rewriteaction_test4':
+netscaler_rewriteaction { '2_9_rewriteaction_test4':
   ensure              => 'present',
   type                => 'insert_before_all',
   target_expression   => 'HTTP.RES.BODY(1000)',
@@ -71,7 +71,7 @@ netscaler_rewriteaction { 'rewriteaction_test4':
 
   it 'makes and deletes a rewriteaction' do
     pp=<<-EOS
-netscaler_rewriteaction { 'rewriteaction_test5':
+netscaler_rewriteaction { '2_9_rewriteaction_test5':
   ensure              => 'present',
   type                => 'insert_before_all',
   target_expression   => 'HTTP.RES.BODY(1000)',
@@ -84,7 +84,7 @@ netscaler_rewriteaction { 'rewriteaction_test5':
     EOS
 
     pp2=<<-EOS
-netscaler_rewriteaction { 'rewriteaction_test5':
+netscaler_rewriteaction { '2_9_rewriteaction_test5':
   ensure              => 'absent',
 }
     EOS

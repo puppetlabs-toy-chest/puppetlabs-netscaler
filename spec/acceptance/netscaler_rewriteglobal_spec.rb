@@ -3,15 +3,15 @@ require 'spec_helper_acceptance'
 describe 'rewriteglobal' do
   it 'makes a rewriteglobal (reqvserver)' do
     pp=<<-EOS
-netscaler_lbvserver { 'lbvirtualserver1':
+netscaler_lbvserver { '2_12_lbvirtualserver1':
   ensure       => 'present',
-  ip_address   => '10.0.0.1',
+  ip_address   => '2.12.1.1',
   port         => '80',
   service_type => 'HTTP',
   state        => 'ENABLED',
 }
 
-netscaler_rewritepolicy { 'rewritepolicy_test1':
+netscaler_rewritepolicy { '2_12_rewritepolicy_test1':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
   comments                => 'comment',
@@ -19,11 +19,11 @@ netscaler_rewritepolicy { 'rewritepolicy_test1':
   undefined_result_action => 'DROP',
 }
 
-netscaler_rewriteglobal {'rewritepolicy_test1':
+netscaler_rewriteglobal {'2_12_rewritepolicy_test1':
   ensure               => 'present',
   priority             => '100',
   goto_expression      => 'END',
-  invoke_vserver_label => 'lbvirtualserver1',
+  invoke_vserver_label => '2_12_lbvirtualserver1',
   connection_type      => 'Request',
 }
     EOS
@@ -34,15 +34,15 @@ netscaler_rewriteglobal {'rewritepolicy_test1':
 
  it 'delete a rewriteglobal (reqvserver)' do
     pp=<<-EOS
-netscaler_lbvserver { 'lbvirtualserver2':
+netscaler_lbvserver { '2_12_lbvirtualserver2':
   ensure       => 'present',
-  ip_address   => '10.0.0.2',
+  ip_address   => '2.12.2.1',
   port         => '80',
   service_type => 'HTTP',
   state        => 'ENABLED',
 }
 
-netscaler_rewritepolicy { 'rewritepolicy_test2':
+netscaler_rewritepolicy { '2_12_rewritepolicy_test2':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
   comments                => 'comment',
@@ -50,11 +50,11 @@ netscaler_rewritepolicy { 'rewritepolicy_test2':
   undefined_result_action => 'DROP',
 }
 
-netscaler_rewriteglobal {'rewritepolicy_test2':
+netscaler_rewriteglobal {'2_12_rewritepolicy_test2':
   ensure               => 'present',
   priority             => '101',
   goto_expression      => 'END',
-  invoke_vserver_label => 'lbvirtualserver2',
+  invoke_vserver_label => '2_12_lbvirtualserver2',
   connection_type      => 'Request',
 }
     EOS
@@ -63,7 +63,7 @@ netscaler_rewriteglobal {'rewritepolicy_test2':
     run_device(:allow_changes => false)
 
     pp2=<<-EOS
-netscaler_rewriteglobal { 'rewritepolicy_test2':
+netscaler_rewriteglobal { '2_12_rewritepolicy_test2':
   ensure            => 'absent',
 }
     EOS
@@ -74,15 +74,15 @@ netscaler_rewriteglobal { 'rewritepolicy_test2':
 
   it 'makes a rewriteglobal (resvserver)' do
     pp=<<-EOS
-netscaler_lbvserver { 'lbvirtualserver3':
+netscaler_lbvserver { '2_12_lbvirtualserver3':
   ensure       => 'present',
-  ip_address   => '10.0.0.3',
+  ip_address   => '2.12.3.1',
   port         => '80',
   service_type => 'HTTP',
   state        => 'ENABLED',
 }
 
-netscaler_rewritepolicy { 'rewritepolicy_test3':
+netscaler_rewritepolicy { '2_12_rewritepolicy_test3':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
   comments                => 'comment',
@@ -90,11 +90,11 @@ netscaler_rewritepolicy { 'rewritepolicy_test3':
   undefined_result_action => 'DROP',
 }
 
-netscaler_rewriteglobal {'rewritepolicy_test3':
+netscaler_rewriteglobal {'2_12_rewritepolicy_test3':
   ensure               => 'present',
   priority             => '102',
   goto_expression      => 'END',
-  invoke_vserver_label => 'lbvirtualserver3',
+  invoke_vserver_label => '2_12_lbvirtualserver3',
   connection_type      => 'Response',
 }
     EOS
@@ -105,7 +105,7 @@ netscaler_rewriteglobal {'rewritepolicy_test3':
 
   it 'makes a rewriteglobal (no invoke)' do
     pp=<<-EOS
-netscaler_rewritepolicy { 'rewritepolicy_test4':
+netscaler_rewritepolicy { '2_12_rewritepolicy_test4':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
   comments                => 'comment',
@@ -113,7 +113,7 @@ netscaler_rewritepolicy { 'rewritepolicy_test4':
   undefined_result_action => 'DROP',
 }
 
-netscaler_rewriteglobal {'rewritepolicy_test4':
+netscaler_rewriteglobal {'2_12_rewritepolicy_test4':
   ensure               => 'present',
   priority             => '103',
   goto_expression      => 'END',

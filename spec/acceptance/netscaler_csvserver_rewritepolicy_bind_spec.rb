@@ -3,7 +3,7 @@ require 'spec_helper_acceptance'
 describe 'csvserver-rewritepolicy-binding' do
   it 'makes a csvserver-rewritepolicy-binding' do
     pp=<<-EOS
-netscaler_rewritepolicy { 'rewritepolicy_test1':
+netscaler_rewritepolicy { '2_4_rewritepolicy_test1':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
   comments                => 'comment',
@@ -11,18 +11,18 @@ netscaler_rewritepolicy { 'rewritepolicy_test1':
   undefined_result_action => 'DROP',
 }
 
-netscaler_csvserver { 'csvserver_test1':
+netscaler_csvserver { '2_4_csvserver_test1':
   ensure        => 'present',
   service_type  => 'HTTP',
   state         => true,
-  ip_address    => '9.9.9.9',
+  ip_address    => '2.4.1.1',
   port          => '8080',
 }
 
-netscaler_csvserver_rewritepolicy_bind { 'csvserver_test1/rewritepolicy_test1':
+netscaler_csvserver_rewritepolicy_bind { '2_4_csvserver_test1/2_4_rewritepolicy_test1':
   ensure               => present,
   priority             => 1,
-  invoke_vserver_label => 'csvserver_test1',
+  invoke_vserver_label => '2_4_csvserver_test1',
   choose_type          => 'Request',
 }
 EOS
@@ -33,7 +33,7 @@ EOS
 
   it 'makes and deletes a csvserver-rewritepolicy-binding' do
     pp=<<-EOS
-netscaler_rewritepolicy { 'rewritepolicy_test2':
+netscaler_rewritepolicy { '2_4_rewritepolicy_test2':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
   comments                => 'comment',
@@ -41,24 +41,24 @@ netscaler_rewritepolicy { 'rewritepolicy_test2':
   undefined_result_action => 'DROP',
 }
 
-netscaler_csvserver { 'csvserver_test2':
+netscaler_csvserver { '2_4_csvserver_test2':
   ensure        => 'present',
   service_type  => 'HTTP',
   state         => true,
-  ip_address    => '9.9.9.10',
+  ip_address    => '2.4.2.1',
   port          => '8080',
 }
 
-netscaler_csvserver_rewritepolicy_bind { 'csvserver_test2/rewritepolicy_test2':
+netscaler_csvserver_rewritepolicy_bind { '2_4_csvserver_test2/2_4_rewritepolicy_test2':
   ensure               => present,
   priority             => 1,
-  invoke_vserver_label => 'csvserver_test2',
+  invoke_vserver_label => '2_4_csvserver_test2',
   choose_type          => 'Request',
 }
 EOS
 
     pp2=<<-EOS
-netscaler_csvserver_rewritepolicy_bind { 'csvserver_test2/rewritepolicy_test2':
+netscaler_csvserver_rewritepolicy_bind { '2_4_csvserver_test2/2_4_rewritepolicy_test2':
   ensure    => absent,
 }
 EOS

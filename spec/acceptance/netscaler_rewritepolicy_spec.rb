@@ -3,7 +3,7 @@ require 'spec_helper_acceptance'
 describe 'rewritepolicy' do
   it 'makes a rewritepolicy' do
     pp=<<-EOS
-netscaler_rewritepolicy { 'rewritepolicy_test1':
+netscaler_rewritepolicy { '2_10_rewritepolicy_test1':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
   comments                => 'comment',
@@ -18,7 +18,7 @@ netscaler_rewritepolicy { 'rewritepolicy_test1':
 
   it 'makes and deletes a rewritepolicy' do
     pp=<<-EOS
-netscaler_rewritepolicy { 'rewritepolicy_test2':
+netscaler_rewritepolicy { '2_10_rewritepolicy_test2':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
   comments                => 'comment',
@@ -28,7 +28,7 @@ netscaler_rewritepolicy { 'rewritepolicy_test2':
     EOS
 
     pp2=<<-EOS
-netscaler_rewritepolicy { 'rewritepolicy_test2':
+netscaler_rewritepolicy { '2_10_rewritepolicy_test2':
   ensure => 'absent',
 }
     EOS
