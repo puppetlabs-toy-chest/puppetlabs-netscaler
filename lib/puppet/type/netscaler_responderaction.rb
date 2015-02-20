@@ -21,9 +21,13 @@ Puppet::Type.newtype(:netscaler_responderaction) do
         :redirect,
         :sqlresponse_ok,
         :sqlresponse_error,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: noop, respondwith, redirect,  sqlresponse_ok, sqlresponse_error" 
       end
+    end
+
+    munge do |value|
+      value.downcase
     end
 
   end
