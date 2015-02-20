@@ -46,9 +46,13 @@ Puppet::Type.newtype(:netscaler_cspolicylabel) do
         :SSL_TCP,
         :TCP,
         :UDP,
-      ].include? value.to_sym
+      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
         fail ArgumentError, "Valid options: HTTP, TCP, RTSP, SSL, SSL_TCP, UDP, DNS, SIP_UDP, ANY, RADIUS, RDP, MYSQL, MSSQL, ORACLE, DIAMETER, SSL_DIAMETER, FTP, DNS_TCP" 
       end
+    end
+
+    munge do |value|
+      value.upcase
     end
 
   end
