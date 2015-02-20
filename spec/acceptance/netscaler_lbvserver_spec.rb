@@ -3,7 +3,7 @@ require 'spec_helper_acceptance'
 describe 'lbvserver tests' do
   it 'makes a lbvserver' do
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver1':
+    netscaler_lbvserver { '1_8_lbvserver1':
       ensure       => 'present',
       service_type => 'DNS',
       state        => true,
@@ -16,10 +16,10 @@ describe 'lbvserver tests' do
 
   it 'makes and edits a lbvserver' do
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver2':
+    netscaler_lbvserver { '1_8_lbvserver2':
       ensure       => 'present',
       service_type => 'HTTP',
-      ip_address   => '8.8.8.8',
+      ip_address   => '1.8.2.1',
       port         => '8080',
       state        => true,
     }
@@ -29,10 +29,10 @@ describe 'lbvserver tests' do
     run_device(:allow_changes => false)
 
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver2':
+    netscaler_lbvserver { '1_8_lbvserver2':
       ensure       => 'present',
       service_type => 'HTTP',
-      ip_address   => '8.8.8.9',
+      ip_address   => '1.8.2.2',
       port         => '8080',
       state        => true,
     }
@@ -44,10 +44,10 @@ describe 'lbvserver tests' do
 
   it 'makes and deletes a lbvserver' do
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver3':
+    netscaler_lbvserver { '1_8_lbvserver3':
       ensure       => 'present',
       service_type => 'HTTP',
-      ip_address   => '8.8.8.10',
+      ip_address   => '1.8.3.1',
       port         => '8080',
       state        => true,
     }
@@ -57,7 +57,7 @@ describe 'lbvserver tests' do
     run_device(:allow_changes => false)
 
     pp=<<-EOS
-    netscaler_lbvserver { 'lbvserver3':
+    netscaler_lbvserver { '1_8_lbvserver3':
       ensure => 'absent',
     }
     EOS
