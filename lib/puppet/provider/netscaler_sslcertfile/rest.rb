@@ -14,9 +14,9 @@ Puppet::Type.type(:netscaler_sslcertfile).provide(:rest, parent: Puppet::Provide
 
     sslcertfiles.each do |sslcertfile|
       instances << new(
-        :ensure => :present,
-        :name   => sslcertfile['name'],
-        :source    => sslcertfile['src'],
+        :ensure   => :present,
+        :name     => sslcertfile['name'],
+        :source   => sslcertfile['src'],
       )
     end
 
@@ -42,6 +42,13 @@ Puppet::Type.type(:netscaler_sslcertfile).provide(:rest, parent: Puppet::Provide
   def create
     @create_elements = true
     result = Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}", message(resource), {"action" => "import"})
+    @property_hash.clear
+
+    return result
+  end
+
+  def destroy
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}", {'args'=>"name:#{resource.name}"})
     @property_hash.clear
 
     return result

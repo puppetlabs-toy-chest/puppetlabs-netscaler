@@ -47,6 +47,13 @@ Puppet::Type.type(:netscaler_sslkeyfile).provide(:rest, parent: Puppet::Provider
     return result
   end
 
+  def destroy
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}", {'args'=>"name:#{resource.name}"})
+    @property_hash.clear
+
+    return result
+  end
+
   def per_provider_munge(message)
     message
   end
