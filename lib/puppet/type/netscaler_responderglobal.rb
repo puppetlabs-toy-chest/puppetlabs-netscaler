@@ -33,6 +33,22 @@ Puppet::Type.newtype(:netscaler_responderglobal) do
     desc "Label of lbvserver to invoke if the bound policy evaluates to true."
   end
 
+  autorequire(:netscaler_responderpolicy) do
+    self[:name]
+  end
+
+  autorequire(:netscaler_lbvserver) do
+    self[:invoke_vserver_label]
+  end
+
+  autorequire(:netscaler_csvserver) do
+    self[:invoke_vserver_label]
+  end
+
+  autorequire(:netscaler_responderpolicylabel) do
+    self[:invoke_policy_label]
+  end
+
  validate do
     if [
       self[:invoke_policy_label],
