@@ -99,6 +99,7 @@ Puppet::Type.type(:netscaler_servicegroup).provide(:rest, parent: Puppet::Provid
       :member_port,
       :protocol,
       :traffic_domain_id,
+      :autoscale_mode
     ]
   end
 
