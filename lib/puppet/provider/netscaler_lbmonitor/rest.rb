@@ -203,4 +203,10 @@ Puppet::Type.type(:netscaler_lbmonitor).provide(:rest, parent: Puppet::Provider:
 
     message
   end
+
+  def destroy
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{resource.name}", {'args'=>"type:#{@property_hash[:type]}"})
+    @property_hash.clear
+    return result
+  end
 end
