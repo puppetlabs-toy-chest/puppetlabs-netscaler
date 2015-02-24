@@ -26,7 +26,12 @@ Puppet::Type.newtype(:netscaler_servicegroup_lbmonitor_bind) do
   end
 
   newproperty(:passive, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property('Indicates if the monitor is passive. A passive monitor does not remove servicegroup from LB decision when the threshold is breached.','ENABLED','DISABLED')
+    truthy_property('Indicates if the monitor is passive. A passive monitor does not remove servicegroup from LB decision when the threshold is breached.','true','false')
+
+    munge do |value|
+      value.downcase == 'true'
+    end
+
   end
 
   autorequire(:netscaler_servicegroup) do
