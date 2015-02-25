@@ -50,7 +50,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
       #handle_binds('service', message['binds'] - @original_values['binds']) if ! @create_elements
       # We have to update the state in a separate call.
       if @property_hash[:state] and ((@property_hash[:state] != @original_values[:state]) and (result.status == 200 or result.status == 201))
-        set_state(@property_hash[:state])
+        set_state(@property_hash[:state], flush_state_args[:name_key], flush_state_args[:name_val])
       end
     end
     return result
@@ -102,17 +102,26 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   end
 
   # I don't want to use `def state=` because that will be called before flush
-  def set_state(value)
+  def set_state(value, name_key, name_val)
+    message_hash = { name_key => name_val }
+    message_hash = { netscaler_api_type => message_hash }
+    message_hash = message_hash.to_json
+
+    action = nil
+    value = value.upcase
     case value
-    when "ENABLED", "DISABLED"
-      state = value.downcase.chop
-      Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}/#{resource[:name]}?action=#{state}", {
-        netscaler_api_type => {:name => resource[:name],}
-      }.to_json)
-    when nil
-      # Do nothing
-    else
-      err "Incorrect state: #{value}"
+      when 'ENABLED'
+        action = "enable"
+      when 'DISABLED'
+        action = "disable"
+      when nil
+        # Do nothing
+      else
+        err "Incorrect state: #{value}"
+    end
+
+    if action
+      Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}", message_hash, {"action" => action})
     end
   end
 
@@ -131,6 +140,13 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     #raise RuntimeError, "Unimplemented method #requried_properties"
     # Actually, I'm just going to assume there are none
     []
+  end
+
+  def flush_state_args
+    {
+      :name_key => 'name',
+      :name_val => resource[:name],
+    }
   end
 
   def per_provider_munge(message)
