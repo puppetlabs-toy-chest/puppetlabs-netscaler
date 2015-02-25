@@ -56,8 +56,4 @@ Puppet::Type.newtype(:netscaler_cspolicylabel) do
     end
 
   end
-
-  newproperty(:comments) do
-    desc "Any comments to preserve information about this cs policy label."
-  end
 end
