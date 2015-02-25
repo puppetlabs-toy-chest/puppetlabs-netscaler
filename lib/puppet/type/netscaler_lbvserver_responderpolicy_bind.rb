@@ -29,28 +29,32 @@ Max = 2147483647"
     desc "Label of policy to invoke if the bound policy evaluates to true."
   end
 
-  newproperty(:invoke_lbvserver_label) do
-    desc "Label of lbvserver to invoke if the bound policy evaluates to true."
-  end
-
-  newproperty(:invoke_csvserver_label) do
-    desc "Label of csvserver to invoke if the bound policy evaluates to true."
+  newproperty(:invoke_vserver_label) do
+    desc "Label of vserver to invoke if the bound policy evaluates to true."
   end
 
   autorequire(:netscaler_lbvserver) do
-    self[:name].split('/')[0]
+    [self[:name].split('/')[0], self[:invoke_vserver_label]]
   end
+
   autorequire(:netscaler_responderpolicy) do
     self[:name].split('/')[1]
+  end
+
+  autorequire(:netscaler_csvserver) do
+    self[:invoke_vserver_label]
+  end
+
+  autorequire(:netscaler_responderpolicylabel) do
+    self[:invoke_policy_label]
   end
 
   validate do
     if [
       self[:invoke_policy_label],
-      self[:invoke_lbvserver_label],
-      self[:invoke_csvserver_label],
+      self[:invoke_vserver_label],
     ].compact.length > 1
-      err "Only one of invoke_policy_label, invoke_lbvserver_label, or invoke_csvserver_label may be specified per bind."
+      err "Only one of invoke_policy_label or invoke_vserver_label may be specified per bind."
     end
   end
 end
