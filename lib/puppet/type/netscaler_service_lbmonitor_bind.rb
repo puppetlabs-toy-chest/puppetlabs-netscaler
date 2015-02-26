@@ -25,6 +25,8 @@ Puppet::Type.newtype(:netscaler_service_lbmonitor_bind) do
     truthy_property('The configured state (enable/disable) of the bound monitor.','ENABLED','DISABLED')
   end
 
+  # Always appears as false in the get REST API response. May go back in
+  # if this behaviour changes.
   # newproperty(:passive, :parent => Puppet::Property::NetscalerTruthy) do
   #   truthy_property('Indicates if the monitor is passive. A passive monitor does not remove service from LB decision when the threshold is breached.','true','false')
   # end
