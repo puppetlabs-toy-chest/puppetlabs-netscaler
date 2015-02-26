@@ -69,4 +69,47 @@ describe 'servicegroup tests' do
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
+
+  it 'makes and disables/enables servicegroup' do
+    pp=<<-EOS
+      netscaler_servicegroup { '1_4_servicegroup4':
+        ensure            => 'present',
+        autoscale_mode    => 'DISABLED',
+        protocol          => 'HTTP',
+        maximum_bandwidth => '1024',
+        comments          => 'This is a comment',
+        state             => 'ENABLED',
+      }
+    EOS
+
+    pp2=<<-EOS
+      netscaler_servicegroup { '1_4_servicegroup4':
+        ensure            => 'present',
+        autoscale_mode    => 'DISABLED',
+        protocol          => 'HTTP',
+        maximum_bandwidth => '1024',
+        comments          => 'This is a comment',
+        state             => 'DISABLED',
+      }
+    EOS
+
+    pp3=<<-EOS
+      netscaler_servicegroup { '1_4_servicegroup4':
+        ensure            => 'present',
+        autoscale_mode    => 'DISABLED',
+        protocol          => 'HTTP',
+        maximum_bandwidth => '1024',
+        comments          => 'This is a comment',
+        state             => 'ENABLED',
+      }
+    EOS
+    make_site_pp(pp)
+    run_device(:allow_changes => true)
+    make_site_pp(pp2)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+    make_site_pp(pp3)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+  end
 end
