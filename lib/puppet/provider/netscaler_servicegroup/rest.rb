@@ -12,6 +12,13 @@ Puppet::Type.type(:netscaler_servicegroup).provide(:rest, parent: Puppet::Provid
     return [] if services.nil?
 
     services.each do |service|
+
+      if not service['autoscale'] or service['autoscale'] == 'DISABLED'
+        autoscale_val = 'DISABLED'
+      else
+        autoscale_val = service['autoscale']
+      end
+
       instances << new(
         :ensure              => :present,
         ## Create-only attributes
@@ -41,7 +48,7 @@ Puppet::Type.type(:netscaler_servicegroup).provide(:rest, parent: Puppet::Provid
         :tcp_buffering       => service['tcpb'],           #create, set, unset
         :use_proxy_port      => service['useproxyport'],   #create, set, unset
         :use_client_ip       => service['usip'],           #create, set, unset
-        :autoscale_mode      => service['autoscale'],
+        :autoscale_mode      => autoscale_val,
         :tcp_profile         => service['tcpprofilename'],
         :http_profile        => service['httpprofilename'],
         :net_profile         => service['netprofile'],
@@ -113,5 +120,12 @@ Puppet::Type.type(:netscaler_servicegroup).provide(:rest, parent: Puppet::Provid
     message.delete(:cache_type) if message[:cache_type] == 'SERVER'
 
     message
+  end
+
+  def flush_state_args
+    {
+      :name_key => 'servicegroupname',
+      :name_val => resource[:name],
+    }
   end
 end
