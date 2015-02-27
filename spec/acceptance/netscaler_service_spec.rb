@@ -3,14 +3,14 @@ require 'spec_helper_acceptance'
 describe 'service tests' do
   it 'makes a service' do
     pp=<<-EOS
-      netscaler_server { 'server1':
+      netscaler_server { '1_2_server1':
         ensure  => present,
         address => '1.2.1.1',
       }
 
-      netscaler_service { 'service1':
+      netscaler_service { '1_2_service1':
         ensure      => 'present',
-        server_name => 'server1',
+        server_name => '1_2_server1',
         port        => '80',
         protocol    => 'HTTP',
         comments    => 'This is a comment'
@@ -23,14 +23,14 @@ describe 'service tests' do
 
   it 'makes and edits a service' do
     pp=<<-EOS
-      netscaler_server { 'server2':
+      netscaler_server { '1_2_server2':
         ensure  => present,
         address => '1.2.2.1',
       }
 
-      netscaler_service { 'service2':
+      netscaler_service { '1_2_service2':
         ensure      => 'present',
-        server_name => 'server2',
+        server_name => '1_2_server2',
         port        => '80',
         protocol    => 'HTTP',
         comments    => 'This is a comment'
@@ -38,9 +38,9 @@ describe 'service tests' do
     EOS
 
     pp2=<<-EOS
-      netscaler_service { 'service2':
+      netscaler_service { '1_2_service2':
         ensure      => 'present',
-        server_name => 'server2',
+        server_name => '1_2_server2',
         port        => '80',
         protocol    => 'HTTP',
         comments    => 'This is an even better, updated comment'
@@ -56,14 +56,14 @@ describe 'service tests' do
 
   it 'makes and deletes a service' do
     pp=<<-EOS
-      netscaler_server { 'server3':
+      netscaler_server { '1_2_server3':
         ensure  => present,
         address => '1.2.3.1',
       }
 
-      netscaler_service { 'service3':
+      netscaler_service { '1_2_service3':
         ensure      => 'present',
-        server_name => 'server3',
+        server_name => '1_2_server3',
         port        => '80',
         protocol    => 'HTTP',
         comments    => 'This is a comment'
@@ -71,7 +71,7 @@ describe 'service tests' do
     EOS
 
     pp2=<<-EOS
-      netscaler_service { 'service3':
+      netscaler_service { '1_2_service3':
         ensure      => 'absent',
       }
     EOS
@@ -85,14 +85,14 @@ describe 'service tests' do
 
   it 'makes and disables/enables a service' do
     pp=<<-EOS
-      netscaler_server { 'server4':
+      netscaler_server { '1_2_server4':
         ensure  => present,
         address => '1.2.4.1',
       }
 
-      netscaler_service { 'service4':
+      netscaler_service { '1_2_service4':
         ensure      => 'present',
-        server_name => 'server4',
+        server_name => '1_2_server4',
         port        => '80',
         protocol    => 'HTTP',
         comments    => 'This is a comment',
@@ -101,9 +101,9 @@ describe 'service tests' do
     EOS
 
     pp2=<<-EOS
-      netscaler_service { 'service4':
+      netscaler_service { '1_2_service4':
         ensure      => 'present',
-        server_name => 'server4',
+        server_name => '1_2_server4',
         port        => '80',
         protocol    => 'HTTP',
         comments    => 'This is a comment',
@@ -112,9 +112,9 @@ describe 'service tests' do
     EOS
 
     pp3=<<-EOS
-      netscaler_service { 'service4':
+      netscaler_service { '1_2_service4':
         ensure      => 'present',
-        server_name => 'server4',
+        server_name => '1_2_server4',
         port        => '80',
         protocol    => 'HTTP',
         comments    => 'This is a comment',
