@@ -147,7 +147,6 @@ Puppet::Type.type(:netscaler_lbvserver).provide(:rest, parent: Puppet::Provider:
 
   def immutable_properties
     [
-      :state,
       :service_type,
       :port,
       :range,
