@@ -112,7 +112,6 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, parent: Puppet::Provider:
      :service_type,
      :range,
      :port,
-     :state,
      :traffic_domain,
     ]
   end
@@ -154,8 +153,8 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, parent: Puppet::Provider:
       if  result.status == 200 or result.status == 201
 
         # We have to update the state in a separate call.
-        if @property_hash[:state] != @original_values[:state]
-          set_state(@property_hash[:state])
+        if @property_hash[:state] and (@property_hash[:state] != @original_values[:state])
+          set_state(@property_hash[:state], flush_state_args[:name_key], flush_state_args[:name_val])
         end
 
         # If csvservr->lbserver binding has not been created yet
