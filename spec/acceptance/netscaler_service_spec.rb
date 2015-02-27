@@ -83,4 +83,53 @@ describe 'service tests' do
     run_device(:allow_changes => false)
   end
 
+  it 'makes and disables/enables a service' do
+    pp=<<-EOS
+      netscaler_server { 'server4':
+        ensure  => present,
+        address => '1.2.4.1',
+      }
+
+      netscaler_service { 'service4':
+        ensure      => 'present',
+        server_name => 'server4',
+        port        => '80',
+        protocol    => 'HTTP',
+        comments    => 'This is a comment',
+        state       => 'ENABLED'
+      }
+    EOS
+
+    pp2=<<-EOS
+      netscaler_service { 'service4':
+        ensure      => 'present',
+        server_name => 'server4',
+        port        => '80',
+        protocol    => 'HTTP',
+        comments    => 'This is a comment',
+        state       => 'DISABLED'
+      }
+    EOS
+
+    pp3=<<-EOS
+      netscaler_service { 'service4':
+        ensure      => 'present',
+        server_name => 'server4',
+        port        => '80',
+        protocol    => 'HTTP',
+        comments    => 'This is a comment',
+        state       => 'ENABLED'
+      }
+    EOS
+
+    make_site_pp(pp)
+    run_device(:allow_changes => true)
+    make_site_pp(pp2)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+    make_site_pp(pp3)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+  end
+
 end
