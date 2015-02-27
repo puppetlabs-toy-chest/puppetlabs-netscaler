@@ -68,4 +68,39 @@ describe 'server tests' do
     run_device(:allow_changes => false)
   end
 
+  it 'makes and disables/enables a server' do
+    pp=<<-EOS
+      netscaler_server { 'server5':
+        ensure  => present,
+        address => '1.1.4.1',
+        state   => 'ENABLED',
+      }
+    EOS
+
+    pp2=<<-EOS
+      netscaler_server { 'server5':
+        ensure  => present,
+        address => '1.1.4.1',
+        state   => 'DISABLED',
+      }
+    EOS
+
+    pp3=<<-EOS
+      netscaler_server { 'server5':
+        ensure  => present,
+        address => '1.1.4.1',
+        state   => 'ENABLED',
+      }
+    EOS
+
+    make_site_pp(pp)
+    run_device(:allow_changes => true)
+    make_site_pp(pp2)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+    make_site_pp(pp3)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+  end
+
 end
