@@ -54,7 +54,7 @@ Puppet::Type.type(:netscaler_service).provide(:rest, parent: Puppet::Provider::N
         #service['serverid'] (maybe unset?)
         #service['tcpprofilename']
         #service['httpprofilename']
-        #service['netprofile']
+        :net_profile_name => service['netprofile'],
         #service['processlocal']
         ## Unknown set attributes
         #service['weight']
@@ -82,6 +82,7 @@ Puppet::Type.type(:netscaler_service).provide(:rest, parent: Puppet::Provider::N
       :max_clients         => :maxclient,
       :max_requests        => :maxreq,
       :monitor_threshold   => :monthreshold,
+      :net_profile_name    => :netprofile,
       :protocol            => :servicetype,
       :server_id           => :customserverid,
       :server_idle_timeout => :svrtimeout,

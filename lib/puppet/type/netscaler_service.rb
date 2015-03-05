@@ -253,6 +253,11 @@ Note: This parameter is available only when the Use Source IP (USIP) parameter i
   newproperty(:client_ip_header) do
     desc "Name for the HTTP header whose value must be set to the IP address of the client. Used with the Client IP parameter. If you set the Client IP parameter, and you do not specify a name for the header, the appliance uses the header name specified for the global Client IP Header parameter (the cipHeader parameter in the set ns param CLI command or the Client IP Header parameter in the Configure HTTP Parameters dialog box at System > Settings > Change HTTP parameters). If the global Client IP Header parameter is not specified, the appliance inserts a header with the name \"client-ip.\""
   end
+
+  newproperty(:net_profile_name) do
+    desc "Network profile to use for the service."
+  end
+
   #newparam(:graceful_shutdown, :parent => Puppet::Property::NetscalerTruthy) do
   #  truthy_property("Indicates graceful shutdown of the server. System will wait for all outstanding connections to this server to be closed before disabling the server.", "YES", "NO")
   #end
