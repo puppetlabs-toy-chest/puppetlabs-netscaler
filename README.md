@@ -27,9 +27,11 @@ The module allows you to manage NetScaler nodes and pool configuration through P
 
 ###Beginning with netscaler
 
-Before you can use the netscaler module, you must create a proxy system able to run `puppet device`.  In order to do so, you will have a Puppet master and a Puppet agent as usual, and the agent will be the "proxy system" for the puppet device subcommand.
+Before you can use the netscaler module, you must create a proxy system able to run `puppet device`.  In order to do so, you will have a Puppet master and a Puppet agent as usual, and the agent will be the "proxy system" for the `puppet device` subcommand.
 
-**NOTE: puppet device was designed to interface with the admin interface to run commands to implement type/provider. puppet device allows you to write a resource to talk to the device (ask Hunter about specific implementation) translates parts of the module (providers and such)into network calls
+**NOTE: `puppet device` was designed to interact with admininistrative interfaces in order to run commands that implement types and providers. `puppet device` allows you to write a resource to talk to the device and translates the module into network calls.**
+
+**TODO^^^ Run that by Hunter.**
 
 This means you must create a device.conf file in the Puppet conf directory (either /etc/puppet or /etc/puppetlabs/puppet) on the Puppet agent. Within your device.conf, you must have:
 
@@ -156,513 +158,545 @@ If you have a '/Common/http_monitor (which is available by default), then when y
 
 ###Type: netscaler_lbmonitor
  
-Manages loadbalancer monitoring on the NetScaler appliance.  If the service is domain-based, you must use the `add server` command to create the server entry before creating the service. You must specify the Server parameter? in the command add server XTODO:?
+Manages loadbalancer monitoring on the NetScaler appliance.  If the service is domain-based, you must use the `add server` command to create the 'server' entry before you create the service. Then, specify the `server` parameter in the `add server` command.
  
-#### Parameters
+####Parameters
 
 All parameters, except where otherwise noted, are optional. Their default values are determined by your particular NetScaler setup.
 
-####`account_application_ids`
+#####`account_application_ids`
 Specifies a list of Acct-Application-Id attribute value pairs (AVPs) for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers. A maximum of eight of AVPs are supported in a monitoring message.
  
-Valid options:**TODO**; maximum = 4294967295 **TODO: Do 8 AVPs = this max?**
+Valid options: An AVP or an array of up to 8 AVPs
  
-####`account_session_id`
-Specifies the Account Session ID to be used in Account Request Packet. Applicable to monitors of type RADIUS_ACCOUNTING.**TODO: What is this?**
+#####`account_session_id`
+Specifies the Account Session ID to be used in Account Request Packet. Applicable to RADIUS_ACCOUNTING monitors.
 
-Valid options: **TODO**
+Valid options: String
  
-####`account_type`
-Sets the Account Type to be used in Account Request Packet. Applicable to monitors of type RADIUS_ACCOUNTING.**TODO: What is this?**
+#####`account_type`
+Sets the Account Type to be used in Account Request Packet. Applicable to RADIUS_ACCOUNTING monitors.
  
-Valid options: Integer; maximum = 15. Default: 1
+Valid options: Integer; maximum = 15 Default: 1
  
-####`action`
+#####`action`
 Specifies the action to perform when the response to an inline monitor (HTTP-INLINE) indicates that the service is down. A service monitored by an inline monitor is considered DOWN if the response code is not one of the codes that have been specified for the Response Code parameter.
  
 The following options will have the following impact:
  
-  * NONE - Takes no action. The `show service` command and the `show lb monitor`**TODO: Are these commands in the usual sense?** command will indicate the total number of responses that were checked and the number of consecutive error responses received after the last successful probe.
+  * NONE - Takes no action. 
   * LOG - Logs the event in NSLOG or SYSLOG.
   * DOWN - Marks the service as being down and ensures no traffic is directed to the service until the configured down time has expired. Persistent connections to the service are terminated as soon as the service is marked as DOWN. The event is logged in NSLOG or SYSLOG.
  
-Valid options: NONE, LOG, DOWN. Default: SM_DOWN
+Valid options: 'NONE', 'LOG', or 'DOWN' Default: 'SM_DOWN'
  
-####`application_name`
-Sets the name of the application used to determine the state of the service. Applicable to monitors of type CITRIX-XML-SERVICE.**TODO: What is this? Maybe change to Applicable to CITRIX-whatever monitors?**
+#####`application_name`
+Sets the name of the application used to determine the state of the service. Applicable to CITRIX-XML-SERVICE monitors.
+
+Valid options: String
  
-####`attribute`
-Specifies the attribute to evaluate when the LDAP server responds to the query. Success or failure of the monitoring probe depends on whether the attribute exists in the response. Optional.**TODO: Optional vs. required status in the whole module**
+#####`attribute`
+Specifies the attribute to evaluate when the LDAP server responds to the query. Success or failure of the monitoring probe depends on whether the attribute exists in the response.
+
+Valid options: String
  
-####`authentication_application_ids`
+#####`authentication_application_ids`
 Specifies the list of Auth-Application-Id attribute value pairs (AVPs) for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers. A maximum of eight of these AVPs are supported in a monitoring CER message.
  
-Valid options:**TODO**; maximum = 4294967295 **TODO: Do 8 AVPs = this max?**
+Valid options: An AVP or an array of up to 8 AVPs
  
-####`base_dn`
-Sets the base distinguished name of the LDAP service, from where the LDAP server can begin the search for the attributes in the monitoring query.**TODO:What?** Required for LDAP service monitoring.
+#####`base_dn`
+Sets the base distinguished name of the LDAP service, from where the LDAP server can begin the search for the attributes in the monitoring query. Required for LDAP service monitoring.
 
-Valid options: **TODO**
+Valid options: String
  
-####`bind_dn`
-Sets the distinguished name with which an LDAP monitor can perform the Bind operation on the LDAP server. Optional.**TODO** Applicable to LDAP monitors.
+#####`bind_dn`
+Sets the distinguished name with which an LDAP monitor can perform the Bind operation on the LDAP server. Applicable to LDAP monitors.
 
-Valid options: **TODO**
+Valid options: String
  
-####`called_station_id`
+#####`called_station_id`
 Sets the Called Station Id to be used in Account Request Packet. Applicable to RADIUS_ACCOUNTING monitors.
 
-Valid options: **TODO**
+Valid options: String
 
-####`calling_station_id`
+#####`calling_station_id`
 Sets the Calling Stations Id to be used in Account Request Packet. Applicable to RADIUS_ACCOUNTING monitors.
 
-Valid options: **TODO**
+Valid options: String
  
-####`check_backend_services`
+#####`check_backend_services`
 Enables monitoring of services running on storefront server. Storefront services are monitored by probing to a Windows service that runs on the Storefront server and exposes details of which storefront services are running.
 
-Valid options: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
  
-####`custom_header`
+#####`custom_header`
 Specifies a custom header string to include in the monitoring probes.
 
-Valid options: String. Default: **TODO**
+Valid options: String
  
-####`database`
+#####`database`
 Specifies the name of the database to connect to during authentication.
 
-Valid options: **TODO**
+Valid options: String
  
-####`destination_ip`
+#####`destination_ip`
 Sets the IP address of the service to send probes to. If the parameter is set to 0, the IP address of the server to which the monitor is bound is considered the destination IP address.
 
-Valid options: **TODO**
+Valid options: IP address or '0'
  
-####`destination_port`
+#####`destination_port`
 Specifies the TCP or UDP port to send the probe to. For most monitors, if the parameter is set to 0, the port number of the service to which the monitor is bound is considered the destination port. For a USER monitor, the destination port is the port number that is included in the HTTP request sent to the dispatcher. This parameter does not apply to PING monitors.
 
-Valid options: **TODO**
+Valid options: Integers
  
-####`deviation`
+#####`deviation`
 Sets the time to add to the learned average response time in dynamic response time monitoring (DRTM). When a deviation is specified, your NetScaler appliance learns the average response time of bound services and adds the deviation to the average. The final value is then continually adjusted to accommodate response time variations over time. Specified in milliseconds, seconds, or minutes.
  
-Valid options: Integer expressed in milliseconds, seconds, or minutes; maximum = 20939000.
+Valid options: Integer expressed in milliseconds, seconds, or minutes; maximum = 20939000 seconds.
  
-####`dispatcher_ip`
-Sets the IP address of the dispatcher to which to send the probe. **TODO**
+#####`dispatcher_ip`
+Sets the IP address of the dispatcher to send the probe to.
 
-Valid options: **TODO**
+Valid options: IP address
  
-####`dispatcher_port`
+#####`dispatcher_port`
 Sets the port number on which the dispatcher listens for the monitoring probe.
 
-Valid options: **TODO**
+Valid options: Integers
  
-####`domain`
+#####`domain`
 Sets the domain in which the XenDesktop Desktop Delivery Controller (DDC) servers or Web Interface servers are present. Required by CITRIX-XD-DDC and CITRIX-WI-EXTENDED monitors for logging on to the DDC servers and Web Interface servers.
 
-Valid options: **TODO**
+Valid options: String
  
-####`down_time`
+#####`down_time`
 Sets the time duration to wait before probing a service that has been marked as DOWN. Expressed in milliseconds, seconds, or minutes.
  
-Valid option: Integer expressed in milliseconds, seconds, or minutes; minimum = 1 and maximum = 20939000. Default: 30
+Valid option: Integer expressed in milliseconds, seconds, or minutes; minimum = 1 second and maximum = 20939000 seconds. Default: 30 seconds
  
-####`ensure`
-Determines whether the loadbalancer monitoring service is present or absent
+#####`ensure`
+Determines whether the loadbalancer monitoring service is present or absent.
  
-Valid options: `present` or `absent`. Default:**TODO**
+Valid options: `present` or `absent`.
  
-####`expression`
+#####`expression`
 Sets the default syntax expression that evaluates the database server's response to a MYSQL-ECV or MSSQL-ECV monitoring query. Must produce a Boolean result, as the result determines the state of the server. If the expression returns TRUE, the probe succeeds.
  
 For example, if you want the appliance to evaluate the error message to determine the state of the server, use the rule 'MYSQL.RES.ROW(10) .TEXT_ELEM(2).EQ("MySQL")'.
 
-Valid options: Boolean**?**
+Valid options: String
  
-####`failure_retries`
-Sets the number of retries that must fail, out of the number specified for the Retries parameter, for a service to be marked as DOWN. For example, if the Retries parameter is set to 10 and the Failure Retries parameter is set to 6, out of the ten probes sent, at least six probes must fail if the service is to be marked as DOWN. The default value of 0 means that all the retries must fail if the service is to be marked as DOWN.
+#####`failure_retries`
+Sets the number of retries that must fail, out of the number specified for the `retries` parameter, for a service to be marked as DOWN. '0' means that all the retries must fail if the service is to be marked as DOWN.
+
+For example, if the `retries` parameter is set to 10 and the `failure_retries` parameter is set to 6, out of the ten probes sent, at least six probes must fail if the service is to be marked as DOWN.
+  
+Valid options: Integer; maximum = 32. Default: 0
  
-Valid options: Integer; maximum = 32.
- 
-####`file_name`
+#####`file_name`
 Sets the name of a file on the FTP server. Your NetScaler appliance monitors the FTP service by periodically checking the existence of the file on the server. Applicable to FTP-EXTENDED monitors.
 
-Valid options: **TODO**
+Valid options: String
  
-####`filter`
-Filters criteria for the LDAP query. Optional.**TODO?**
+#####`filter`
+Filters criteria for the LDAP query.
 
-Valid options: **TODO**
+Valid options: String
  
-####`firmware_revision`
+#####`firmware_revision`
 Sets the Firmware-Revision value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
 
-Valid options: **TOSO**
+Valid options: Integer
  
-####`framed_ip`
+#####`framed_ip`
 Sets the source IP the packet will go out with. Applicable to RADIUS_ACCOUNTING monitors.
 
-Valid options: **TODO**
+Valid options: IP address
  
-####`group_name`
+#####`group_name`
 Sets the name of a newsgroup available on the monitored NNTP service. Your NetScaler appliance periodically generates an NNTP query for the name of the newsgroup and evaluates the response. If the newsgroup is found on the server, the service is marked as UP. If the newsgroup does not exist or if the search fails, the service is marked as DOWN. Applicable to NNTP monitors.
 
-Valid options: **TODO**
+Valid options: String
  
-####`host_ip`
+#####`host_ip`
 Sets the Host-IP-Address value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers. If Host-IP-Address is not specified, the appliance inserts the mapped IP (MIP) address or subnet IP (SNIP) address from which the CER request (the monitoring probe) is sent.
 
 Valid options: IP address
  
-####`http_request`
+#####`http_request`
 Specifies the HTTP request to send to the server (for example, "HEAD /file.html").
 
-Valid options: 
- 
-####`inband_security_id
-: Inband-Security-Id for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
- 
-  Possible values: NO_INBAND_SECURITY, TLS
- 
-####`interval
-: Time interval between two successive probes. Must be greater than the value of Response Time-out.
- 
-  Default value: 5
- 
-  Minimum value: 1
- 
-  Maximum value: 20940000
- 
-####`ip_address
-: Set of IP addresses expected in the monitoring response from the DNS server, if the record type is A or AAAA. Applicable to DNS monitors.
- 
-####`ip_tunnel
-: Send the monitoring probe to the service through an IP tunnel. A destination IP address must be specified.
- 
-  Possible values: YES, NO
- 
-  Default value: NO
-      Valid options: <yes|no|true|false|enabled|disabled|ENABLED|DISABLED|YES|NO|on|off|ON|OFF>
- 
-####`kcd_account
-: KCD Account used by MSSQL monitor
- 
-####`logon_agent_service_version
-: Version number of the Citrix Advanced Access Control Logon Agent. Required by the CITRIX-AAC-LAS monitor.
- 
-####`logon_point_name
-: Name of the logon point that is configured for the Citrix Access Gateway Advanced Access Control software. Required if you want to monitor the associated login page or Logon Agent. Applicable to CITRIX-AAC-LAS and CITRIX-AAC-LOGINPAGE monitors.
- 
-####`lrtm
-: Calculate the least response times for bound services. If this parameter is not enabled, the appliance does not learn the response times of the bound services. Also used for LRTM load balancing.
- 
-  Possible values: ENABLED, DISABLED
-      Valid options: <yes|no|true|false|enabled|disabled|ENABLED|DISABLED|YES|NO|on|off|ON|OFF>
- 
-####`max_forwards
-: Maximum number of hops that the SIP request used for monitoring can traverse to reach the server. Applicable only to monitors of type SIP-UDP.
- 
-  Default value: 1
- 
-  Maximum value: 255
- 
-####`metric_table
-: Metric table to which to bind metrics.
- 
-####`name
-: Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
- 
-####`nas_id
-: NAS-Identifier to send in the Access-Request packet. Applicable to monitors of type RADIUS.
- 
-####`nas_ip
-: Network Access Server (NAS) IP address to use as the source IP address when monitoring a RADIUS server. Applicable to monitors of type RADIUS and RADIUS_ACCOUNTING.
- 
-####`net_profile
-: Name of the network profile.
- 
-####`origin_host
-: Origin-Host value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
- 
-####`origin_realm
-: Origin-Realm value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
- 
-####`password
-: Password that is required for logging on to the RADIUS, NNTP, FTP, FTP-EXTENDED, MYSQL, MSSQL, POP3, CITRIX-AG, CITRIX-XD-DDC, CITRIX-WI-EXTENDED, CITRIX-XNC-ECV or CITRIX-XDM server. Used in conjunction with the user name specified for the User Name parameter.
- 
-####`product_name
-: Product-Name value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
- 
-####`protocol_version
-: Version of MSSQL server that is to be monitored.
- 
-  Possible values: 70, 2000, 2000SP1, 2005, 2008, 2008R2, 2012
- 
-  Default value: TDS_PROT_70
- 
-####`query
-: Domain name to resolve as part of monitoring the DNS service (for example, example.com).
- 
-####`query_type
-: Type of DNS record for which to send monitoring queries. Set to Address for querying A records, AAAA for querying AAAA records, and Zone for querying the SOA record.
- 
-  Possible values: Address, Zone, AAAA
- 
-####`radius_key
-: Authentication key (shared secret text string) for RADIUS clients and servers to exchange. Applicable to monitors of type RADIUS and RADIUS_ACCOUNTING.
- 
-####`receive_string
-: String expected from the server for the service to be marked as UP. Applicable to TCP-ECV, HTTP-ECV, and UDP-ECV monitors.
- 
-####`resp_timeout_threshold
-: Response time threshold, specified as a percentage of the Response Time-out parameter. If the response to a monitor probe has not arrived when the threshold is reached, the appliance generates an SNMP trap called monRespTimeoutAboveThresh. After the response time returns to a value below the threshold, the appliance generates a monRespTimeoutBelowThresh SNMP trap. For the traps to be generated, the "MONITOR-RTO-THRESHOLD" alarm must also be enabled.
- 
-  Maximum value: 100
- 
-####`response_codes
-: Response codes for which to mark the service as UP. For any other response code, the action performed depends on the monitor type. HTTP monitors and RADIUS monitors mark the service as DOWN, while HTTP-INLINE monitors perform the action indicated by the Action parameter.
- 
-####`response_timeout
-: Amount of time for which the appliance must wait before it marks a probe as FAILED. Must be less than the value specified for the Interval parameter.
- 
-  Note: For UDP-ECV monitors for which a receive string is not configured, response timeout does not apply. For UDP-ECV monitors with no receive string, probe failure is indicated by an ICMP port unreachable error received from the service.
- 
-  Default value: 2
- 
-  Minimum value: 1
- 
-  Maximum value: 20939000
- 
-####`retries
-: Maximum number of probes to send to establish the state of a service for which a monitoring probe failed.
- 
-  Default value: 3
- 
-  Minimum value: 1
- 
-  Maximum value: 127
- 
-####`reverse
-: Mark a service as DOWN, instead of UP, when probe criteria are satisfied, and as UP instead of DOWN when probe criteria are not satisfied.
- 
-  Possible values: YES, NO
- 
-  Default value: NO
-      Valid options: <yes|no|true|false|enabled|disabled|ENABLED|DISABLED|YES|NO|on|off|ON|OFF>
- 
-####`rtsp_request
-: RTSP request to send to the server (for example, "OPTIONS *").
- 
-####`script_arguments
-: String of arguments for the script. The string is copied verbatim into the request.
- 
-####`script_name
-: Path and name of the script to execute. The script must be available on the NetScaler appliance, in the /nsconfig/monitors/ directory.
- 
-####`secondary_password
-: Secondary password that users might have to provide to log on to the Access Gateway server. Applicable to CITRIX-AG monitors.
- 
-####`secure
-: Use a secure SSL connection when monitoring a service. Applicable only to TCP based monitors. The secure option cannot be used with a CITRIX-AG monitor, because a CITRIX-AG monitor uses a secure connection by default.
- 
-  Possible values: YES, NO
- 
-  Default value: NO
-      Valid options: <yes|no|true|false|enabled|disabled|ENABLED|DISABLED|YES|NO|on|off|ON|OFF>
- 
-####`send_string
-: String to send to the service. Applicable to TCP-ECV, HTTP-ECV, and UDP-ECV monitors.
- 
-####`sid
-: Name of the service identifier that is used to connect to the Oracle database during authentication.
- 
-####`sip_method
-: SIP method to use for the query. Applicable only to monitors of type SIP-UDP.
- 
-  Possible values: OPTIONS, INVITE, REGISTER
- 
-####`sip_reg_uri
-: SIP user to be registered. Applicable only if the monitor is of type SIP-UDP and the SIP Method parameter is set to REGISTER.
- 
-####`sip_uri
-: SIP URI string to send to the service (for example, sip:sip.test). Applicable only to monitors of type SIP-UDP.
- 
-####`site_path
-: URL of the logon page. For monitors of type CITRIX-WEB-INTERFACE, to monitor a dynamic page under the site path, terminate the site path with a slash (/). Applicable to CITRIX-WEB-INTERFACE, CITRIX-WI-EXTENDED and CITRIX-XDM monitors.
- 
-####`snmp_alert_retries
-: Number of consecutive probe failures after which the appliance generates an SNMP trap called monProbeFailed.
- 
-  Maximum value: 32
- 
-####`snmp_community
-: Community name for SNMP monitors.
- 
-####`snmp_oid
-: SNMP OID for SNMP monitors.
- 
-####`snmp_threshold
-: Threshold for SNMP monitors.
- 
-####`snmp_version
-: SNMP version to be used for SNMP monitors.
- 
-  Possible values: V1, V2
- 
-####`sql_query
-: SQL query for a MYSQL-ECV or MSSQL-ECV monitor. Sent to the database server after the server authenticates the connection.
- 
-####`state
-: State of the monitor. The DISABLED setting disables not only the monitor being configured, but all monitors of the same type, until the parameter is set to ENABLED. If the monitor is bound to a service, the state of the monitor is not taken into account when the state of the service is determined.
-  Valid options: <yes|no|true|false|enabled|disabled|ENABLED|DISABLED|YES|NO|on|off|ON|OFF>
- 
-####`store_db
-: Store the database list populated with the responses to monitor probes. Used in database specific load balancing if MSSQL-ECV/MYSQL-ECV monitor is configured.
- 
-  Possible values: ENABLED, DISABLED
- 
-####`store_name
-: Store Name. For monitors of type STOREFRONT, STORENAME is an optional argument defining storefront service store name. Applicable to STOREFRONT monitors.
- 
-####`storefront_account_service
-: Enable/Disable probing for Account Service. Applicable only to Store Front monitors. For multi-tenancy configuration users my skip account service
- 
-  Possible values: YES, NO
- 
-  Default value: YES
- 
-####`success_retries
-: Number of consecutive successful probes required to transition a service's state from DOWN to UP.
- 
-  Default value: 1
- 
-  Minimum value: 1
- 
-  Maximum value: 32
- 
-####`supported_vendor_ids
-: List of Supported-Vendor-Id attribute value pairs (AVPs) for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers. A maximum eight of these AVPs are supported in a monitoring message.
- 
-  Minimum value: 1
- 
-  Maximum value: 4294967295
- 
-####`tos
-: Probe the service by encoding the destination IP address in the IP TOS (6) bits.
- 
-  Possible values: YES, NO
-      Valid options: <yes|no|true|false|enabled|disabled|ENABLED|DISABLED|YES|NO|on|off|ON|OFF>
- 
-####`tos_id
-: The TOS ID of the specified destination IP. Applicable only when the TOS parameter is set.
- 
-  Minimum value: 1
- 
-  Maximum value: 63
- 
-####`transparent
-: The monitor is bound to a transparent device such as a firewall or router. The state of a transparent device depends on the responsiveness of the services behind it. If a transparent device is being monitored, a destination IP address must be specified. The probe is sent to the specified IP address by using the MAC address of the transparent device.
- 
-  Possible values: YES, NO
- 
-  Default value: NO
-      Valid options: <yes|no|true|false|enabled|disabled|ENABLED|DISABLED|YES|NO|on|off|ON|OFF>
- 
-####`type
-: Type of monitor that you want to create.
- 
-  Possible values: PING, TCP, HTTP, TCP-ECV, HTTP-ECV, UDP-ECV, DNS, FTP, LDNS-PING, LDNS-TCP, LDNS-DNS, RADIUS, USER, HTTP-INLINE, SIP-UDP, LOAD, FTP-EXTENDED, SMTP, SNMP, NNTP, MYSQL, MYSQL-ECV, MSSQL-ECV, ORACLE-ECV, LDAP, POP3, CITRIX-XML-SERVICE, CITRIX-WEB-INTERFACE, DNS-TCP, RTSP, ARP, CITRIX-AG, CITRIX-AAC-LOGINPAGE, CITRIX-AAC-LAS, CITRIX-XD-DDC, ND6, CITRIX-WI-EXTENDED, DIAMETER, RADIUS_ACCOUNTING, STOREFRONT, APPC, CITRIX-XNC-ECV, CITRIX-XDM
- 
-####`####`user_name
-: User name with which to probe the RADIUS, NNTP, FTP, FTP-EXTENDED, MYSQL, MSSQL, POP3, CITRIX-AG, CITRIX-XD-DDC, CITRIX-WI-EXTENDED, CITRIX-XNC or CITRIX-XDM server.
- 
-####`validate_credentials
-: Validate the credentials of the Xen Desktop DDC server user. Applicable to monitors of type CITRIX-XD-DDC.
- 
-  Possible values: YES, NO
- 
-  Default value: NO
-      Valid options: <yes|no|true|false|enabled|disabled|ENABLED|DISABLED|YES|NO|on|off|ON|OFF>
- 
-####`vendor_id
-: Vendor-Id value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
- 
-####`vendor_specific_vendor_id
-: Vendor-Id to use in the Vendor-Specific-Application-Id grouped attribute-value pair (AVP) in the monitoring CER message. To specify Auth-Application-Id or Acct-Application-Id in Vendor-Specific-Application-Id, use vendorSpecificAuthApplicationIds or vendorSpecificAcctApplicationIds, respectively. Only one Vendor-Id is supported for all the Vendor-Specific-Application-Id AVPs in a CER monitoring message.
- 
-  Minimum value: 1
+Valid options: String 
+ 
+#####`inband_security_id`
+Specifies the Inband-Security-Id for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
+ 
+Valid options: 'NO_INBAND_SECURITY' or 'TLS'
+ 
+#####`interval`
+Determines the time interval in seconds between two successive probes. Must be greater than the value of [`response_timeout`](#response_timeout).
+ 
+Valid options: Integer expressed in seconds; minimum = 1 second and maximum = 20940000 seconds Default: 5 seconds
+
+#####`ip_address`
+Specifies the set of IP addresses expected in the monitoring response from the DNS server if the record type is A or AAAA. Applicable to DNS monitors.
+
+Valid options: An array of IP addresses
+ 
+#####`ip_tunnel`
+Determines whether to send the monitoring probe to the loadbalancing service through an IP tunnel. A destination IP address must be specified.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF' Default: 'NO'
+
+#####`kcd_account`
+Specifices the KCD Account used by MSSQL monitor.
+
+Valid options: String
+ 
+#####`logon_agent_service_version`
+Sets the version number of the Citrix Advanced Access Control Logon Agent. Required by the CITRIX-AAC-LAS monitor.
+
+Valid options: String
+
+#####`logon_point_name`
+Specifies the name of the logon point that is configured for the Citrix Access Gateway Advanced Access Control software. Required if you want to monitor the associated login page or Logon Agent. Applicable to CITRIX-AAC-LAS and CITRIX-AAC-LOGINPAGE monitors.
+
+Valid options: String
+
+#####`lrtm`
+Calculates the least response times for bound services. If this parameter is not enabled, the appliance does not learn the response times of the bound services. Also used for LRTM load balancing.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
+
+#####`max_forwards`
+Sets the maximum number of hops that the SIP request used for monitoring can traverse to reach the server. Applicable only to SIP-UDP monitors.
+
+Valid options: Integer; maximum = 255 Default: 1
+
+#####`metric_table`
+Specifies a metric table to bind metrics to.
+
+Valid options: String
+
+#####`name`
+Specifies a name for the object.
+
+Valid options: Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`nas_id`
+Specifies the NAS-Identifier to send in the Access-Request packet. Applicable to RADIUS monitors.
+
+Valid options: String
+ 
+#####`nas_ip`
+Sets the Network Access Server (NAS) IP address to use as the source IP address when monitoring a RADIUS server. Applicable to  RADIUS and RADIUS_ACCOUNTING monitors.
+
+Valid options: IP Address
+
+#####`net_profile`
+Sets the name of the network profile.
+
+Valid options: String
+ 
+#####`origin_host`
+Specifies the Origin-Host value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
+
+Valid options: String
+
+#####`origin_realm`
+Specifies the Origin-Realm value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
+
+Valid options: String
+
+#####`password`
+Sets the password required for logging on to the RADIUS, NNTP, FTP, FTP-EXTENDED, MYSQL, MSSQL, POP3, CITRIX-AG, CITRIX-XD-DDC, CITRIX-WI-EXTENDED, CITRIX-XNC-ECV or CITRIX-XDM servers. Used in conjunction with the user name specified for the [`user_name`](#user_name) parameter.
+
+Valid options: String
+
+#####`product_name`
+Specifies the Product-Name value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
+
+Valid options: String
+
+#####`protocol_version`
+Specifies the version of MSSQL server to be monitored.
+
+Valid options: '70', '2000', '2000SP1', '2005', '2008', '2008R2', '2012' Default: '70'
+
+#####`query`
+Specifies the domain name to resolve as part of monitoring the DNS service (for example, example.com).
+
+Valid options: String
+
+#####`query_type`
+Sets the type of DNS record to send monitoring queries to. Set to 'Address' for querying A records, 'AAAA' for querying AAAA records, and 'Zone' for querying the SOA record.
+
+Valid options: 'Address', 'Zone', or 'AAAA'
+
+#####`radius_key`
+Specifies the authentication key (shared secret text string) for RADIUS clients and servers to exchange. Applicable to RADIUS and RADIUS_ACCOUNTING monitors.
+
+Valid options: String
+
+#####`receive_string`
+Specifies the string expected from the server for the service to be marked as UP. Applicable to TCP-ECV, HTTP-ECV, and UDP-ECV monitors.
+
+Valid options: String
+ 
+#####`resp_timeout_threshold`
+Sets the response time threshold, specified as a percentage of the [`response_timeout`](#response_timeout) parameter. If the response to a monitor probe has not arrived when the threshold is reached, the NetScaler appliance generates an SNMP trap called monRespTimeoutAboveThresh. After the response time returns to a value below the threshold, the appliance generates a monRespTimeoutBelowThresh SNMP trap. For the traps to be generated, the "MONITOR-RTO-THRESHOLD" alarm must also be enabled.
+
+Valid options: Integer; maximum = 100 Default: 1
+
+#####`response_codes`
+Sets the response codes that mark the service as UP. For any other response code, the action performed depends on the monitor type. HTTP monitors and RADIUS monitors mark the service as DOWN, while HTTP-INLINE monitors perform the action indicated by the [`action`](#action) parameter.
+
+Valid options: String or array of strings
+
+#####`response_timeout`
+Sets the amount of time the appliance must wait before it marks a probe as FAILED. Must be less than the value specified for the [`interval`](interval) parameter.
+
+Note: This parameter does not apply to UDP-ECV monitors that do not have a receive string configured. For UDP-ECV monitors with no receive string, probe failure is indicated by an ICMP port unreachable error received from the service.
+
+Valid options: Integer; minimum = 1s and maximum = 20939000s Default: 2s
+ 
+#####`retries`
+Sets the maximum number of probes to send to establish the state of a service for which a monitoring probe failed.
+
+Valid options: Integers; minimum = 1 and maximum = 127 Default: 3
+ 
+#####`reverse`
+Specifies whether to ,ark a service as DOWN instead of UP when probe criteria are satisfied, and as UP instead of DOWN when probe criteria are not satisfied.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF' Default: 'NO'
+ 
+#####`rtsp_request`
+Specifies the RTSP request to send to the server (for example, "OPTIONS *").
+
+Valid options: String
+
+#####`script_arguments`
+Specifies the string of arguments for the script. The string is copied verbatim into the request.
+
+Valid options: String
+
+#####`script_name`
+Sets the path and name of the script to execute. The script must be available on the NetScaler appliance, in the /nsconfig/monitors/ directory.
+
+Valid options: String
+
+#####`secondary_password`
+Sets the secondary password that users might have to provide to log on to the Access Gateway server. Applicable to CITRIX-AG monitors.
+
+Valid options: String
+
+#####`secure`
+Determines whether to use a secure SSL connection when monitoring a service. Applicable only to TCP-based monitors. The secure option cannot be used with a CITRIX-AG monitor, because a CITRIX-AG monitor uses a secure connection by default.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF' Default: 'NO'
+
+#####`send_string`
+Specifies the string to send to the service. Applicable to TCP-ECV, HTTP-ECV, and UDP-ECV monitors.
+
+Valid options: String
+
+#####`sid`
+Sets the name of the service identifier used to connect to the Oracle database during authentication.
+
+Valid options: String
+
+#####`sip_method`
+Specifies the SIP method to use for the query. Applicable only to SIP-UDP monitors.
+
+Valid options: 'OPTIONS', 'INVITE', or 'REGISTER'
+
+#####`sip_reg_uri`
+Specifies the SIP user to be registered. Applicable only to SIP-UDP monitors with the  `sip_method` parameter set to 'REGISTER'.
+
+Valid options: String
+
+#####`sip_uri`
+Specifies the SIP URI string to send to the service (for example, sip:sip.test). Applicable only to SIP-UDP monitors.
+
+Valid options: String
+
+#####`site_path`
+Sets the URL of the logon page. For CITRIX-WEB-INTERFACE monitors: to monitor a dynamic page under the site path, terminate the site path with a slash (/). Applicable to CITRIX-WEB-INTERFACE, CITRIX-WI-EXTENDED and CITRIX-XDM monitors.
+
+Valid options: String
+
+#####`snmp_alert_retries`
+Sets the number of consecutive probe failures after which the appliance generates an SNMP trap called monProbeFailed.
+
+Valid options: Integer; maximum = 32
+
+#####`snmp_community`
+Sets the community name for SNMP monitors.
+
+Valid options: String
+
+#####`snmp_oid`
+Sets the SNMP OID for SNMP monitors.
+
+Valid options: String
+
+#####`snmp_threshold`
+Specifies the threshold for SNMP monitors.
+
+Valid options: String
+
+#####`snmp_version`
+Sets the SNMP version to be used for SNMP monitors.
+
+Valid options: 'V1' or 'V2'
+
+#####`sql_query`
+Specifies a SQL query for a MYSQL-ECV or MSSQL-ECV monitor. Sent to the database server after the server authenticates the connection.
+
+Valid options: String
+
+#####`state`
+Sets the state of the monitor. The 'DISABLED' setting disables not only the monitor being configured, but all monitors of the same type until the parameter is set to ENABLED. If the monitor is bound to a service, the state of the monitor is not taken into account when the state of the service is determined.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
+
+#####`store_db`
+Determines whether to store the database list populated with the responses to monitor probes. Used in database specific load balancing if MSSQL-ECV/MYSQL-ECV monitor is configured.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
+
+#####`store_name`    
+Sets the store name. Applicable to STOREFRONT monitors.
+
+Valid options: String
+
+#####`storefront_account_service`
+Determines whether to enable or disable probing for Account Service. Applicable only to Store Front monitors. Multi-tenancy configuration users may skip this parameter.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF' Default: 'YES'
+
+#####`success_retries`
+Specifies the number of consecutive successful probes required to transition a service's state from DOWN to UP.
+
+Valid option: Integer; minimum = 1 and maximum = 32 Default: 1
+
+#####`supported_vendor_ids`
+Lists the Supported-Vendor-Id attribute value pairs (AVPs) for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers. A maximum eight of these AVPs are supported in a monitoring message.
+
+Valid options: An AVP or an array of up to 8 AVPs
+
+#####`tos`
+Determines whether to probe the service by encoding the destination IP address in the IP TOS (6) bits.
+
+Valid options:'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
+ 
+#####`tos_id`
+Sets the TOS ID of the specified destination IP. Applicable only when the `tos` parameter is set.
+
+Valid options: Integer; minimum = 1 and maximum = 63
+
+#####`transparent`
+Determines whether the monitor is bound to a transparent device, such as a firewall or router. The state of a transparent device depends on the responsiveness of the services behind it. If a transparent device is being monitored, a destination IP address must be specified. The probe is sent to the specified IP address by using the MAC address of the transparent device.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF' Default: 'NO'
+ 
+#####`type`
+Specifies type of monitor that you want to create.
+
+Valid options: 'PING', 'TCP', 'HTTP', 'TCP-ECV', 'HTTP-ECV', 'UDP-ECV', 'DNS', 'FTP', 'LDNS-PING', 'LDNS-TCP', 'LDNS-DNS', 'RADIUS', 'USER', 'HTTP-INLINE', 'SIP-UDP', 'LOAD', 'FTP-EXTENDED', 'SMTP', 'SNMP', 'NNTP', 'MYSQL', 'MYSQL-ECV', 'MSSQL-ECV', 'ORACLE-ECV', 'LDAP', 'POP3', 'CITRIX-XML-SERVICE', 'CITRIX-WEB-INTERFACE', 'DNS-TCP', 'RTSP', 'ARP', 'CITRIX-AG', 'CITRIX-AAC-LOGINPAGE', 'CITRIX-AAC-LAS', 'CITRIX-XD-DDC', 'ND6', 'CITRIX-WI-EXTENDED', 'DIAMETER', 'RADIUS_ACCOUNTING', 'STOREFRONT', 'APPC', 'CITRIX-XNC-ECV', or 'CITRIX-XDM'
+
+#####`user_name`
+Specifies the user name with which to probe the RADIUS, NNTP, FTP, FTP-EXTENDED, MYSQL, MSSQL, POP3, CITRIX-AG, CITRIX-XD-DDC, CITRIX-WI-EXTENDED, CITRIX-XNC or CITRIX-XDM server.
+
+Valid options: String
+
+#####`validate_credentials`
+Determines whether to validate the credentials of the Xen Desktop DDC server user. Applicable to CITRIX-XD-DDC monitors.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF' Default: 'NO'
+
+#####`vendor_id`
+Sets the vendor-ID value for the Capabilities-Exchange-Request (CER) message to use for monitoring Diameter servers.
+
+Valid options: Integers
+
+#####`vendor_specific_vendor_id`
+Sets the vendor-ID to use in the Vendor-Specific-Application-Id grouped attribute-value pair (AVP) in the monitoring CER message. To specify Auth-Application-Id or Acct-Application-Id in Vendor-Specific-Application-Id, use vendorSpecificAuthApplicationIds or vendorSpecificAcctApplicationIds, respectively. Only one Vendor-Id is supported for all the Vendor-Specific-Application-Id AVPs in a CER monitoring message.
+
+Valid options: Integers; minimum = 1
 
 ###Type: netscaler_server
 
 Manages basic NetScaler server objects, either IP address based servers or domain-based servers.
  
 ####Parameters
+
+All parameters, except where otherwise noted, are optional. Their default values are determined by your particular NetScaler setup.
  
-####`address`
+#####`address`
 Specifies the domain name, IPv4 address, or IPv6 address of the server.
 
-Valid options: 'ipv4', 'ipv6', or 'domain name'. 
- 
-####`comments`
+Valid options: 'ipv4', 'ipv6', or 'domain name'
+
+#####`comments`
 Provides any necessary or additional information about the server.
 
-Valid options: '< String >'
+Valid options: String
  
-####`disable_wait_time`
+#####`disable_wait_time`
 Specifies a wait time when disabling a server object. During the wait time, the server object continues to handle established connections but rejects new connections.
  
 Valid options: '/\d+/'.
  
-####`ensure`
+#####`ensure`
 Determines whether the server object is present or absent.
  
-Valid values are `present`, `absent`.
+Valid values are 'present', 'absent'
  
-####`graceful_shutdown`
+#####`graceful_shutdown`
 Enables graceful shutdown of the server, in which the system will wait for all outstanding connections to the server to be closed before disabling it.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
-####`ipv6_domain`
+#####`ipv6_domain`
 Supports IPv6 addressing mode. If you configure a server with the IPv6 addressing mode, you cannot use the server in the IPv4 addressing mode
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
-####`name`
+#####`name`
 Specifies the name for the server. 
 
-Valid options: Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+Valid options: Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters
  
-####`resolve_retry`
+#####`resolve_retry`
 Sets the time, in seconds, the NetScaler appliance must wait after DNS resolution fails before sending the next DNS query to resolve the domain name.
 
-Valid options: Integer; maximum = 20939 and minimum = 5. Default: 5
+Valid options: Integer; maximum = 20939 and minimum = 5 Default: 5
  
-####`state`
+#####`state`
 Sets the state of the server.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
    
-####`traffic_domain_id`
+#####`traffic_domain_id`
 Specifies the integer value that uniquely identifies the traffic domain in which you want to configure the entity. If you do not specify an ID, the entity becomes part of the default traffic domain.
  
-Valid options: Integer; minimum = 0 and maximum = 4096. Default: 0
+Valid options: Integer; minimum = 0 and maximum = 4096 Default: 0
  
-####`translation_ip_address`
+#####`translation_ip_address`
 Specifies the IP address used to transform the server's DNS-resolved IP address.
 
-Valid options: **TODO**
+Valid options: IP address
  
-####`translation_mask`
+#####`translation_mask`
 Sets the netmask of the translation IP. 
 
-Valid options: **TODO**
+Valid options: IP netmask
 
 ###Type: netscaler_service
 
-Manages service on the NetScaler appliance. If the service is domain-based, you must use the `add server`command to create the server entry before creating the service. You must specify the Server parameter**?** in the command `add server X`**TODO:?**
+Manages service representation objects for NetScaler server entries. If the service is domain-based, you must use the `add server` command to create the 'server' entry before you create the service. Then, specify the server parameter in the `add server` command.
  
 ####Parameters
 
@@ -671,162 +705,194 @@ All parameters, except where otherwise noted, are optional. Their default values
 #####`access_down`
 Determines whether to use Layer 2 mode to bridge the packets sent to the service if it is marked as DOWN. If the service is DOWN and this parameter is disabled, the packets are dropped.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`appflow_logging`
 Enables logging of AppFlow information.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`cache_type`
 Specifies the cache type supported by the cache server.
 
-Valid options: **TODO**
+Valid options: 'SERVER', 'TRANSPARENT', 'REVERSE', or 'FORWARD'
  
 #####`cacheable`
 Uses the transparent cache redirection virtual server to forward requests to the cache server. May not be specified if `cache_type` is 'TRANSPARENT', 'REVERSE', or 'FORWARD'.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`clear_text_port`
 Sets the port to which clear text data must be sent after the appliance decrypts incoming SSL traffic. Applicable to transparent SSL services.
 
-Valid options: **TODO**
+Valid options: Integer
  
 #####`client_idle_timeout`
 Specifies the time, in seconds, after which to terminate an idle client connection.
  
-Valid options: integer; max = 31536000s. Default:**TODO**
+Valid options: Integer; max = 31536000s
  
 #####`client_ip`
 Determines whether to insert an HTTP header with the client's IPv4 or IPv6 address as its value before forwarding a request to the service. Use if the server needs the client's IP address for security, accounting, or other purposes, and setting the `use_source_ip` parameter is not a viable option.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
    
 #####`client_ip_header`
 Specifies the name for the HTTP header whose value must be set to the IP address of the client. Used with the `client_ip` parameter. 
 
 If you set `client_ip` and you do not specify a name for the header, the appliance uses the header name specified for the global `client_ip_header` parameter. If the global `client_ip_header` parameter is not specified, the appliance inserts a header with the name "client-ip."
 
-Valid options:**TODO**
+Valid options: Strings
  
 #####`client_keepalive`
 Enables client keep-alive for the service.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
    
 #####`comments`
 Provides any necessary or additional information about the service.
 
-Valid options: **TODO**
+Valid options: String
  
 #####`down_state_flush`
 Flushes all active transactions associated with a service whose state transitions from UP to DOWN. Do not enable this option for applications that must complete their transactions.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`ensure`
 Determines whether the service is present or absent.
  
-Valid options: 'present' or 'absent'. Default:**TODO**
+Valid options: 'present' or 'absent'
  
 #####`graceful_shutdown`
 Enables graceful shutdown of the server, meaning the system will wait for all outstanding connections to this server to be closed before disabling it.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: "**TODO**"
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`hash_id`
 Specifies a numerical identifier to be used by hash-based load balancing methods. Must be unique for each service.
  
-Valid options: Integer; minimum = 1. Default: **TODO**
+Valid options: Integer; minimum = 1
  
 #####`health_monitoring`
 Monitors the health of this service. Enabling this parameter sends probes to check the health of the service. Disabling this parameter means no probes are sent to check the health of the service, and the appliance shows the service as UP at all times.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`max_bandwidth`
 Sets the maximum bandwidth, in Kbps, allocated to the service.
  
-Valid options: Integers; maximum = 4294967287. Default: **TODO**
+Valid options: Integers; maximum = 4294967287
  
 #####`max_clients`
 Sets the maximum number of simultaneous open connections to the service.
  
-Valid options: Integers; maximum = 4294967294. Default: **TODO**
+Valid options: Integers; maximum = 4294967294
  
 #####`max_requests`
 Sets the maximum number of requests that can be sent on a persistent connection to the service. Connection requests beyond this value are rejected.
  
-Valid options: Integers; maximum = 65535. Default: **TODO**
+Valid options: Integers; maximum = 65535
  
 #####`monitor_threshold`
 Specifies the minimum sum of weights of the monitors that are bound to this service. Used to determine whether to mark a service as UP or DOWN.
  
-Valid options: Integers; maximum = 65535. Default: **TODO**
+Valid options: Integers; maximum = 65535
  
 #####`name`
 Specifies the name for the service. 
 
-Valid options: Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters. Default: **TODO**
+Valid options: Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters
  
 #####`port`
 *Required.* Specifies the port number of the service.
 
-Valid options: '*' or integers.
+Valid options: '*' or Integers
  
 #####`protocol`
 *Required.* Specifies the protocol in which data is exchanged with the service.
 
-Valid options: **TODO**
+Valid options: 'HTTP', 'FTP', 'TCP', 'UDP', 'SSL', 'SSL_BRIDGE', 'SSL_TCP', 'DTLS', 'NNTP', 'RPCSVR', 'DNS', 'ADNS', 'SNMP', 'RTSP', 'DHCPRA', 'ANY', 'SIP_UDP', 'DNS_TCP', 'ADNS_TCP', 'MYSQL', 'MSSQL', 'ORACLE', 'RADIUS', 'RDP', 'DIAMETER', 'SSL_DIAMETER', or 'TFTP' 
 
 #####`server_id`
 Specifies a unique identifier for the service. Used when the persistency type for the virtual server is set to 'Custom Server ID'.
 
-Valid options: **TODO**
+Valid options: String
  
 #####`server_idle_timeout`
 Sets the time, in seconds, after which to terminate an idle server connection.
  
-Valid options: Integers; maximum = 31536000. Default: **TODO**
+Valid options: Integers; maximum = 31536000
  
 #####`server_name`
 *Required.* Specifies the name of the server that hosts the service.
 
-Valid options:
+Valid options: String
  
 #####`state`
 Sets the state of the node resource.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`sure_connect`
 Sets the state of SureConnect for the service.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`surge_protection`
 Enables surge protection for the service.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`tcp_buffering`
 Enables TCP buffering for the service.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`traffic_domain_id`
 Specifies the integer value that uniquely identifies the traffic domain in which you want to configure the entity. If you do not specify an ID, the entity becomes part of the default traffic domain.
 
-Valid options: Integer; minimum = 0 and maximum = 4096. Default: 0
+Valid options: Integer; minimum = 0 and maximum = 4096
  
 #####`use_proxy_port`
-Uses the proxy port as the source port when initiating connections with the server. Disabling this parameter means the client-side connection port is used as the source port for the server-side connection. This parameter is available only when the `use_source_ip` parameter is set to 'YES'. **TODO: Set to yes or simply enabled?**
+Uses the proxy port as the source port when initiating connections with the server. Disabling this parameter means the client-side connection port is used as the source port for the server-side connection. This parameter is available only when the `use_source_ip` parameter is enabled.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: **TODO**
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
  
 #####`use_source_ip`
 Uses the client's IP address as the source IP address when initiating a connection to the server. When creating a service, if you do not set this parameter, the service inherits the global Use Source IP setting (available in the enable ns mode and disable ns mode CLI commands, or in the System > Settings > Configure modes > Configure Modes dialog box). However, you can override this setting after you create the service.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
 
+###Type: netscaler_service_lbmonitor_bind
+ 
+Manages a binding between a NetScaler service representation object and a loadbalancing monitor.
+ 
+####Parameters
+
+All parameters, except where otherwise noted, are optional. Their default values are determined by your particular NetScaler setup.
+ 
+#####`ensure`
+Determines whether the monitor-service binding is present or absent.
+
+Valid values are `present` or `absent`.
+ 
+#####`name`
+Specifies the name for the monitor-service binding.
+
+Valid options: Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters
+
+#####`passive`
+Sets the monitor as passive. A passive monitor does not remove service from LB decision when the threshold is breached.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
+
+#####`state`
+Determines whether the bound monitor is enabled or disabled.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
+
+#####`weight`
+Specifies the weight to assign to the monitor-service binding. When a monitor is UP, the weight assigned to its binding with the service determines how much the monitor contributes toward keeping the health of the service above the value configured for the [`monitor_threshold`](#monitor_threshold) parameter.
+
+Valid options /^\d+$/ ; minimum = 1 and maximum = 100
