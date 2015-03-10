@@ -102,8 +102,12 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   end
 
   # I don't want to use `def state=` because that will be called before flush
-  def set_state(value, name_key, name_val)
-    message_hash = { name_key => name_val }
+  def set_state(value, name_key=nil, name_val=nil)
+    if name_key
+      message_hash = { name_key => name_val }
+    else
+      message_hash = {}
+    end
     message_hash = { netscaler_api_type => message_hash }
     message_hash = message_hash.to_json
 
