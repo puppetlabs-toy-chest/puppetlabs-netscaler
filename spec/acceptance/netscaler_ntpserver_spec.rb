@@ -9,6 +9,7 @@ describe 'ntpserver tests' do
         maximum_poll_interval => '55',
         auto_key              => true,
         key                   => '55',
+        preferred_ntp_server  => 'yes',
       }
     EOS
     make_site_pp(pp)
