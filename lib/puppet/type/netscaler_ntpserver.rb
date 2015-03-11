@@ -34,7 +34,7 @@ Maximum value = 65534"
   end
 
   newproperty(:preferred_ntp_server,:parent => Puppet::Property::NetscalerTruthy) do #<String>
-    truthy_property("Preferred NTP server. The NetScaler appliance chooses this NTP server for time synchronization among a set of correctly operating hosts. Note: This property will not be enforced by puppet on a resource that is being created, only one one that already exists.
+    truthy_property("Preferred NTP server. The NetScaler appliance chooses this NTP server for time synchronization among a set of correctly operating hosts.
 Default value: NO
 Possible values = YES, NO","YES","NO")
   end

@@ -42,10 +42,22 @@ Puppet::Type.type(:netscaler_ntpserver).provide(:rest, parent: Puppet::Provider:
   end
   def per_provider_munge(message)
     # Not accepted on create
-    # XXX But can we fix this so it can?
     if ! @original_values[:ensure]
       message.delete(:preferred_ntp_server)
     end
     message
+  end
+
+  def create
+    result = super
+    if (result.status == 200 or result.status == 201) and resource[:preferred_ntp_server]
+      result = Puppet::Provider::Netscaler.put("/config/#{netscaler_api_type}/#{resource[:name]}", {
+        netscaler_api_type => {
+          :servername         => resource[:name],
+          :preferredntpserver => resource[:preferred_ntp_server],
+        }
+      }.to_json)
+    end
+    result
   end
 end
