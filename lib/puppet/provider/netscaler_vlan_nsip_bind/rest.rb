@@ -12,7 +12,6 @@ Puppet::Type.type(:netscaler_vlan_nsip_bind).provide(:rest, parent: Puppet::Prov
 
     services.each do |service|
       binds = Puppet::Provider::Netscaler.call("/config/vlan_nsip_binding/#{service['name']}") || []
-      require'pry';binding.pry
       binds.each do |bind|
         instances << new(
           :ensure  => :present,
