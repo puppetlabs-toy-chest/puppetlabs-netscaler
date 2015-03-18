@@ -14,10 +14,15 @@ Puppet::Type.type(:netscaler_feature).provide(:rest, parent: Puppet::Provider::N
     features.delete('feature')
   
     features.each do |feature|
-      instances << new(
-        :name => feature[0],
-        :ensure => feature[1] ? :present : :absent,
-      )
+      # map rest name to english name (ie wl to Web Logging)
+      name = Puppet::Type::Netscaler_feature.rest_name_map[feature[0]]
+
+      if (name != nil)  
+        instances << new(
+          :name => name,
+          :ensure => feature[1] ? :present : :absent,
+        )
+      end
     end
 
     instances
@@ -41,6 +46,12 @@ Puppet::Type.type(:netscaler_feature).provide(:rest, parent: Puppet::Provider::N
       when :absent then 'disable'
     end
     
-    result = Puppet::Provider::Netscaler.post("/config/nsfeature", { :nsfeature => { :feature => resource[:name] } }.to_json, {"action" => action})    
+    # map english name to rest name, ie Web Logging to wl
+    rest_name = Puppet::Type::Netscaler_feature.rest_name_map.rassoc(resource[:name])[0]
+    
+    result = Puppet::Provider::Netscaler.post("/config/nsfeature", { :nsfeature => { :feature => rest_name } }.to_json, {"action" => action})    
   end
+  
+  
+  
 end
