@@ -74,8 +74,8 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     transport.connection
   end
 
-  def self.call(url)
-    transport.call(url)
+  def self.call(url, args=nil)
+    transport.call(url, args)
   end
 
   def self.post(url, message, args=nil)
