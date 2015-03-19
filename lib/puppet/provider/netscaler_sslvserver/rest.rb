@@ -52,6 +52,12 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, parent: Puppet::Provider
     ]
   end
 
+  def destroy
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{resource.name}", {'args'=>"certkeyname:#{resource.certkeyname}"})
+    @property_hash.clear
+    return result
+  end
+
   def per_provider_munge(message)
     message
   end
