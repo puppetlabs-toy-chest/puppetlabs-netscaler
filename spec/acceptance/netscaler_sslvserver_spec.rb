@@ -60,7 +60,6 @@ netscaler_lbvserver { 'lbvserver_ssl':
 }
 netscaler_sslvserver { 'lbvserver_ssl/test_sslcertkey':
   ensure => 'present',
-  certkeyname => 'test_sslcertkey',
 } 
     EOS
     make_site_pp(pp)
