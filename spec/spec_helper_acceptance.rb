@@ -30,7 +30,7 @@ end
 def run_resource(resource_type, resource_title=nil)
   device_host = hosts_as('netscaler').first
   options = {:ENV => {
-    'FACTER_url' => "https://nsroot:#{device_host[:ssh][:password]}@#{device_host["ip"]}/nitro/v1/"
+    'FACTER_url' => "https://nsroot:#{device_host[:ssh][:password]}@#{device_host['ip']}/nitro/v1/"
   } }
   if resource_title
     on(default, puppet('resource', resource_type, resource_title, '--trace', options), { :acceptable_exit_codes => 0 }).stdout
@@ -83,14 +83,14 @@ RSpec.configure do |c|
     #puppet_module_install_on(master, {:source => proj_root, :module_name => 'f5'}) #This doesn't seem to work?
     hosts.each do |host|
       if ! host['platform'].match(/netscaler/)
-        scp_to host, proj_root, "#{host['distmoduledir']}/netscaler", {:ignore => [".bundle"]}
+        rsync_to host, proj_root, "#{host['distmoduledir']}/netscaler", {:ignore => [".bundle"]}
         on host, puppet('plugin','download','--server',master.to_s)
       end
     end
     device_conf=<<-EOS
 [netscaler]
 type netscaler
-url https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as("netscaler").first["ip"]}/nitro/v1/
+url https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first['ip']}/nitro/v1/
 EOS
     create_remote_file(default, File.join(default[:puppetpath], "device.conf"), device_conf)
     apply_manifest("include netscaler")

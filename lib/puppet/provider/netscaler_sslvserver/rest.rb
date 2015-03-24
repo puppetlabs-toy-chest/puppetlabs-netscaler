@@ -18,8 +18,7 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, parent: Puppet::Provider
       binds.each do |bind|
         instances << new(
           :ensure       => :present,
-          :name         => bind['vservername'],
-          :certkeyname  => bind['certkeyname'],
+          :name         => "#{bind['vservername']}/#{bind['certkeyname']}",
           :crlcheck     => bind['crlcheck'],
           :ca           => bind['ca'],
           :snicert      => bind['snicert'],
@@ -43,7 +42,6 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, parent: Puppet::Provider
 
   def immutable_properties
     [
-      :certkeyname,
       :crlcheck,
       :ca,
       :snicert,
@@ -53,12 +51,16 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, parent: Puppet::Provider
   end
 
   def destroy
-    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{resource.name}", {'args'=>"certkeyname:#{resource.certkeyname}"})
+    vservername, certkeyname = resource.name.split('/')
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{vservername}", {'args'=>"certkeyname:#{certkeyname}"})
     @property_hash.clear
     return result
   end
 
   def per_provider_munge(message)
+    message[:vservername], message[:certkeyname] = message[:name].split('/')
+    message.delete(:name)
+
     message
   end
 end

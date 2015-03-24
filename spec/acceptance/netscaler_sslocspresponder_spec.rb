@@ -1,12 +1,11 @@
 require 'spec_helper_acceptance'
 
 describe 'sslocspresponder' do
-
   it 'makes a sslocspresponder' do
     pp=<<-EOS
 netscaler_sslocspresponder { 'test_sslocspresponder':
   ensure                => 'present',
-  url  => 'http://www.bla.com',
+  url  => 'http://www.bla.com:80/',
 }
     EOS
     make_site_pp(pp)
