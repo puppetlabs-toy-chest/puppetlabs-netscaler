@@ -6,9 +6,8 @@ describe 'ntpserver tests' do
       netscaler_ntpserver { 'test1':
         ensure                => present,
         minimum_poll_interval => '5',
-        maximum_poll_interval => '55',
+        maximum_poll_interval => '10',
         auto_key              => true,
-        key                   => '55',
         preferred_ntp_server  => 'yes',
       }
     EOS
@@ -22,8 +21,7 @@ describe 'ntpserver tests' do
       netscaler_ntpserver { 'test2':
         ensure                => present,
         minimum_poll_interval => '5',
-        maximum_poll_interval => '55',
-        auto_key              => true,
+        maximum_poll_interval => '10',
         key                   => '55',
       }
     EOS
@@ -32,8 +30,7 @@ describe 'ntpserver tests' do
       netscaler_ntpserver { 'test2':
         ensure                => present,
         minimum_poll_interval => '6',
-        maximum_poll_interval => '56',
-        auto_key              => true,
+        maximum_poll_interval => '11',
         key                   => '56',
       }
     EOS
@@ -50,9 +47,8 @@ describe 'ntpserver tests' do
       netscaler_ntpserver { 'test3':
         ensure                => present,
         minimum_poll_interval => '6',
-        maximum_poll_interval => '56',
+        maximum_poll_interval => '10',
         auto_key              => true,
-        key                   => '56',
       }
     EOS
 

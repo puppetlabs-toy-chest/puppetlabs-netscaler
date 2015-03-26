@@ -49,10 +49,11 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
 
   def post(url, json, args={})
     url = URI.escape(url) if url
+    resource_type = url.split('/')[2]
     if valid_json?(json)
       result = connection.post do |req|
         req.url "/nitro/v1#{url}", args
-        req.headers['Content-Type'] = 'application/json'
+        req.headers['Content-Type'] = "application/vnd.com.citrix.netscaler.#{resource_type}+json"
         req.body = json
       end
       failure?(result)
@@ -64,6 +65,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
 
   def put(url, json)
     url = URI.escape(url) if url
+    resource_type = url.split('/')[2]
     if valid_json?(json)
       result = connection.put do |req|
         req.url "/nitro/v1#{url}"

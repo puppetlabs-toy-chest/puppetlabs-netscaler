@@ -6,7 +6,7 @@ describe 'vlan tests' do
       netscaler_vlan { '11':
         ensure                    => present,
         alias_name                => 'test alias',
-        ipv6_dynamic_routing      => 'VIP',
+        ipv6_dynamic_routing      => 'enabled',
         maximum_transmission_unit => '1111',
       }
     EOS
@@ -20,7 +20,7 @@ describe 'vlan tests' do
       netscaler_vlan { '12':
         ensure                    => present,
         alias_name                => 'test alias',
-        ipv6_dynamic_routing      => 'VIP',
+        ipv6_dynamic_routing      => 'enabled',
         maximum_transmission_unit => '2222',
       }
     EOS
@@ -29,7 +29,7 @@ describe 'vlan tests' do
       netscaler_vlan { '12':
         ensure                    => present,
         alias_name                => 'test alias',
-        ipv6_dynamic_routing      => 'VIP',
+        ipv6_dynamic_routing      => 'enabled',
         maximum_transmission_unit => '2223',
       }
     EOS
@@ -46,7 +46,7 @@ describe 'vlan tests' do
       netscaler_vlan { '13':
         ensure                    => present,
         alias_name                => 'test alias',
-        ipv6_dynamic_routing      => 'VIP',
+        ipv6_dynamic_routing      => 'enabled',
         maximum_transmission_unit => '3333',
       }
     EOS

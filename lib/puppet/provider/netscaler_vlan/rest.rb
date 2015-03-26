@@ -28,14 +28,13 @@ Puppet::Type.type(:netscaler_vlan).provide(:rest, parent: Puppet::Provider::Nets
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :vlan_id                   => :id,
+      :name                      => :id,
       :maximum_transmission_unit => :mtu,
     }
   end
 
   def immutable_properties
     [
-      :vlan_id,
     ]
   end
   def per_provider_munge(message)
