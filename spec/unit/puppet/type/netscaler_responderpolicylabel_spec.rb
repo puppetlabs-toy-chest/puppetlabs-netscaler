@@ -6,7 +6,6 @@ res_type_name = :netscaler_responderpolicylabel
 res_type = Puppet::Type.type(res_type_name)
 
 describe res_type do
-
 #create setting name type target bypasssafetycheck comment
     let(:provider) {
     prov = stub 'provider'
@@ -25,5 +24,4 @@ describe res_type do
   it 'should have :name be its namevar' do
     res_type.key_attributes.should == [:name]
   end
-
 end

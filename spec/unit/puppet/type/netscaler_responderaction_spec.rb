@@ -6,7 +6,6 @@ res_type_name = :netscaler_responderaction
 res_type = Puppet::Type.type(res_type_name)
 
 describe res_type do
-
 #create setting name type target bypasssafetycheck comment
     let(:provider) {
     prov = stub 'provider'

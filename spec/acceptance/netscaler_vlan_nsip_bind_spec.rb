@@ -38,7 +38,6 @@ describe 'vlan_nsip_bind tests' do
     pp2=<<-EOS
       netscaler_vlan_nsip_bind { '3321/3.3.2.1':
         ensure  => 'absent',
-        netmask => '255.255.255.0',
       }
     EOS
     make_site_pp(pp)
