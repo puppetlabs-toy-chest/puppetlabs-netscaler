@@ -7,7 +7,7 @@ Puppet::Type.newtype(:netscaler_vlan) do
   apply_to_device
   ensurable
 
-  newparam(:vlan_id, :namevar => true) do #<Double>
+  newparam(:name, :namevar => true) do #<Double>
     desc "A positive integer that uniquely identifies a VLAN.
 Minimum value = 1
 Maximum value = 4094"

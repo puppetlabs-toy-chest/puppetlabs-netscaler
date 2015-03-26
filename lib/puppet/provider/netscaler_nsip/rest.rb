@@ -50,6 +50,7 @@ Puppet::Type.type(:netscaler_nsip).provide(:rest, parent: Puppet::Provider::Nets
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
+      :name                     => :ipaddress,
       :ip_type                  => :type,
       :virtual_router_id        => :vird,
       :traffic_domain           => :td,
@@ -71,6 +72,7 @@ Puppet::Type.type(:netscaler_nsip).provide(:rest, parent: Puppet::Provider::Nets
   def immutable_properties
     [
       :ip_address,
+      :netmask,
       :ip_type,
       :traffic_domain,
     ]

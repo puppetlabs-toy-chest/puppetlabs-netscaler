@@ -11,11 +11,13 @@ Puppet::Type.type(:netscaler_vlan_nsip_bind).provide(:rest, parent: Puppet::Prov
     return [] if services.nil?
 
     services.each do |service|
-      binds = Puppet::Provider::Netscaler.call("/config/vlan_nsip_binding/#{service['name']}") || []
+      binds = Puppet::Provider::Netscaler.call("/config/vlan_nsip_binding/#{service['id']}") || []
       binds.each do |bind|
         instances << new(
-          :ensure  => :present,
-          :name    => "#{bind['id']}/#{bind['ipaddress']}",
+          :ensure   => :present,
+          :name     => "#{bind['id']}/#{bind['ipaddress']}",
+          :netmask  => bind['netmask'],
+          :td       => bind['td'],
         )
       end
     end
@@ -32,6 +34,7 @@ Puppet::Type.type(:netscaler_vlan_nsip_bind).provide(:rest, parent: Puppet::Prov
 
   def per_provider_munge(message)
     message[:id], message[:ipaddress] = message[:name].split('/')
+    message.delete(:name)
 
     message
   end

@@ -4,7 +4,7 @@ describe 'vlan_nsip_bind tests' do
   it 'binds a vlan_nsip_bind' do
     pp=<<-EOS
       netscaler_vlan { '3311':
-        ensure            => 'present',
+        ensure  => 'present',
       }
       netscaler_nsip { '3.3.1.1':
         ensure  => present,
@@ -12,6 +12,7 @@ describe 'vlan_nsip_bind tests' do
       }
       netscaler_vlan_nsip_bind { '3311/3.3.1.1':
         ensure  => 'present',
+        netmask => '255.255.255.0',
       }
     EOS
     make_site_pp(pp)
@@ -22,7 +23,7 @@ describe 'vlan_nsip_bind tests' do
   it 'makes and deletes a service_lbmonitor_bind' do
     pp=<<-EOS
       netscaler_vlan { '3321':
-        ensure            => 'present',
+        ensure  => 'present',
       }
       netscaler_nsip { '3.3.2.1':
         ensure  => present,
@@ -30,12 +31,14 @@ describe 'vlan_nsip_bind tests' do
       }
       netscaler_vlan_nsip_bind { '3321/3.3.2.1':
         ensure  => 'present',
+        netmask => '255.255.255.0',
       }
     EOS
 
     pp2=<<-EOS
       netscaler_vlan_nsip_bind { '3321/3.3.2.1':
         ensure  => 'absent',
+        netmask => '255.255.255.0',
       }
     EOS
     make_site_pp(pp)

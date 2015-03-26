@@ -12,7 +12,7 @@ describe 'nshostname tests' do
 
   it 'changes an nshostname' do
     pp=<<-EOS
-      netscaler_ntpsync { 'testname2': }
+      netscaler_nshostname { 'testname2': }
     EOS
     make_site_pp(pp)
     run_device(:allow_changes => true)
