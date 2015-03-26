@@ -95,5 +95,4 @@ netscaler_rewriteaction { '2_9_rewriteaction_test5':
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
-
 end
