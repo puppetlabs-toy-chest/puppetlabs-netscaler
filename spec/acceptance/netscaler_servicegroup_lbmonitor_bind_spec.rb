@@ -69,5 +69,4 @@ describe 'servicegroup_lbmonitor_bind tests' do
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
-
 end

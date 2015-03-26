@@ -69,7 +69,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
     if valid_json?(json)
       result = connection.put do |req|
         req.url "/nitro/v1#{url}"
-        req.headers['Content-Type'] = 'application/json'
+        req.headers['Content-Type'] = "application/vnd.com.citrix.netscaler.#{resource_type}+json"
         req.body = json
       end
       failure?(result)
