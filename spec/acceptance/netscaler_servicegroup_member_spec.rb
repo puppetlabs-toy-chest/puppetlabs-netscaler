@@ -64,5 +64,4 @@ describe 'servicegroup_member tests' do
   end
 
   
-
 end

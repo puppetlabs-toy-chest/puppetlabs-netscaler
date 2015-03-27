@@ -34,5 +34,4 @@ EOS
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
-
 end

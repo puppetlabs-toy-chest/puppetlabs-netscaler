@@ -51,5 +51,4 @@ netscaler_responderglobal { 'Top_URL_CLIENTS_CSVSERVER':
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
-
 end

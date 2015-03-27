@@ -123,5 +123,4 @@ netscaler_rewriteglobal {'2_12_rewritepolicy_test4':
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
-
 end
