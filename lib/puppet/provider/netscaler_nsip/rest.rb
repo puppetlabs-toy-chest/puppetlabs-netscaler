@@ -27,7 +27,7 @@ Puppet::Type.type(:netscaler_nsip).provide(:rest, parent: Puppet::Provider::Nets
         :dynamic_routing          => ip['dynamicrouting'],
         :host_route               => ip['hostroute'],
         :host_route_gateway_ip    => ip['hostrtgw'],
-        :host_route_metric        => ip['metric'],
+        :host_route_metric        => ip['metric'].to_s,
         :ospf_lsa_type            => ip['ospflsatype'],
         :ospf_area                => ip['ospfarea'],
         :virtual_server_rhi_level => ip['vserverrhilevel'],
