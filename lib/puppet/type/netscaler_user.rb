@@ -3,7 +3,7 @@ require 'puppet/property/netscaler_traffic_domain'
 require 'puppet/property/netscaler_truthy'
 
 Puppet::Type.newtype(:netscaler_user) do
-  @doc = 'Configuration for AAA user resource.'
+  @doc = 'Configuration for system user resource.'
 
   apply_to_device
   ensurable
