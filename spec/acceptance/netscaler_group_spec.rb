@@ -5,6 +5,7 @@ describe 'group' do
     pp=<<-EOS
 netscaler_group { 'test_group':
   ensure                  => 'present',
+  cli_prompt              => 'group prompt',
   idle_time_out           => '900',
 }
     EOS
@@ -17,6 +18,7 @@ netscaler_group { 'test_group':
     pp=<<-EOS
 netscaler_group { 'test_group':
   ensure                  => 'present',
+  cli_prompt              => 'better group prompt',
   idle_time_out           => '1000',
 }
     EOS
