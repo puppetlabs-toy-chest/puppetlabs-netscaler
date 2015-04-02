@@ -2,7 +2,7 @@ require 'puppet/parameter/netscaler_name'
 require 'puppet/property/netscaler_traffic_domain'
 require 'puppet/property/netscaler_truthy'
 
-Puppet::Type.newtype(:netscaler_group_user_binding) do
+Puppet::Type.newtype(:netscaler_group_user_bind) do
   @doc = 'Binding object showing the systemuser that can be bound to systemgroup.'
 
   apply_to_device

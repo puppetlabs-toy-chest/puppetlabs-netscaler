@@ -2,7 +2,7 @@ require 'puppet/provider/netscaler'
 
 require 'json'
 
-Puppet::Type.type(:netscaler_group_user_binding).provide(:rest, parent: Puppet::Provider::Netscaler) do
+Puppet::Type.type(:netscaler_group_user_bind).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
     "systemgroup_systemuser_binding"
   end
