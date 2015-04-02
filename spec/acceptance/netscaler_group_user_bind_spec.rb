@@ -1,7 +1,7 @@
 require 'spec_helper_acceptance'
 
-describe 'group_user_binding' do
-  it 'makes a group_user_binding' do
+describe 'group_user_bind' do
+  it 'makes a group_user_bind' do
     pp=<<-EOS
 netscaler_user { 'joe':
   ensure                  => 'present',
@@ -13,7 +13,7 @@ netscaler_user { 'joe':
 netscaler_group { 'testing':
   ensure   => 'present',
 }
-netscaler_group_user_binding { 'testing/joe':
+netscaler_group_user_bind { 'testing/joe':
   ensure  => 'present',
 }
     EOS
@@ -22,9 +22,9 @@ netscaler_group_user_binding { 'testing/joe':
     run_device(:allow_changes => false)
   end
 
- it 'delete a group_user_binding' do
+ it 'delete a group_user_bind' do
     pp2=<<-EOS
-netscaler_group_user_binding { 'testing/joe':
+netscaler_group_user_bind { 'testing/joe':
   ensure => 'absent',
 }
     EOS
