@@ -1,5 +1,4 @@
 class Puppet::Util::NetworkDevice::Netscaler::Facts
-
   attr_reader :transport
 
   def initialize(transport)

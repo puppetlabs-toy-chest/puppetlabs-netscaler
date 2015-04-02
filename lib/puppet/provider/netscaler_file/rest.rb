@@ -17,9 +17,9 @@ Puppet::Type.type(:netscaler_file).provide(:rest, parent: Puppet::Provider::Nets
       file_contents = Puppet::Provider::Netscaler.call("/config/systemfile", {'args'=>"filelocation:%2Fnsconfig%2F,filename:#{file['filename']}"}) || [] 
       file_contents.each do |file_content|
         instances << new(
-          :ensure     => :present,
-          :name       => file_content['filename'],
-          :encoding   => file_content['fileencoding'],
+          :ensure   => :present,
+          :name     => file_content['filename'],
+          :encoding => file_content['fileencoding'],
         )
       end
     end
@@ -32,9 +32,9 @@ Puppet::Type.type(:netscaler_file).provide(:rest, parent: Puppet::Provider::Nets
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :name       => :filename,
-      :content    => :filecontent,
-      :encoding   => :fileencoding,
+      :name     => :filename,
+      :content  => :filecontent,
+      :encoding => :fileencoding,
     }
   end
 

@@ -48,10 +48,7 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:traffic_domain_id, :parent => Puppet::Property::NetscalerTrafficDomain)
@@ -69,10 +66,7 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:autoscale_mode) do
@@ -87,10 +81,7 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:member_port) do

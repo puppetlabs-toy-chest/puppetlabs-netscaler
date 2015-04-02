@@ -12,7 +12,6 @@ Puppet::Type.type(:netscaler_servicegroup).provide(:rest, parent: Puppet::Provid
     return [] if services.nil?
 
     services.each do |service|
-
       if not service['autoscale'] or service['autoscale'] == 'DISABLED'
         autoscale_val = 'DISABLED'
       else
@@ -74,7 +73,7 @@ Puppet::Type.type(:netscaler_servicegroup).provide(:rest, parent: Puppet::Provid
   # Map irregular attribute names for conversion in the message.
   def property_to_rest_mapping
     {
-      :name => :servicegroupname,
+      :name                => :servicegroupname,
       :appflow_logging     => :appflowlog,
       :client_idle_timeout => :clttimeout,
       :client_ip           => :cip,

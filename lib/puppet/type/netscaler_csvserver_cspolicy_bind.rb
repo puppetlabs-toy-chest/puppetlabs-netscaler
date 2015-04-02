@@ -48,5 +48,4 @@ Max = 2147483647"
   autorequire(:netscaler_lbvserver) do
     self[:target_lbvserver]
   end
-
 end

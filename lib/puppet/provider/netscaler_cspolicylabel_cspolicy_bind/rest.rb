@@ -14,12 +14,12 @@ Puppet::Type.type(:netscaler_cspolicylabel_cspolicy_bind).provide(:rest, parent:
       binds = Puppet::Provider::Netscaler.call("/config/cspolicylabel_cspolicy_binding/#{cspolicylabel['labelname']}") || []
       binds.each do |bind|
         instances << new(
-          :ensure                 => :present,
-          :name                   => "#{bind['labelname']}/#{bind['policyname']}",
-          :priority               => bind['priority'],
-          :goto_expression        => bind['gotopriorityexpression'],
-          :invoke_policy_label    => bind['invoke_labelname'],
-          :target_lbvserver       => bind['targetvserver'],
+          :ensure              => :present,
+          :name                => "#{bind['labelname']}/#{bind['policyname']}",
+          :priority            => bind['priority'],
+          :goto_expression     => bind['gotopriorityexpression'],
+          :invoke_policy_label => bind['invoke_labelname'],
+          :target_lbvserver    => bind['targetvserver'],
         )
       end
     end

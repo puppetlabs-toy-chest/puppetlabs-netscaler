@@ -19,27 +19,21 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:ip_address) do
     desc "IPv4 or IPv6 address to assign to the virtual server."
-
   end
 
   newproperty(:ip_pattern) do
     desc "IP address pattern, in dotted decimal notation, for identifying packets to be accepted by the virtual server. The IP Mask parameter specifies which part of the destination IP address is matched against the pattern.  Mutually exclusive with the IP Address parameter.
   For example, if the IP pattern assigned to the virtual server is 198.51.100.0 and the IP mask is 255.255.240.0 (a forward mask), the first 20 bits in the destination IP addresses are matched with the first 20 bits in the pattern. The virtual server accepts requests with IP addresses that range from 198.51.96.1 to 198.51.111.254.  You can also use a pattern such as 0.0.2.2 and a mask such as 0.0.255.255 (a reverse mask).
   If a destination IP address matches more than one IP pattern, the pattern with the longest match is selected, and the associated virtual server processes the request. For example, if virtual servers vs1 and vs2 have the same IP pattern, 0.0.100.128, but different IP masks of 0.0.255.255 and 0.0.224.255, a destination IP address of 198.51.100.128 has the longest match with the IP pattern of vs1. If a destination IP address matches two or more virtual servers to the same extent, the request is processed by the virtual server whose port number matches the port number in the request."
-
   end
 
   newproperty(:ip_mask) do
     desc "IP mask, in dotted decimal notation, for the IP Pattern parameter. Can have leading or trailing non-zero octets (for example, 255.255.240.0 or 0.0.255.255). Accordingly, the mask specifies whether the first n bits or the last n bits of the destination IP address in a client request are to be matched with the corresponding bits in the IP pattern. The former is called a forward mask. The latter is called a reverse mask."
-
   end
 
   newproperty(:port) do
@@ -48,7 +42,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:range) do
@@ -64,7 +57,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:persistence_type) do
@@ -86,10 +78,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:persistence_timeout) do
@@ -100,7 +89,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:persistence_backup) do
@@ -112,10 +100,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:backup_persistence_timeout) do
@@ -127,7 +112,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:lb_method) do
@@ -155,10 +139,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:lb_method_hash_length) do
@@ -169,13 +150,11 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:lb_method_netmask) do
     desc "IPv4 subnet mask to apply to the destination IP address or source IP address when the load balancing method is DESTINATIONIPHASH or SOURCEIPHASH.
   Minimum length = 1"
-
   end
 
   newproperty(:lb_method_ipv6_mask_length) do
@@ -186,12 +165,10 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:cookie_name) do
     desc "Use this parameter to specify the cookie name for COOKIE peristence type. It specifies the name of cookie with a maximum of 32 characters. If not specified, cookie name is internally generated."
-
   end
 
   newproperty(:rule) do
@@ -202,12 +179,10 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   * If the expression includes one or more spaces, enclose the entire expression in double quotation marks.
   * If the expression itself includes double quotation marks, escape the quotations by using the \ character.
   * Alternatively, you can use single quotation marks to enclose the rule, in which case you do not have to escape the double quotation marks."
-
   end
 
   newproperty(:listen_policy) do
     desc "Default syntax expression identifying traffic accepted by the virtual server. Can be either an expression (for example, CLIENT.IP.DST.IN_SUBNET(192.0.2.0/24) or the name of a named expression. In the above example, the virtual server accepts all requests whose destination IP address is in the 192.0.2.0/24 subnet."
-
   end
 
   newproperty(:listen_priority) do
@@ -218,19 +193,16 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:response_rule) do
     desc "Default syntax expression specifying which part of a server's response to use for creating rule based persistence sessions (persistence type RULE). Can be either an expression or the name of a named expression.
   Example:
   HTTP.RES.HEADER(\"setcookie\").VALUE(0).TYPECAST_NVLIST_T('=',';').VALUE(\"server1\")."
-
   end
 
   newproperty(:persistence_ipv4_mask) do
     desc "Persistence mask for IP based persistence types, for IPv4 virtual servers."
-
   end
 
   newproperty(:persistence_ipv6_mask_length) do
@@ -242,22 +214,18 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:priority_queuing, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Use priority queuing on the virtual server. based persistence types, for IPv6 virtual servers.", 'ON', 'OFF')
-
   end
 
   newproperty(:sure_connect, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Use SureConnect on the virtual server.", 'ON', 'OFF')
-
   end
 
   newproperty(:rtsp_natting, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Use network address translation (NAT) for RTSP data connections.", 'ON', 'OFF')
-
   end
 
   newproperty(:redirection_mode) do
@@ -274,10 +242,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:tos_id) do
@@ -288,7 +253,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:data_length) do
@@ -299,7 +263,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:data_offset) do
@@ -309,17 +272,14 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:sessionless, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Perform load balancing on a per-packet basis, without establishing sessions. Recommended for load balancing of intrusion detection system (IDS) servers and scenarios involving direct server return (DSR), where session information is unnecessary.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:state, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("State of the load balancing virtual server.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:connection_failover) do
@@ -334,21 +294,16 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:redirect_url) do
     desc "URL to which to redirect traffic if the virtual server becomes unavailable.
   WARNING! Make sure that the domain in the URL does not match the domain specified for a content switching policy. If it does, requests are continuously redirected to the unavailable virtual server."
-
   end
 
   newproperty(:cacheable, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Route cacheable requests to a cache redirection virtual server. The load balancing virtual server can forward requests only to a transparent cache redirection virtual server that has an IP address and port combination of *:80, so such a cache redirection virtual server must be configured on the appliance.", 'YES', 'NO')
-
   end
 
   newproperty(:client_timeout) do
@@ -359,7 +314,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:spillover_method) do
@@ -376,15 +330,11 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:spillover_persistence, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("If spillover occurs, maintain source IP address based persistence for both primary and backup virtual servers.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:spillover_persistence_timeout) do
@@ -396,7 +346,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:health_threshold) do
@@ -408,7 +357,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:spillover_threshold) do
@@ -419,7 +367,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:spillover_backup_action) do
@@ -431,30 +378,23 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:redirect_port_rewrite, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Rewrite the port and change the protocol to ensure successful HTTP redirects from services.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:down_state_flush, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Flush all active transactions associated with a virtual server whose state transitions from UP to DOWN. Do not enable this option for applications that must complete their transactions.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:backup_virtual_server) do
     desc "Name of the backup virtual server to which to forward requests if the primary virtual server goes DOWN or reaches its spillover threshold."
-
   end
 
   newproperty(:disable_primary_on_down, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("If the primary virtual server goes down, do not allow it to return to primary status until manually enabled.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:virtual_server_ip_port_insertion) do
@@ -469,80 +409,63 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:vip_header_name) do
     desc "Name for the inserted header. The default name is vip-header."
-
   end
 
   newproperty(:authentication_fqdn) do
     desc "Fully qualified domain name (FQDN) of the authentication virtual server to which the user must be redirected for authentication. Make sure that the Authentication parameter is set to ENABLED."
-
   end
 
   newproperty(:authentication, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Enable or disable user authentication.", 'ON', 'OFF')
-
   end
 
   newproperty(:authentication_401, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Enable or disable user authentication with HTTP 401 responses.", 'ON', 'OFF')
-
   end
 
   newproperty(:authentication_virtual_server_name) do
     desc "Name of an authentication virtual server with which to authenticate users."
-
   end
 
   newproperty(:push, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Process traffic with the push virtual server that is bound to this load balancing virtual server.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:push_virtual_server_name) do
     desc "Name of the load balancing virtual server, of type PUSH or SSL_PUSH, to which the server pushes updates received on the load balancing virtual server that you are configuring."
-
   end
 
   newproperty(:push_label_expression) do
     desc "Expression for extracting a label from the server's response. Can be either an expression or the name of a named expression."
-
   end
 
   newproperty(:push_multiple_clients, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Allow multiple Web 2.0 connections from the same client to connect to the virtual server and expect updates.", 'YES', 'NO')
-
   end
 
   newproperty(:tcp_profile_name) do
     desc "Name of the TCP profile whose settings are to be applied to the virtual server."
-
   end
 
   newproperty(:http_profile_name) do
     desc "Name of the HTTP profile whose settings are to be applied to the virtual server."
-
   end
 
   newproperty(:db_profile_name) do
     desc "Name of the DB profile whose settings are to be applied to the virtual server."
-
   end
 
   newproperty(:comment) do
     desc "Any comments that you might want to associate with the virtual server."
-
   end
 
   newproperty(:layer2_parameters, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Use Layer 2 parameters (channel number, MAC address, and VLAN ID) in addition to the 4-tuple (<source IP>:<source port>::<destination IP>:<destination port>) that is used to identify a connection. Allows multiple TCP and non-TCP connections with the same 4-tuple to co-exist on the NetScaler appliance.", 'ON', 'OFF')
-
   end
 
   newproperty(:oracle_server_version) do
@@ -554,10 +477,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:mssql_server_version) do
@@ -569,10 +489,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:mysql_protocol_version) do
@@ -581,12 +498,10 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:mysql_server_version) do
     desc "MySQL server version string that the virtual server advertises to clients."
-
   end
 
   newproperty(:mysql_character_set) do
@@ -595,7 +510,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:mysql_server_capabilities) do
@@ -604,17 +518,14 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:appflow_logging, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Apply AppFlow logging to the virtual server.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:net_profile_name) do
     desc "Name of the network profile to associate with the virtual server. If you set this parameter, the virtual server uses only the IP addresses in the network profile as source IP addresses when initiating connections with servers."
-
   end
 
   newproperty(:icmp_virtual_server_response) do
@@ -630,10 +541,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:rhi_state) do
@@ -648,10 +556,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:new_service_request_rate) do
@@ -660,7 +565,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:new_service_request_unit) do
@@ -673,10 +577,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
       end
 
-      munge do |value|
-        value.upcase
-      end
-
+      munge(&:upcase)
   end
 
   newproperty(:new_service_request_increment_interval) do
@@ -687,7 +588,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:min_autoscale_members) do
@@ -698,7 +598,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:max_autoscale_members) do
@@ -709,7 +608,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:persist_avp_no) do
@@ -722,7 +620,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:skip_persistency) do
@@ -746,7 +643,6 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
         end
         value
       end
-
   end
 
   newproperty(:traffic_domain) do
@@ -757,44 +653,33 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:authentication_profile_name) do
     desc "Name of the authentication profile to be used when authentication is turned on."
-
   end
 
   newproperty(:macmode_retain_vlan, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("This option is used to retain vlan information of incoming packet when macmode is enabled", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:database_specific_lb , :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Enable database specific load balancing for MySQL and MSSQL service types.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:dns64, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("This argument is for enabling/disabling the dns64 on lbvserver", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:bypass_aaaa, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("If this option is enabled while resolving DNS64 query AAAA queries are not sent to back end dns server", 'YES', 'NO')
-
   end
 
   newproperty(:recursion_available, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("When set to YES, this option causes the DNS replies from this vserver to have the RA bit turned on. Typically one would set this option to YES, when the vserver is load balancing a set of DNS servers thatsupport recursive queries.", 'YES', 'NO')
-
   end
 
   newproperty(:process_local, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("By turning on this option packets destined to a vserver in a cluster will not under go any steering. Turn this option for single packet request response mode or when the upstream device is performing a proper RSS for connection based distribution.", 'ENABLED', 'DISABLED')
-
   end
-
 end
-
- 

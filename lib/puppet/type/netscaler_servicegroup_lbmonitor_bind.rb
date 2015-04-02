@@ -31,7 +31,6 @@ Puppet::Type.newtype(:netscaler_servicegroup_lbmonitor_bind) do
     munge do |value|
       value.downcase == 'true'
     end
-
   end
 
   autorequire(:netscaler_servicegroup) do

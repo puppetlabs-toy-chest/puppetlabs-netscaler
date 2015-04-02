@@ -13,10 +13,10 @@ Puppet::Type.type(:netscaler_responderpolicylabel).provide(:rest, parent: Puppet
 
     responderpolicylabels.each do |responderpolicylabel|
       instances << new(
-        :ensure                 => :present,
-        :name                   => responderpolicylabel['labelname'],
-        :type                   => responderpolicylabel['policylabeltype'],
-        :comments               => responderpolicylabel['comment'],
+        :ensure   => :present,
+        :name     => responderpolicylabel['labelname'],
+        :type     => responderpolicylabel['policylabeltype'],
+        :comments => responderpolicylabel['comment'],
       )
     end
 
@@ -28,9 +28,9 @@ Puppet::Type.type(:netscaler_responderpolicylabel).provide(:rest, parent: Puppet
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :name                   => :labelname,
-      :type                   => :policylabeltype,
-      :comments               => :comment,
+      :name     => :labelname,
+      :type     => :policylabeltype,
+      :comments => :comment,
     }
   end
 

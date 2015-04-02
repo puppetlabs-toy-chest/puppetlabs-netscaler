@@ -15,5 +15,4 @@ Puppet::Type.newtype(:netscaler_sslkeyfile) do
   newproperty(:source) do
     desc "URL specifying the protocol, host, and path, including file name, to the key file to be imported."
   end
-
 end

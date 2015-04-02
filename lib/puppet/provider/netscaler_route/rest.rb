@@ -15,16 +15,16 @@ Puppet::Type.type(:netscaler_route).provide(:rest, parent: Puppet::Provider::Net
 
     routes.each do |route|
       instances << new(
-        :ensure     => :present,
-        :name       => "#{route['network']}/#{route['netmask']}:#{route['gateway']}",
-        :td         => route['td'],
-        :advertise  => route['advertise'],
-        :distance   => route['distance'],
-        :cost1      => route['cost1'],
-        :weight     => route['weight'],
-        :protocol   => route['protocol'],
-        :msr        => route['msr'],
-        :monitor    => route['monitor'],
+        :ensure    => :present,
+        :name      => "#{route['network']}/#{route['netmask']}:#{route['gateway']}",
+        :td        => route['td'],
+        :advertise => route['advertise'],
+        :distance  => route['distance'],
+        :cost1     => route['cost1'],
+        :weight    => route['weight'],
+        :protocol  => route['protocol'],
+        :msr       => route['msr'],
+        :monitor   => route['monitor'],
       )
     end
 

@@ -23,5 +23,4 @@ class Puppet::Util::NetworkDevice::Netscaler::Device
 
     return @facts.retrieve
   end
-
 end

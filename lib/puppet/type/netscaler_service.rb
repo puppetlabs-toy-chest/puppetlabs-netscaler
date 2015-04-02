@@ -57,10 +57,7 @@ Puppet::Type.newtype(:netscaler_service) do
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:state, :parent => Puppet::Property::NetscalerTruthy) do
@@ -135,10 +132,7 @@ Minimum value: 1"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:cacheable, :parent => Puppet::Property::NetscalerTruthy) do

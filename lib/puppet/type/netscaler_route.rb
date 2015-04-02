@@ -59,9 +59,7 @@ Possible values = OSPF, ISIS, RIP, BGP"
       end 
     end
 
-    munge do |value|
-      value.downcase
-    end
+    munge(&:downcase)
   end
 
   newproperty(:msr, :parent => Puppet::Property::NetscalerTruthy) do

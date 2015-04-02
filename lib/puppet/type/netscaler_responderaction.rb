@@ -26,10 +26,7 @@ Puppet::Type.newtype(:netscaler_responderaction) do
       end
     end
 
-    munge do |value|
-      value.downcase
-    end
-
+    munge(&:downcase)
   end
 
   newproperty(:expression) do

@@ -28,10 +28,7 @@ Puppet::Type.newtype(:netscaler_responderpolicylabel) do
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:comments) do

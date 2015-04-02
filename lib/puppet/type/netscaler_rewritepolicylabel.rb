@@ -45,10 +45,7 @@ Puppet::Type.newtype(:netscaler_rewritepolicylabel) do
       end
     end
 
-    munge do |value|
-      value.downcase
-    end
-
+    munge(&:downcase)
   end
 
   newproperty(:comments) do
