@@ -15,10 +15,10 @@ Puppet::Type.type(:netscaler_group).provide(:rest, parent: Puppet::Provider::Net
 
     groups.each do |group|
         instances << new(
-          :ensure                  => :present,
-          :name                    => group['groupname'],
-          :cli_prompt              => group['promptstring'],
-          :idle_time_out           => group['timeout'].to_s,
+          :ensure        => :present,
+          :name          => group['groupname'],
+          :cli_prompt    => group['promptstring'],
+          :idle_time_out => group['timeout'].to_s,
         )
     end
 
@@ -30,9 +30,9 @@ Puppet::Type.type(:netscaler_group).provide(:rest, parent: Puppet::Provider::Net
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :name                    => :groupname,
-      :cli_prompt              => :promptstring,
-      :idle_time_out           => :timeout,
+      :name          => :groupname,
+      :cli_prompt    => :promptstring,
+      :idle_time_out => :timeout,
     }
   end
 
