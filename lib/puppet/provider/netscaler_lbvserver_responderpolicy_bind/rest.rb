@@ -20,12 +20,12 @@ Puppet::Type.type(:netscaler_lbvserver_responderpolicy_bind).provide(:rest, pare
             policylabel = bind['labelname']
         end
         instances << new(
-          :ensure                 => :present,
-          :name                   => "#{bind['name']}/#{bind['policyname']}",
-          :priority               => bind['priority'],
-          :goto_expression        => bind['gotopriorityexpression'],
-          :invoke_policy_label    => policylabel,
-          :invoke_vserver_label   => vserverlabel,
+          :ensure               => :present,
+          :name                 => "#{bind['name']}/#{bind['policyname']}",
+          :priority             => bind['priority'],
+          :goto_expression      => bind['gotopriorityexpression'],
+          :invoke_policy_label  => policylabel,
+          :invoke_vserver_label => vserverlabel,
         )
       end
     end

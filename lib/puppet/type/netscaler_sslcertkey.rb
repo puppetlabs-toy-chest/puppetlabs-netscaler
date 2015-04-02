@@ -63,5 +63,4 @@ Puppet::Type.newtype(:netscaler_sslcertkey) do
   newproperty(:nodomaincheck, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Override the check for matching domain names during a certificate update operation.", "true", "false")
   end
-
 end

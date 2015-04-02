@@ -8,7 +8,6 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, parent: Puppet::Provider:
     return [] if cs_vservers.nil?
 
     cs_vservers.each do |cs_vserver|
-
       lbvserver_binds = Puppet::Provider::Netscaler.call("/config/csvserver_lbvserver_binding/#{cs_vserver['name']}") || []
       if !lbvserver_binds.empty?
         default_lbvserver = lbvserver_binds[0]['lbvserver']
@@ -184,5 +183,4 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, parent: Puppet::Provider:
     message = message.to_json
     message
   end
-
 end

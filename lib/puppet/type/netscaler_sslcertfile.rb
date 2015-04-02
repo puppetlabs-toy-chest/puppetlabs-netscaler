@@ -15,5 +15,4 @@ Puppet::Type.newtype(:netscaler_sslcertfile) do
   newproperty(:source) do
     desc "URL specifying the protocol, host, and path, including file name, to the certificate file to be imported."
   end
-
 end

@@ -15,5 +15,4 @@ Puppet::Type.newtype(:netscaler_sslocspresponder) do
   newproperty(:url) do
     desc "URL of the OCSP responder."
   end
-
 end

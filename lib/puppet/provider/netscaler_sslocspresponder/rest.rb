@@ -13,9 +13,9 @@ Puppet::Type.type(:netscaler_sslocspresponder).provide(:rest, parent: Puppet::Pr
 
     sslocspresponders.each do |sslocspresponder|
       instances << new(
-        :ensure           => :present,
-        :name             => sslocspresponder['name'],
-        :url              => sslocspresponder['url'],
+        :ensure => :present,
+        :name   => sslocspresponder['name'],
+        :url    => sslocspresponder['url'],
       )
     end
 

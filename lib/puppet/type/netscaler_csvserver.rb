@@ -20,7 +20,6 @@ Maximum value = 4094"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:service_type) do
@@ -32,20 +31,15 @@ Maximum value = 4094"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:ip_address) do
     desc "The new IP address of the virtual server."
-
   end
 
   newproperty(:ip_pattern) do
     desc "The IP Pattern of the virtual server."
-
   end
 
   newproperty(:range) do
@@ -57,7 +51,6 @@ Maximum value = 4094"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:port) do
@@ -67,27 +60,22 @@ Maximum value = 4094"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:state, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("The initial state, enabled or disabled, of the virtual server.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:state_update, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("To enable the state update for a CSW vserver", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:cacheable, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("The option to specify whether a virtual server used for content switching will route requests to the cache redirection virtual server before sending it to the configured servers.", 'YES', 'NO')
-
   end
 
   newproperty(:redirect_url) do
     desc "The redirect URL for content switching."
-
   end
 
   newproperty(:client_timeout) do
@@ -98,7 +86,6 @@ Maximum value = 4094"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:precedence) do
@@ -114,17 +101,13 @@ Maximum value = 4094"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:case_sensitive, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("The URL lookup case option on the content switching vserver.
   If case sensitivity of a content switching virtual server is set to 'ON', the URLs /a/1.html and /A/1.HTML are treated differently and may have different targets (set by content switching policies).
   If case sensitivity is set to 'OFF', the URLs /a/1.html and /A/1.HTML are treated the same, and will be switched to the same target.", 'ON', 'OFF')
-
   end
 
   newproperty(:spillover_method) do
@@ -136,15 +119,11 @@ Maximum value = 4094"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:spillover_persistence, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("The state of the spillover persistence.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:spillover_threshold) do
@@ -155,7 +134,6 @@ Maximum value = 4094"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:spillover_backup_action) do
@@ -168,30 +146,23 @@ Valid options: DROP, ACCEPT, REDIRECT"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:redirect_port_rewrite, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("SSL redirect port rewrite.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:down_state_flush, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Perform delayed clean up of connections on this vserver.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:backup_virtual_server) do
     desc "The backup virtual server for content switching."
-
   end
 
   newproperty(:disable_primary_on_down, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("When this argument is enabled, traffic will continue reaching backup vservers even after primary comes UP from DOWN state.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:virtual_server_ip_port_insertion) do
@@ -206,37 +177,29 @@ Valid options: DROP, ACCEPT, REDIRECT"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:vip_header_name) do
     desc "Name of virtual server IP and port header, for use with the VServer IP Port Insertion parameter.
 Minimum length = 1"
-
   end
 
   newproperty(:rtsp_natting, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Use this parameter to enable natting for RTSP data connection.", 'ON', 'OFF')
-
   end
 
   newproperty(:authentication_fqdn) do
     desc "FQDN of authentication vserver"
-
   end
 
   newproperty(:authentication, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("This option toggles on or off the application of authentication of incoming users to the vserver.", 'ON', 'OFF')
-
   end
 
   newproperty(:listen_policy) do
     desc "Use this parameter to specify the listen policy for CS Vserver.
   The string can be either an existing expression name (configured using add policy expression command) or else it can be an in-line expression with a maximum of 1499 characters."
-
   end
 
   newproperty(:listen_priority) do
@@ -247,53 +210,43 @@ Minimum length = 1"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:authentication_401, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("This option toggles on or off the HTTP 401 response based authentication.", 'ON', 'OFF')
-
   end
 
   newproperty(:authentication_virtual_server_name) do
     desc "Name of authentication vserver"
-
   end
 
   newproperty(:push, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Process traffic on bound Push vserver.", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:push_virtual_server_name) do
     desc "The lb vserver of type PUSH/SSL_PUSH to which server pushes the updates received on the client facing non-push lb vserver."
-
   end
 
   newproperty(:push_label_expression) do
     desc "Use this parameter to specify the expression to extract the label in response from server.
   The string can be either a named expression (configured using add policy expression command) or else it can be an in-line expression with a maximum of 63 characters."
-
   end
 
   newproperty(:push_multiple_clients, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Specify if multiple web 2.0 connections from the same client can connect to this vserver and expect updates.", 'YES', 'NO')
-
   end
 
   newproperty(:tcp_profile_name) do
     desc "The name of the TCP profile."
-
   end
 
   newproperty(:http_profile_name) do
     desc "Name of the HTTP profile."
-
   end
 
   newproperty(:db_profile_name) do
     desc "Name of the DB profile."
-
   end
 
   newproperty(:oracle_server_version) do
@@ -305,15 +258,11 @@ Minimum length = 1"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:comment) do
     desc "Comments associated with this virtual server."
-
   end
 
   newproperty(:mssql_server_version) do
@@ -325,15 +274,11 @@ Minimum length = 1"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:layer2_parameters, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Use L2 Parameters to identify a connection", 'ON', 'OFF')
-
   end
 
   newproperty(:mysql_protocol_version) do
@@ -342,12 +287,10 @@ Minimum length = 1"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:mysql_server_version) do
     desc "The server version string returned by the mysql vserver."
-
   end
 
   newproperty(:mysql_character_set) do
@@ -356,7 +299,6 @@ Minimum length = 1"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:mysql_server_capabilities) do
@@ -365,17 +307,14 @@ Minimum length = 1"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:appflow_logging, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Enable logging appflow flow information", 'ENABLED', 'DISABLED')
-
   end
 
   newproperty(:net_profile_name) do
     desc "The name of the network profile."
-
   end
 
   newproperty(:icmp_virtual_server_response) do
@@ -387,15 +326,11 @@ Minimum length = 1"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:ip_mask) do
     desc "The IP Mask of the virtual server IP Pattern"
-
   end
 
   newproperty(:spillover_persistence_timeout) do
@@ -407,7 +342,6 @@ Minimum length = 1"
     munge do |value|
       Integer(value)
     end
-
   end
 
   newproperty(:rhi_state) do
@@ -419,20 +353,15 @@ Minimum length = 1"
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:authentication_profile_name) do
     desc "Name of the authentication profile to be used when authentication is turned on."
-
   end
 
   newproperty(:default_lbvserver) do
     desc "The virtual server name to which content will be switched."
-
   end
 
   def generate
@@ -459,5 +388,4 @@ Minimum length = 1"
   autorequire(:netscaler_lbvserver) do
     self[:default_lbvserver]
   end
-
 end

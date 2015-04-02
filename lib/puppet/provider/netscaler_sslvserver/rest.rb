@@ -17,13 +17,13 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, parent: Puppet::Provider
 
       binds.each do |bind|
         instances << new(
-          :ensure       => :present,
-          :name         => "#{bind['vservername']}/#{bind['certkeyname']}",
-          :crlcheck     => bind['crlcheck'],
-          :ca           => bind['ca'],
-          :snicert      => bind['snicert'],
-          :skipcaname   => bind['skipcaname'],
-          :ocspcheck    => bind['ocspcheck'],
+          :ensure     => :present,
+          :name       => "#{bind['vservername']}/#{bind['certkeyname']}",
+          :crlcheck   => bind['crlcheck'],
+          :ca         => bind['ca'],
+          :snicert    => bind['snicert'],
+          :skipcaname => bind['skipcaname'],
+          :ocspcheck  => bind['ocspcheck'],
         )
       end
     end

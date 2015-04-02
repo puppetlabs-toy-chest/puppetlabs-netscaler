@@ -68,10 +68,7 @@ Possible values: PING, TCP, HTTP, TCP-ECV, HTTP-ECV, UDP-ECV, DNS, FTP, LDNS-PIN
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:interval) do

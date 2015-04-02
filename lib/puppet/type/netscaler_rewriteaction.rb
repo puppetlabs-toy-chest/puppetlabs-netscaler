@@ -83,25 +83,19 @@ Puppet::Type.newtype(:netscaler_rewriteaction) do
       end
     end
 
-    munge do |value|
-      value.downcase
-    end
-
+    munge(&:downcase)
   end
 
   newproperty(:target_expression) do
     desc "Default syntax expression that specifies which part of the request or response to rewrite."
-
   end
 
   newproperty(:content_expression) do
      desc "Default syntax expression that specifies the content to insert into the request or response at the specified location, or that replaces the specified string. Applicable for the following types: INSERT_HTTP_HEADER, INSERT_SIP_HEADER, REPLACE, INSERT_BEFORE, INSERT_AFTER, REPLACE_ALL, INSERT_BEFORE_ALL, INSERT_AFTER_ALL."
-
   end
 
   newproperty(:pattern) do
     desc "Pattern to be used for INSERT_BEFORE_ALL, INSERT_AFTER_ALL, REPLACE_ALL, DELETE_ALL action types."
-
   end
 
   newproperty(:search) do
@@ -119,12 +113,10 @@ Puppet::Type.newtype(:netscaler_rewriteaction) do
   3) DELETE_ALL
   4) INSERT_BEFORE_ALL.
   search is a super set of pattern. It is advised to use search over pattern."
-
   end
 
   newproperty(:bypass_safety_check, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Bypass the safety check and allow unsafe expressions.", 'YES', 'NO')
-
   end
 
   newproperty(:refine_search) do
@@ -137,12 +129,9 @@ Puppet::Type.newtype(:netscaler_rewriteaction) do
   This can accelerate search using regular expression. For example if we need to find all the urls from www.zippo.com in a response body. Rather than writing a regular expression to search this url pattern we can search for 'zippo' pattern first and then extend the search space by some bytes and finally check for prefix 'www.zippo.com'. The rewrite command might look like:
         add rewrite action act1 delete_all 'http.res.body(10000)' -pattern \"zippo\" -refineSearch \"extend(10,10).regex_select(re%<www.zippo.com[^>].*>%)\"
   Maximum length of the input expression is 8191. Maximum size of string that can be used inside the expression is 1499."
-
   end
 
   newproperty(:comments) do
     desc "Comments associated with this rewrite action."
-
   end
-
 end

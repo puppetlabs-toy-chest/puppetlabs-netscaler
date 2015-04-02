@@ -44,5 +44,4 @@ Puppet::Type.newtype(:netscaler_cspolicylabel_cspolicy_bind) do
   autorequire(:netscaler_lbvserver) do
     self[:target_lbvserver]
   end
-
 end

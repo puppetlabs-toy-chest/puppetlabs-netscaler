@@ -29,7 +29,6 @@ Puppet::Type.newtype(:netscaler_csvserver_rewritepolicy_bind) do
       end
       value
     end
-
   end
 
   newproperty(:priority) do

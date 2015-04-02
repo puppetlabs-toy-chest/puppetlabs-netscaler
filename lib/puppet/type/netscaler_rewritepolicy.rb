@@ -12,12 +12,10 @@ Puppet::Type.newtype(:netscaler_rewritepolicy) do
 
   newproperty(:expression) do
     desc "Expression to be used by rewrite policy. It has to be a boolean PI rule expression."
-
   end
 
   newproperty(:action) do
     desc "Rewrite action to be used by the policy."
-
   end
 
   newproperty(:undefined_result_action) do
@@ -29,20 +27,15 @@ Puppet::Type.newtype(:netscaler_rewritepolicy) do
       end
     end
 
-    munge do |value|
-      value.upcase
-    end
-
+    munge(&:upcase)
   end
 
   newproperty(:comments) do
     desc "Comments associated with this rewrite policy."
-
   end
 
   newproperty(:log_action) do
     desc "The log action associated with the rewrite policy"
-
   end
   
 end

@@ -13,10 +13,10 @@ Puppet::Type.type(:netscaler_rewritepolicylabel).provide(:rest, parent: Puppet::
 
     rewritepolicylabels.each do |rewritepolicylabel|
       instances << new(
-        :ensure                 => :present,
-        :name                   => rewritepolicylabel['labelname'],
-        :transform_name         => rewritepolicylabel['transform'],
-        :comments               => rewritepolicylabel['comment'],
+        :ensure         => :present,
+        :name           => rewritepolicylabel['labelname'],
+        :transform_name => rewritepolicylabel['transform'],
+        :comments       => rewritepolicylabel['comment'],
       )
     end
 
@@ -28,9 +28,9 @@ Puppet::Type.type(:netscaler_rewritepolicylabel).provide(:rest, parent: Puppet::
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :name                   => :labelname,
-      :transform_name         => :transform,
-      :comments               => :comment,
+      :name           => :labelname,
+      :transform_name => :transform,
+      :comments       => :comment,
     }
   end
 

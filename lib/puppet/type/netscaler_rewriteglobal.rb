@@ -77,5 +77,4 @@ Puppet::Type.newtype(:netscaler_rewriteglobal) do
       fail "When invoking a vserver, a connection type must be specified, and vice versa."
     end
   end
-
 end

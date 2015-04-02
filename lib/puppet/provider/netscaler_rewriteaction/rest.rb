@@ -13,16 +13,16 @@ Puppet::Type.type(:netscaler_rewriteaction).provide(:rest, parent: Puppet::Provi
 
     rewriteactions.each do |rewriteaction|
     instances << new(
-        :ensure              => :present,
-        :name                => rewriteaction['name'],
-        :type                => rewriteaction['type'],
-        :target_expression   => rewriteaction['target'],
-        :content_expression  => rewriteaction['stringbuilderexpr'],
-        :pattern             => rewriteaction['pattern'],
-        :search              => rewriteaction['search'],
-        :bypass_safety_check => rewriteaction['bypasssafetycheck'],
-        :refine_search       => rewriteaction['refinesearch'],
-        :comments            => rewriteaction['comment'],
+      :ensure              => :present,
+      :name                => rewriteaction['name'],
+      :type                => rewriteaction['type'],
+      :target_expression   => rewriteaction['target'],
+      :content_expression  => rewriteaction['stringbuilderexpr'],
+      :pattern             => rewriteaction['pattern'],
+      :search              => rewriteaction['search'],
+      :bypass_safety_check => rewriteaction['bypasssafetycheck'],
+      :refine_search       => rewriteaction['refinesearch'],
+      :comments            => rewriteaction['comment'],
     )
 end
 

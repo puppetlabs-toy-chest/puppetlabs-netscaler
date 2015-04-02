@@ -14,9 +14,9 @@ Puppet::Type.type(:netscaler_sslkeyfile).provide(:rest, parent: Puppet::Provider
 
     sslkeyfiles.each do |sslkeyfile|
       instances << new(
-        :ensure   => :present,
-        :name     => sslkeyfile['name'],
-        :source   => sslkeyfile['src'],
+        :ensure => :present,
+        :name   => sslkeyfile['name'],
+        :source => sslkeyfile['src'],
       )
     end
 

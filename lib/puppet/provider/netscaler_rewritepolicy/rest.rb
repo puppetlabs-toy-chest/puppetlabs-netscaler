@@ -13,13 +13,13 @@ Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, parent: Puppet::Provi
 
     rewritepolicies.each do |rewritepolicy|
     instances << new(
-        :ensure                  => :present,
-        :name                    => rewritepolicy['name'],
-        :expression              => rewritepolicy['rule'],
-        :action                  => rewritepolicy['action'],
-        :undefined_result_action => rewritepolicy['undefaction'],
-        :comments                => rewritepolicy['comment'],
-        :log_action              => rewritepolicy['logaction'],
+      :ensure                  => :present,
+      :name                    => rewritepolicy['name'],
+      :expression              => rewritepolicy['rule'],
+      :action                  => rewritepolicy['action'],
+      :undefined_result_action => rewritepolicy['undefaction'],
+      :comments                => rewritepolicy['comment'],
+      :log_action              => rewritepolicy['logaction'],
     )
     end
 

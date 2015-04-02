@@ -19,7 +19,7 @@ Puppet::Type.type(:netscaler_feature).provide(:rest, parent: Puppet::Provider::N
 
       if (name != nil)  
         instances << new(
-          :name => name,
+          :name   => name,
           :ensure => feature[1] ? :present : :absent,
         )
       end

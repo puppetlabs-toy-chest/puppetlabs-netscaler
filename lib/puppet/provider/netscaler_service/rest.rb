@@ -54,7 +54,7 @@ Puppet::Type.type(:netscaler_service).provide(:rest, parent: Puppet::Provider::N
         #service['serverid'] (maybe unset?)
         #service['tcpprofilename']
         #service['httpprofilename']
-        :net_profile_name => service['netprofile'],
+        :net_profile_name    => service['netprofile'],
         #service['processlocal']
         ## Unknown set attributes
         #service['weight']
