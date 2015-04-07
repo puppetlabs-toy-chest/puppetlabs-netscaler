@@ -9,5 +9,4 @@ Puppet::Type.newtype(:netscaler_csvserver_lbvserver_binding) do
   newparam(:name, :namevar => true) do
     desc "csvserver_name/lbvserver_name"
   end
-
 end

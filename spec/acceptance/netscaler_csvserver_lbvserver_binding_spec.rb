@@ -11,7 +11,6 @@ netscaler_csvserver { '2_17_csvserver_test1':
   port              => '8080',
   default_lbvserver => '2_17_lbvserver_test1',
 }
-
 netscaler_lbvserver { '2_17_lbvserver_test1':
   ensure        => 'present',
   service_type  => 'HTTP',
@@ -22,7 +21,7 @@ netscaler_lbvserver { '2_17_lbvserver_test1':
 netscaler_csvserver_lbvserver_binding { '2_17_csvserver_test1/2_17_lbvserver_test1':
   ensure         => 'present',
 }
-EOS
+    EOS
     make_site_pp(pp)
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)

@@ -14,8 +14,8 @@ Puppet::Type.type(:netscaler_csvserver_lbvserver_binding).provide(:rest, parent:
       binds = Puppet::Provider::Netscaler.call("/config/csvserver_lbvserver_binding/#{csvserver['name']}") || []
       binds.each do |bind|
         instances << new(
-          :ensure           => :present,
-          :name             => "#{bind['name']}/#{bind['lbvserver']}",
+          :ensure => :present,
+          :name   => "#{bind['name']}/#{bind['lbvserver']}",
         )
       end
     end
