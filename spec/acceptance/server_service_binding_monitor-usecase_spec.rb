@@ -15,7 +15,7 @@ netscaler_service { 'service-http-1': # 7 clicks
   port        => '80',
   protocol    => 'HTTP',
 }
-netscaler_service_lbmonitor_bind { 'service-http-1/http': # 10 clicks
+netscaler_service_lbmonitor_binding { 'service-http-1/http': # 10 clicks
   ensure => present,
 }
 
@@ -30,7 +30,7 @@ netscaler_service { 'service-http-2': # 7 clicks
   port        => '80',
   protocol    => 'HTTP',
 }
-netscaler_service_lbmonitor_bind { 'service-http-2/http': # 10 clicks
+netscaler_service_lbmonitor_binding { 'service-http-2/http': # 10 clicks
   ensure => present,
 }
 
@@ -41,10 +41,10 @@ netscaler_lbvserver { 'vserver-lb-1': # 6 clicks
   port          => '80',
   service_type  => 'HTTP',
 }
-netscaler_lbvserver_service_bind { 'vserver-lb-1/service-http-1': # 5 clicks
+netscaler_lbvserver_service_binding { 'vserver-lb-1/service-http-1': # 5 clicks
   ensure => 'present',
 }
-netscaler_lbvserver_service_bind { 'vserver-lb-1/service-http-2': # 5 clicks
+netscaler_lbvserver_service_binding { 'vserver-lb-1/service-http-2': # 5 clicks
   ensure => 'present',
 }
 
