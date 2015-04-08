@@ -3,7 +3,7 @@ require 'puppet/property/netscaler_traffic_domain'
 require 'puppet/property/netscaler_truthy'
 
 Puppet::Type.newtype(:netscaler_route) do
-  @doc = 'Configuration for route resource.'
+  @doc = 'Configuration for route resource. It is worth noting, even though the api documentation allows you to update a route, the ui or api will not let you'
 
   apply_to_device
   ensurable

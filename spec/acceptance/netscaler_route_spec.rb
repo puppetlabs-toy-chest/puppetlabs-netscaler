@@ -1,5 +1,6 @@
 require 'spec_helper_acceptance'
 
+#It is worth noting, even though the api documentation allows you to update a route, the ui or api will not let you
 describe 'route' do
   it 'makes a route' do
     pp=<<-EOS
