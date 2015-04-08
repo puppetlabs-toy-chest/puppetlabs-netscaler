@@ -1,5 +1,5 @@
 require 'spec_helper_acceptance'
-
+#this is a special case, where the binding is created when the csvserver is created. the binding to the lbvserver
 describe 'csvserver-lbvserver-binding' do
   it 'makes a csvserver-lbvserver-binding' do
     pp=<<-EOS

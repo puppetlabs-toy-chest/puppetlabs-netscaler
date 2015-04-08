@@ -40,7 +40,16 @@ Puppet::Type.type(:netscaler_route).provide(:rest, parent: Puppet::Provider::Net
   end
 
   def immutable_properties
+    #It is worth noting, even though the api documentation allows you to update a route, the ui or api will not let you
     [
+      :td,
+      :advertise,
+      :distance,
+      :cost1,
+      :weight,
+      :protocol,
+      :msr,
+      :monitor,
     ]
   end
 

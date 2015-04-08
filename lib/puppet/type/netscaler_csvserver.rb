@@ -361,7 +361,7 @@ Minimum length = 1"
   end
 
   newproperty(:default_lbvserver) do
-    desc "The virtual server name to which content will be switched."
+    desc "The virtual server name to which content will be switched. This is a special case, where the binding to the lbvserver is created when the csvserver is created"
   end
 
   def generate
