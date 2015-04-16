@@ -3,7 +3,7 @@ require 'puppet/property/netscaler_traffic_domain'
 require 'puppet/property/netscaler_truthy'
 
 Puppet::Type.newtype(:netscaler_sslcertkey) do
-  @doc = 'Configuration for Imported Certfile resource.'
+  @doc = 'Configuration for Imported Certfile resource'
 
   apply_to_device
   ensurable
@@ -13,11 +13,11 @@ Puppet::Type.newtype(:netscaler_sslcertkey) do
   #ensure: change from absent to present failed: Could not set 'present' on ensure: REST failure: HTTP status code 400 detected.  Body of failure is: { "errorcode": 1075, "message": "Invalid name; names must begin with an alphanumeric character or underscore and must contain only alphanumerics, '_', '#', '.', ' ', ':', '@', '=' or '-' [name, hunner's website]", "severity": "ERROR" } at 55:/etc/puppetlabs/puppet/environments/produc
 
   newproperty(:certificate_filename) do
-    desc "Name of and, optionally, path to the X509 certificate file that is used to form the certificate-key pair."
+    desc "Name of and, optionally, path to the X509 certificate file that is used to form the certificate-key pair. If you use the netscaler_file resource you will need a full path eg /nsconfig/server.cert. This may throw an error the first time you apply the manifest"
   end
 
   newproperty(:key_filename) do
-    desc "Name of and, optionally, path to the private-key file that is used to form the certificate-key pair."
+    desc "Name of and, optionally, path to the private-key file that is used to form the certificate-key pair. If you use the netscaler_file resource you will need a full path eg /nsconfig/server.key. This may throw an error the first time you apply the manifest"
   end
 
   newproperty(:password, :parent => Puppet::Property::NetscalerTruthy) do
