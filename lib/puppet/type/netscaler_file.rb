@@ -3,7 +3,7 @@ require 'puppet/property/netscaler_traffic_domain'
 require 'puppet/property/netscaler_truthy'
 
 Puppet::Type.newtype(:netscaler_file) do
-  @doc = 'Allows the uploading of a file to the Netscaler. only accepts names of *.cert *.key and *.txt'
+  @doc = 'Allows the uploading of a file to the Netscaler. only accepts names of *.cert *.key and *.txt. Currently this file is uploaded to /nsconfig/'
 
   apply_to_device
   ensurable

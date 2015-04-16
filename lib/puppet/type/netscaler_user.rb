@@ -13,7 +13,7 @@ Puppet::Type.newtype(:netscaler_user) do
   #ensure: change from absent to present failed: Could not set 'present' on ensure: REST failure: HTTP status code 400 detected.  Body of failure is: { "errorcode": 1075, "message": "Invalid name; names must begin with an alphanumeric character or underscore and must contain only alphanumerics, '_', '#', '.', ' ', ':', '@', '=' or '-' [name, hunner's website]", "severity": "ERROR" } at 55:/etc/puppetlabs/puppet/environments/produc
 
   newparam(:password) do
-    desc "Password with which the user logs on. Required for any user account that does not exist on an external authentication server. If you are not using an external authentication server, all user accounts must have a password. If you are using an external authentication server, you must provide a password for local user accounts that do not exist on the authentication server."
+    desc "Password with which the user logs on. Required for any user account that does not exist on an external authentication server. This is only set on creation, this is due to the password being returned as a hash."
   end
 
   newproperty(:external_authentication, :parent => Puppet::Property::NetscalerTruthy) do
