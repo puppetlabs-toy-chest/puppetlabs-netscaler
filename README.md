@@ -37,9 +37,9 @@ This means you must create a device.conf file in the Puppet conf directory (eith
 
 **TODO:Check this**
 ~~~
-[bigip]
+[certname]
 type netscaler
-url https://<USERNAME>:<PASSWORD>@<IP ADDRESS OF BIGIP>/
+url https://<USERNAME>:<PASSWORD>@<netscaler1.example.com>/
 ~~~
 
 In the above example, <USERNAME> and <PASSWORD> refer to Puppet's login for the device.
@@ -65,56 +65,62 @@ In order to successfully set up your web servers, you must know the following in
 
 In your site.pp file, enter the below code:
 
-**TODO:Update for NetScaler**
+**TODO:Update**
+
 ~~~
-node bigip {
-f5_node { '/Common/WWW_Server_1':
-  ensure                   => 'present',
-  address                  => '172.16.226.10',
-  description              => 'WWW Server 1',
-  availability_requirement => 'all',
-  health_monitors          => ['/Common/icmp'],
-}->
-f5_node { '/Common/WWW_Server_2':
-  ensure                   => 'present',
-  address                  => '172.16.226.11',
-  description              => 'WWW Server 2',
-  availability_requirement => 'all',
-  health_monitors          => ['/Common/icmp'],
-}->
-f5_pool { '/Common/puppet_pool':
-  ensure                    => 'present',
-  members                   => [{ name => '/Common/WWW_Server_1', port => '80'}, { name => '/Common/WWW_Server_1', port => '80'}],
-  availability_requirement  => 'all',
-  health_monitors           => ['/Common/http_head_f5'],
-}->
-f5_virtualserver { '/Common/puppet_vs':
-  ensure                    => 'present',
-  provider                  => 'standard',
-  default_pool              => '/Common/puppet_pool',
-  destination_address       => '192.168.80.100',
-  destination_mask          => '255.255.255.255',
-  http_profile              => '/Common/http',
-  service_port              => '80',
-  protocol                  => 'tcp',
-  source                    => '0.0.0.0/0',
-  vlan_and_tunnel_traffic   => {'enabled' => ['/Common/Client']},
+node 'certname' {
+netscaler_server { '1_10_server1':
+  ensure  => present,
+  address => '1.10.1.1',
+  }
+netscaler_service { '1_10_service1':
+  ensure      => 'present',
+  server_name => '1_10_server1',
+  port        => '80',
+  protocol    => 'HTTP',
+  comments    => 'This is a comment'
+}
+netscaler_lbvserver { '1_10_lbvserver1':
+  ensure       => 'present',
+  service_type => 'HTTP',
+  ip_address   => '1.10.1.2',
+  port         => '8080',
+  state        => true,
+}
+netscaler_lbvserver_service_binding { '1_10_lbvserver1/1_10_service1':
+  ensure => 'present',
+  weight => '100',
+}
+netscaler_rewritepolicy { '2_4_rewritepolicy_test1':
+  ensure                  => 'present',
+  action                  => 'NOREWRITE',
+  comments                => 'comment',
+  expression              => 'HTTP.REQ.URL.SUFFIX.EQ("")',
+  undefined_result_action => 'DROP',
+}
+netscaler_csvserver { '2_4_csvserver_test1':
+  ensure        => 'present',
+  service_type  => 'HTTP',
+  state         => true,
+  ip_address    => '2.4.1.1',
+  port          => '8080',
+}
+netscaler_csvserver_rewritepolicy_binding { '2_4_csvserver_test1/2_4_rewritepolicy_test1':
+  ensure               => present,
+  priority             => 1,
+  invoke_vserver_label => '2_4_csvserver_test1',
+  choose_type          => 'Request',
 }
 }
 ~~~
 
-**The order of your resources is extremely important.** You must first establish your two web servers. In the code above, they are **TODO:Update this**`f5_node { '/Common/WWW_Server_1'...` and `f5_node { '/Common/WWW_Server_2'...`. Each have the minimum number of parameters possible, and are set up with a health monitor that will ping each server directly to make sure it is still responsive. 
-
-Then you establish the pool of servers. The pool is also set up with the minimum number of parameters. The health monitor for the pool will run an https request to see that a webpage is returned.
-
-The virtual server brings your setup together. Your virtual server **must** have a `provider` assigned. 
 
 ####Step Two: Run your Puppet master
 
 Run the following to have the Puppet master apply your classifications and configure the NetScaler device: 
 
 ~~~
-$ FACTER_url=https:/<USERNAME>:<PASSWORD>@<IP ADDRESS OF BIGIP> puppet device -v
+$ FACTER_url=https://<USERNAME>:<PASSWORD>@<NETSCALER1.EXAMPLE.COM> puppet device -v
 ~~~
 
 If you do not run this command, clients will not be able to make requests to the web servers.
@@ -131,15 +137,8 @@ To begin with you can simply call the types from the proxy system.
 
 **TODO:Update**
 ```
-$ FACTER_url=https://admin:admin@f5.hostname/ puppet resource f5_node
+$ FACTER_url=https://admin:admin@netscaler1.example.com/ puppet resource netscaler_lbvserver
 ```
-
-You can change a property by hand this way, too.
-
-**TODO:Update**
-```
-$ FACTER_url=https://admin:admin@f5.hostname/ puppet resource f5_user node ensure=absent
-``` 
 
 ####Role and Profiles
 The [above example](#set-up-two-loadbalanced-web-servers) is for setting up a simple configuration of two web servers. However, for anything more complicated, you will want to use the roles and profiles pattern when classifying nodes or devices for NetScaler.
