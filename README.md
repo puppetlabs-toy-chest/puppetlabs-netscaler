@@ -151,9 +151,12 @@ If you have a '/Common/http_monitor (which is available by default), then when y
 ###Public Types
 
 * [`netscaler_lbmonitor`](#type-netscaler_monitor)
+* [`netscaler_lbvserver`](#type-netscaler_lbvserver)
+* [`netscaler_lbvserver_service_bind`](#type-netscaler_lbvserver_service_bind)
 * [`netscaler_server`](#type-netscaler_server)
 * [`netscaler_service`](#type-netscaler_service)
 * [`netscaler_service_lbmonitor-bind`](#type-netscaler_service_lbmonitor-bind)
+
 
 ###Type: netscaler_lbmonitor
  
@@ -861,7 +864,7 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', '
 #####`use_source_ip`
 Uses the client's IP address as the source IP address when initiating a connection to the server. When creating a service, if you do not set this parameter, the service inherits the global Use Source IP setting (available in the enable ns mode and disable ns mode CLI commands, or in the System > Settings > Configure modes > Configure Modes dialog box). However, you can override this setting after you create the service.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
 
 ###Type: netscaler_service_lbmonitor_bind
  
@@ -879,12 +882,12 @@ Valid values are `present` or `absent`.
 #####`name`
 Specifies the name for the monitor-service binding.
 
-Valid options: Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters
+Valid options: Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
 
 #####`passive`
 Sets the monitor as passive. A passive monitor does not remove service from LB decision when the threshold is breached.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
 
 #####`state`
 Determines whether the bound monitor is enabled or disabled.
@@ -894,4 +897,35 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', '
 #####`weight`
 Specifies the weight to assign to the monitor-service binding. When a monitor is UP, the weight assigned to its binding with the service determines how much the monitor contributes toward keeping the health of the service above the value configured for the [`monitor_threshold`](#monitor_threshold) parameter.
 
-Valid options /^\d+$/ ; minimum = 1 and maximum = 100
+Valid options /^\d+$/ ; minimum = 1 and maximum = 100.
+
+###netscaler_lbvserver_service_bind
+
+Manages a binding between a loadbalancing vserver and a service.
+
+####Parameters
+
+All parameters, except where otherwise noted, are optional. Their default values are determined by your particular NetScaler setup.
+
+#####`ensure`
+Determines whether the lbvserver-service binding is present or absent.
+
+Valid values are `present` or `absent`.
+
+#####`name`
+Specifies the name for the lbvserver-service binding.
+
+TODO lbvserver_name/service_name
+
+#####`provider`
+
+The specific backend to use for this `netscaler_lbvserver_service_bind` resource. You will seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. 
+
+Available providers are:
+
+* `rest`
+
+#####`weight`
+Specifies the weight to assign to the specified service.
+
+Valid options /^\d+$/ ; minimum = 1 and maximum = 100.
