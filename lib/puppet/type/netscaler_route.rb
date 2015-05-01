@@ -40,7 +40,7 @@ Maximum value = 65535"
   end
 
   newproperty(:advertise, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Advertise this route. Possible values = DISABLED, ENABLED", "DISABLED", "ENABLED")
+    truthy_property("Advertise this route. Possible values = DISABLED, ENABLED", "ENABLED", "DISABLED")
   end
 
   newproperty(:protocol) do
@@ -63,7 +63,7 @@ Possible values = OSPF, ISIS, RIP, BGP"
   end
 
   newproperty(:msr, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Monitor this route using a monitor of type ARP or PING. Possible values = DISABLED, ENABLED", "DISABLED", "ENABLED")
+    truthy_property("Monitor this route using a monitor of type ARP or PING. Possible values = DISABLED, ENABLED", "ENABLED", "DISABLED")
   end
 
   newproperty(:monitor) do
