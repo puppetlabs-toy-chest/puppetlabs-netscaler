@@ -6,6 +6,12 @@ describe 'feature' do
 netscaler_feature { 'Responder':
   ensure      => 'present',
 }
+netscaler_feature { 'SSL Offloading':
+  ensure      => 'present',
+}
+netscaler_feature { 'SSL VPN':
+  ensure      => 'present',
+}
     EOS
     make_site_pp(pp)
     run_device(:allow_changes => true)
@@ -16,6 +22,12 @@ netscaler_feature { 'Responder':
     pp=<<-EOS
 netscaler_feature { 'Responder':
   ensure      => 'absent',
+}
+netscaler_feature { 'SSL Offloading':
+  ensure      => 'present',
+}
+netscaler_feature { 'SSL VPN':
+  ensure      => 'present',
 }
     EOS
     make_site_pp(pp)

@@ -46,7 +46,7 @@ Puppet::Type.newtype(:netscaler_feature) do
   
   newparam(:name, :namevar => true) do
     desc 'Feature name'
-    
+
     validate do |value|
       if ! Puppet::Type::Netscaler_feature.rest_name_map.values.any?{ |s| s.casecmp(value) == 0 }
         fail ArgumentError, "Valid options: " + Puppet::Type::Netscaler_feature.rest_name_map.values.to_s
@@ -55,8 +55,9 @@ Puppet::Type.newtype(:netscaler_feature) do
   end
   
   def self.title_patterns
+    key_pattern =  self.rest_name_map.keys.join('|')
     [ 
-      [ Regexp.new( '(' + self.rest_name_map.keys.join('|') + ')', true ), [ [ :name, Proc.new { |value|  self.rest_name_map[value.downcase] } ] ] ] ,
+      [ /^(#{key_pattern})$/i, [ [ :name, Proc.new { |value|  self.rest_name_map[value.downcase] } ] ] ] ,
       [ /(.*)/m, [ [ :name ] ] ]
     ]
   end
