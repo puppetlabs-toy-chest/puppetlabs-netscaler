@@ -101,5 +101,4 @@ netscaler_nsip { '3.1.2.1':
     run_device(:allow_changes => true)
     run_device(:allow_changes => false)
   end
-
 end
