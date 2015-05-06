@@ -12,6 +12,9 @@ netscaler_feature { 'SSL Offloading':
 netscaler_feature { 'SSL VPN':
   ensure      => 'present',
 }
+netscaler_feature { 'Content Switching':
+  ensure      => 'present',
+}
     EOS
     make_site_pp(pp)
     run_device(:allow_changes => true)
@@ -24,10 +27,13 @@ netscaler_feature { 'Responder':
   ensure      => 'absent',
 }
 netscaler_feature { 'SSL Offloading':
-  ensure      => 'present',
+  ensure      => 'absent',
 }
 netscaler_feature { 'SSL VPN':
-  ensure      => 'present',
+  ensure      => 'absent',
+}
+netscaler_feature { 'Content Switching':
+  ensure      => 'absent',
 }
     EOS
     make_site_pp(pp)
