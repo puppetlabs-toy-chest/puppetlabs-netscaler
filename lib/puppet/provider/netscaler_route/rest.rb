@@ -18,7 +18,7 @@ Puppet::Type.type(:netscaler_route).provide(:rest, parent: Puppet::Provider::Net
         :ensure    => :present,
         :name      => "#{route['network']}/#{route['netmask']}:#{route['gateway']}",
         :td        => route['td'],
-        :advertise => route['advertise'],
+        :advertise => route['advertise'] == nil ? 'DISABLED' : 'ENABLED',
         :distance  => route['distance'],
         :cost1     => route['cost1'],
         :weight    => route['weight'],
@@ -27,7 +27,6 @@ Puppet::Type.type(:netscaler_route).provide(:rest, parent: Puppet::Provider::Net
         :monitor   => route['monitor'],
       )
     end
-
     instances
   end
 
@@ -40,16 +39,7 @@ Puppet::Type.type(:netscaler_route).provide(:rest, parent: Puppet::Provider::Net
   end
 
   def immutable_properties
-    #It is worth noting, even though the api documentation allows you to update a route, the ui or api will not let you
     [
-      :td,
-      :advertise,
-      :distance,
-      :cost1,
-      :weight,
-      :protocol,
-      :msr,
-      :monitor,
     ]
   end
 
