@@ -43,7 +43,7 @@ Maximum value = 65535"
     truthy_property("Advertise this route. Possible values = DISABLED, ENABLED", "ENABLED", "DISABLED")
   end
 
-  newproperty(:protocol) do
+  newproperty(:protocol, :array_matching => :all) do
     desc "Routing protocol used for advertising this route.
 Default value: ADV_ROUTE_FLAGS
 Possible values = OSPF, ISIS, RIP, BGP"
@@ -59,7 +59,7 @@ Possible values = OSPF, ISIS, RIP, BGP"
       end 
     end
 
-    munge(&:downcase)
+    munge(&:upcase)
   end
 
   newproperty(:msr, :parent => Puppet::Property::NetscalerTruthy) do
