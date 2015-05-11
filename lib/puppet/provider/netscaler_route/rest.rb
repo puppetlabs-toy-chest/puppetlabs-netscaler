@@ -18,7 +18,7 @@ Puppet::Type.type(:netscaler_route).provide(:rest, parent: Puppet::Provider::Net
         :ensure    => :present,
         :name      => "#{route['network']}/#{route['netmask']}:#{route['gateway']}",
         :td        => route['td'],
-        :advertise => route['advertise'] == nil ? 'DISABLED' : 'ENABLED',
+        :advertise => route['advertise'],
         :distance  => route['distance'],
         :cost1     => route['cost1'],
         :weight    => route['weight'],
