@@ -15,6 +15,12 @@ netscaler_feature { 'SSL VPN':
 netscaler_feature { 'Content Switching':
   ensure      => 'present',
 }
+netscaler_feature { 'Http DoS Protection':
+  ensure      => 'present',
+}
+netscaler_feature { 'Priority Queuing':
+  ensure      => 'present',
+}
     EOS
     make_site_pp(pp)
     run_device(:allow_changes => true)
@@ -33,6 +39,12 @@ netscaler_feature { 'SSL VPN':
   ensure      => 'absent',
 }
 netscaler_feature { 'Content Switching':
+  ensure      => 'absent',
+}
+netscaler_feature { 'Http DoS Protection':
+  ensure      => 'absent',
+}
+netscaler_feature { 'Priority Queuing':
   ensure      => 'absent',
 }
     EOS
