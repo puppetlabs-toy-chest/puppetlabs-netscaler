@@ -18,7 +18,7 @@ netscaler_feature { 'Content Switching':
 netscaler_feature { 'Http DoS Protection':
   ensure      => 'present',
 }
-netscaler_feature { 'Priority Queing':
+netscaler_feature { 'Priority Queuing':
   ensure      => 'present',
 }
     EOS
@@ -44,7 +44,7 @@ netscaler_feature { 'Content Switching':
 netscaler_feature { 'Http DoS Protection':
   ensure      => 'absent',
 }
-netscaler_feature { 'Priority Queing':
+netscaler_feature { 'Priority Queuing':
   ensure      => 'absent',
 }
     EOS
