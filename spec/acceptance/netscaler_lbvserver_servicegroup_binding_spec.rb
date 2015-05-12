@@ -13,7 +13,6 @@ describe 'lbvserver_servicegroup_binding tests' do
         protocol => 'HTTP',
       }
       
-
       netscaler_lbvserver { '1_10_lbvserver1':
         ensure       => 'present',
         service_type => 'HTTP',
