@@ -24,3 +24,7 @@ AMI:
     :image:
       :default: "ami-39396a09"
     :region: "us-west-2"
+  "netscaler-platinum-10.5-10mb":
+    :image:
+      :default: "ami-75341345"
+    :region: "us-west-2"

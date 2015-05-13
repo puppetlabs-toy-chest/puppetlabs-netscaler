@@ -10,9 +10,9 @@ HOSTS:
   "netscaler":
     roles:
       - "netscaler"
-    vmname: "netscaler-standard-10.5-10mb"
+    vmname: "netscaler-platinum-10.5-10mb"
     hypervisor: "netscaler"
-    platform: "aix-netscaler-standard-10.1-10mb"
+    platform: "aix-netscaler-platinum-10.5-10mb"
     snapshot: "default"
     amisize: "m3.large"
     user: "nsroot"
