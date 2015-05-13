@@ -13,10 +13,6 @@ describe 'lbvserver_servicegroup_binding tests' do
         protocol => 'HTTP',
       }
       
-      netscaler_servicegroup_member { "1_10_servicegroup1/1_10_server1:80": 
-        ensure => present, 
-      }
-
       netscaler_lbvserver { '1_10_lbvserver1':
         ensure       => 'present',
         service_type => 'HTTP',
@@ -44,10 +40,6 @@ describe 'lbvserver_servicegroup_binding tests' do
       netscaler_servicegroup { '1_10_servicegroup1':
         ensure   => 'present',
         protocol => 'HTTP',
-      }
-    
-      netscaler_servicegroup_member { "1_10_servicegroup1/1_10_server1:80": 
-        ensure => present, 
       }
 
       netscaler_lbvserver { '1_10_lbvserver1':
