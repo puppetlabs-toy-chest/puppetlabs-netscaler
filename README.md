@@ -8,6 +8,8 @@
     * [Setup requirements](#setup-requirements)
     * [Beginning with netscaler](#beginning-with-netscaler)
 4. [Usage - Configuration options and additional functionality](#usage)
+    * [Set up two load-balanced web servers](#set-up-two-load-balanced-web-servers)
+    * [Tips and tricks](#tips-and-tricks)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Development - Guide for contributing to the module](#development)
@@ -35,7 +37,7 @@ Before you can use the netscaler module, you must create a proxy system able to 
 
 This means you must create a device.conf file in the Puppet conf directory (either /etc/puppet or /etc/puppetlabs/puppet) on the Puppet agent. Within your device.conf, you must have:
 
-**TODO:Check this**
+**TODO:Hunter?Check this**
 ~~~
 [certname]
 type netscaler
@@ -48,11 +50,11 @@ Additionally, you must install the faraday gem on the proxy host (Puppet agent).
 
 ##Usage
 
-###Set up two load-balanced web servers.
+###Set up two load-balanced web servers
 
 ####Before you begin
 
-This example is built around the following infrastructure: A server running a Puppet master is connected to the NetScaler device. The NetScaler device contains a management VLAN, a client VLAN which will contain the virtual server, and a server VLAN which will connect to the two web servers the module will be setting up. 
+This example is built around the following infrastructure: A server running a Puppet master is connected to the NetScaler device. The NetScaler device contains a management VLAN, a client VLAN that contains the virtual server, and a server VLAN that connects to the two web servers the module will be setting up. 
 
 In order to successfully set up your web servers, you must know the following information about your systems:
 
@@ -114,7 +116,6 @@ netscaler_csvserver_rewritepolicy_binding { '2_4_csvserver_test1/2_4_rewritepoli
 }
 ~~~
 
-
 ####Step Two: Run your Puppet master
 
 Run the following to have the Puppet master apply your classifications and configure the NetScaler device: 
@@ -127,27 +128,27 @@ If you do not run this command, clients will not be able to make requests to the
 
 At this point, your basic web servers should be up and fielding requests.
 
-###Tips and Tricks
+###Tips and tricks
 
-####Basic Usage**TODO**
+####Basic Usage**TODO: Hunter please check**
 
 Once you've established a basic configuration, you can explore the providers and their allowed options by running `puppet resource <TYPENAME>` for each type. This will provide a starting point for seeing what's already on your NetScaler. If anything failed to set up properly, it will not show up when you run the command.
 
 To begin with you can simply call the types from the proxy system.
 
-**TODO:Update**
+**TODO:Check/Update**
 
 ~~~
 $ FACTER_url=https://admin:admin@netscaler1.example.com/ puppet resource netscaler_lbvserver
 ~~~
 
-####Role and Profiles
+####Roles and profiles
 
-The [above example](#set-up-two-loadbalanced-web-servers) is for setting up a simple configuration of two web servers. For anything more complicated, we recommend you use the roles and profiles pattern when classifying nodes or devices for NetScaler.
+The [above example](#set-up-two-load-balanced-web-servers) is for setting up a simple configuration of two web servers. For anything more complicated, we recommend you use the roles and profiles pattern when classifying nodes or devices for NetScaler.
 
 ####Custom HTTP monitors
 
-If you have a '/Common/http_monitor' (which is available by default), then when you are creating a '/Common/custom_http_monitor' you can simply use `parent_monitor => '/Common/http'` so that you don't have to duplicate all values.
+If you have a '/Common/http_monitor' (available by default), then when you are creating a '/Common/custom_http_monitor' you can simply use `parent_monitor => '/Common/http'` so that you don't have to duplicate all values.
 
 ##Reference
 
@@ -159,7 +160,7 @@ If you have a '/Common/http_monitor' (which is available by default), then when 
 * [`netscaler_cspolicylabel_cspolicy_bind`](#type-netscaler_cspolicylabel_cspolicy_bind)
 * [`netscaler_csvserver`](#type-netscaler_csvserver)
 * [`netscaler_csvserver_cspolicy_bind`](#type-netscaler_cspolicy_bind)
-* [`netscaler_csvserver_responder_policy_bind`](#type-netscaler_csvserver_responderpolicy_bind)
+* [`netscaler_csvserver_responderpolicy_bind`](#type-netscaler_csvserver_responderpolicy_bind)
 * [`netscaler_csvserver_rewritepolicy_bind`](#type-netscaler_csvserver_rewritepolicy_bind)
 * [`netscaler_lbmonitor`](#type-netscaler_lbmonitor)
 * [`netscaler_lbvserver`](#type-netscaler_lbvserver)
@@ -308,7 +309,7 @@ Valid values are 'present', 'absent'.
 
 #####`goto_expression`
 
-Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to true.
+Expression specifying the priority of the next policy that gets evaluated if the current policy rule evaluates to true.
 
 #####`invoke_policy_label`
 
@@ -467,11 +468,11 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', '
 
 #####`listen_policy`
 
-Specifies the listen policy for cs vserver. The string can be either an existing expression name (configured using add policy expression command) or else it can be an in-line expression with a maximum of 1499 characters.
+Specifies the listen policy for csvserver. The string can be either an existing expression name (configured using add policy expression command) or else it can be an in-line expression with a maximum of 1499 characters.
 
 #####`listen_priority`
 
-Specifies the priority for listen policy of cs vserver.
+Specifies the priority for listen policy of csvserver.
 
 Maximum value: 100
 
@@ -556,7 +557,7 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', '
 
 #####`push_virtual_server_name`
 
-The lb vserver of type PUSH/SSL_PUSH to which server pushes the updates received on the client facing non-push lb vserver.
+The type PUSH/SSL_PUSH lbvserver to which the server pushes the updates received on the client-facing non-push lbvserver. **TODO: Clarify?**
 
 #####`range`
 
@@ -696,7 +697,7 @@ Valid values are 'present', 'absent'.
 
 #####`goto_expression`
 
-Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE
+Expression specifying the priority of the next policy that gets evaluated if the current policy rule evaluates to true.
 
 #####`label_name`
 
@@ -737,7 +738,7 @@ Valid values are 'present', 'absent'.
 
 #####`goto_expression`
 
-Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to true.
+Expression specifying the priority of the next policy that gets evaluated if the current policy rule evaluates to true.
 
 #####`invoke_policy_label`
 
@@ -749,7 +750,7 @@ Label of vserver to invoke if the bound policy evaluates to true.
 
 #####`name`
 
-The title of the bind resource, composed of the title of the cs vserver and the title of the responder policy: 'csvserver_name/policy_name'.
+The title of the bind resource, composed of the title of the csvserver and the title of the responder policy: 'csvserver_name/policy_name'.
 
 #####`priority`
 
@@ -782,7 +783,7 @@ Valid values are 'present', 'absent'.
 
 #####`goto_expression`
 
-Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to true.
+Expression specifying the priority of the next policy that gets evaluated if the current policy rule evaluates to true.
 
 #####`invoke_policy_label`
 
@@ -950,13 +951,13 @@ Valid option: an integer expressed in milliseconds, seconds, or minutes; minimum
  
 #####`ensure`
 
-Determines whether the loadbalancer monitoring service is present or absent.
+Determines whether the load balancer monitoring service is present or absent.
 
 Valid options: 'present' or 'absent'.
  
 #####`expression`
 
-Sets the default syntax expression that evaluates the database server's response to a MySQL-ECV or MSSQL-ECV monitoring query. Must produce a Boolean result, as the result determines the state of the server. If the expression returns TRUE, the probe succeeds.
+Sets the default syntax expression that evaluates the database server's response to a MySQL-ECV or MSSQL-ECV monitoring query. Must produce a Boolean result, as the result determines the state of the server. If the expression returns true, the probe succeeds.
  
 For example, if you want the appliance to evaluate the error message to determine the state of the server, use the rule 'MYSQL.RES.ROW(10) .TEXT_ELEM(2).EQ("MySQL")'.
 
@@ -1032,7 +1033,7 @@ Valid options: An array of IP addresses.
  
 #####`ip_tunnel`
 
-Determines whether to send the monitoring probe to the loadbalancing service through an IP tunnel. A destination IP address must be specified.
+Determines whether to send the monitoring probe to the load balancing service through an IP tunnel. A destination IP address must be specified.
 
 Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. Default: 'NO'.
 
@@ -1660,7 +1661,7 @@ Valid options: 10G, 11G.
 
 #####`persist_avp_no`
 
-Persist AVP number for Diameter Persistency. In case this AVP is not defined in Base RFC 3588 and it is nested inside a Grouped AVP, define a sequence of AVP numbers (max 3) in order of parent to child. So say persist AVP number X is nested inside AVP Y which is nested in Z, then define the list as  Z Y X.
+Persist AVP number for Diameter Persistency. If this AVP is not defined in Base RFC 3588 and it is nested inside a Grouped AVP, define a sequence of AVP numbers (max 3) in order of parent to child. So if persist AVP number X is nested inside AVP Y, which is nested in Z, then you would define the list as  Z Y X.
 
 Minimum value: 1
 
@@ -1916,9 +1917,9 @@ Insert an HTTP header, whose value is the IP address and port number of the virt
 * V6TOV4MAPPING - Insert the IPv4 address that is mapped to the virtual server's IPv6 address. If a mapped IPv4 address is not configured, insert the IPv6 address.
 * OFF - Disable header insertion.
 
-### netscaler_lbvserver_responderpolicy_bind
+###Type: netscaler_lbvserver_responderpolicy_bind
 
-Manage a binding between a loadbalancing vserver and a responder policy.
+Manages a binding between a load balancing vserver and a responder policy.
 
 ####Parameters
 
@@ -1930,7 +1931,7 @@ The basic state that the resource should be in. Valid values are 'present', 'abs
 
 #####`goto_expression`
 
-Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to true.
+Expression specifying the priority of the next policy that gets evaluated if the current policy rule evaluates to true.
 
 #####`invoke_policy_label`
 
@@ -1954,6 +1955,45 @@ Max = 2147483647
 #####`provider`
 
 The specific backend to use for this `netscaler_lbvserver_responderpolicy_bind` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+
+### netscaler_lbvserver_responderpolicy_bind
+
+Manage a binding between a load balancing vserver and a responder policy.
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in.
+
+Valid values are 'present', 'absent'.
+
+#####`goto_expression`
+
+Specifies the priority of the next policy to be evaluated if the current policy rule evaluates to true.
+
+#####`invoke_policy_label`
+
+Label of the policy to invoke if the bound policy evaluates to true.
+
+#####`invoke_vserver_label`
+
+Label of the vserver to invoke if the bound policy evaluates to true.
+
+#####`name`
+
+The title of the bind resource, composed of the title of the lbvserver and the title of the policy: 'lbvserver_name/policy_name'.
+
+#####`priority`
+
+Specifies the priority of the policy binding. Values can match '/^\d+$/'.
+
+Min = 1
+Max = 2147483647
+
+#####`provider`
+
+The specific backend to use for this `netscaler_lbvserver_responderpolicy_bind` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform.Available providers are: rest.
 
 ###Type: netscaler_lbserver_service_bind
 
@@ -2041,7 +2081,7 @@ Valid values are 'present', 'absent'.
 
 #####`goto_expression`
 
-Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to true.
+Expression specifying the priority of the next policy that gets evaluated if the current policy rule evaluates to true.
 
 #####`invoke_policy_label`
 
@@ -2345,7 +2385,7 @@ Valid values are 'present', 'absent'.
 
 #####`goto_expression`
 
-Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to true.
+Expression specifying the priority of the next policy that gets evaluated if the current policy rule evaluates to true.
 
 #####`invoke_policy_label`
 
@@ -2353,7 +2393,7 @@ Label of policy to invoke if the bound policy evaluates to true.
 
 #####`invoke_vserver_label`
 
-Label of lbvserver to invoke if the bound policy evaluates to true.
+Label of lbvserver to invoke if the bound policy evaluates to 'true'.
 
 #####`name`
 
