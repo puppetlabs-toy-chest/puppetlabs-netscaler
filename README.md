@@ -39,12 +39,12 @@ This means you must create a device.conf file in the Puppet conf directory (eith
 
 **TODO:Hunter?Check this**
 ~~~
-[certname]
-type netscaler
-url https://<USERNAME>:<PASSWORD>@<netscaler1.example.com>/
+[<CERTNAME>]
+  type netscaler
+  url https://nsroot:<PASSWORD>@<IP ADDRESS or FULLY QUALIFIED HOST NAME>/nitro/v1/
 ~~~
 
-In the above example, <USERNAME> and <PASSWORD> refer to Puppet's login for the device.
+In the above example, <PASSWORD> refers to the NetScaler administrator password --- this should be a password that has superuser privileges.
 
 Additionally, you must install the faraday gem on the proxy host (Puppet agent). You can do this by declaring the **TODO:What class?** class on that host. If you do not install the faraday gem, the module will not work.
 
@@ -67,7 +67,7 @@ In order to successfully set up your web servers, you must know the following in
 
 In your site.pp file, enter the below code:
 
-**TODO:Update**
+**TODO:Check/Update**
 
 ~~~
 node 'certname' {
