@@ -156,10 +156,17 @@ The [above example](#set-up-two-load-balanced-web-servers) is a proof-of-concept
 * [`netscaler_csvserver_cspolicy_bind`](#type-netscaler_cspolicy_bind)
 * [`netscaler_csvserver_responderpolicy_bind`](#type-netscaler_csvserver_responderpolicy_bind)
 * [`netscaler_csvserver_rewritepolicy_bind`](#type-netscaler_csvserver_rewritepolicy_bind)
+* [`netscaler_feature`](#type-netscaler_feature)
+* [`netscaler_file`](#type-netscaler_file)
+* [`netscaler_group_user_bind`](#type-netscaler_group_user_bind)
 * [`netscaler_lbmonitor`](#type-netscaler_lbmonitor)
 * [`netscaler_lbvserver`](#type-netscaler_lbvserver)
 * [`netscaler_lbvserver_responderpolicy_bind`](#type-netscaler_lbvserver_responderpolicy_bind)
 * [`netscaler_lbvserver_service_bind`](#type-netscaler_lbvserver_service_bind)
+* [`netscaler_nshostname`](#type-netscaler_nshostname)
+* [`netscaler_nsip`](#type-netscaler_nsip)
+* [`netscaler_ntpserver`](#type-netscaler_ntpserver)
+* [`netscaler_ntpsync`](#type-netscaler_ntpsync)
 * [`netscaler_responderaction`](#type-netscaler_responderaction)
 * [`netscaler_responderglobal`](#type-netscaler_responderglobal)
 * [`netscaler_responderpolicy`](#type-netscaler_responderpolicy)
@@ -754,6 +761,76 @@ The title of the bind resource, composed of the title of the csvserver and the t
 #####`priority`
 
 The priority of the policy binding. Values can be any integer between 1 and 2147483647.
+
+###Type: netscaler_feature
+
+**TODO**: What does this feature do?
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in.
+
+Valid values are 'present', 'absent'.
+
+#####`name`
+
+Name for the feature. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`provider`
+
+The specific backend to use for this `netscaler_feature` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+  
+###Type: netscaler_file
+
+Allows the uploading of a file to the NetScaler. Only accepts names of *.cert *.key and *.txt.
+
+####Parameters
+
+#####`content`
+
+The file content. This content will be encoded to Base64.
+
+#####`encoding`
+
+Encoding type of the file content. Only accepts 'BASE64'.
+
+#####`ensure`
+
+The basic state that the resource should be in.
+
+Valid values are 'present', 'absent'.
+
+#####`name`
+
+The name for the file. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`provider`
+
+The specific backend to use for this `netscaler_file` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+
+###Type: netscaler_group_user_bind
+
+The group and user binding, in the following format: 
+
+`group/user:gateway eg testers/joe`
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in.
+
+Valid values are 'present', 'absent'.
+
+#####`name`
+
+Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`provider`
+
+The specific backend to use for this `netscaler_group_user_binding` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
 
 ###Type: netscaler_lbmonitor
  
@@ -1938,6 +2015,322 @@ The title of the bind resource, composed of the title of the lbvserver and the t
 #####`weight`
 
 Weight to assign to the specified service. Value can be any integer between 1 and 100.
+
+###Type: netscaler_nshostname
+
+Manages NetScaler NTP server objects.
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`name`
+
+Host name for the NetScaler appliance.
+
+#####`ownernode`
+
+ID of the cluster node for which you are setting the hostname. This can be configured only through the cluster IP address.
+
+Minimum value = 0
+Maximum value = 31
+
+#####`provider`
+
+The specific backend to use for this `netscaler_nshostname` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform.Available providers are: rest.
+
+###Type: netscaler_nsip
+
+Manages basic NetScaler network IP objects.
+
+#### Parameters
+
+All parameters, except where otherwise noted, are optional. Their default values are determined by your particular NetScaler setup.
+
+#####`allow_ftp`
+
+Allows File Transfer Protocol (FTP) access to this IP address.
+
+Valid options: Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+
+#####`allow_gui`
+
+Allows graphical user interface (GUI) access to this IP address. 
+
+Valid options: 'ENABLED', 'SECUREONLY', 'DISABLED'. Default value: 'ENABLED'.
+
+#####`allow_management_access`
+
+Allows access to management applications on this IP address. 
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'DISABLED'.
+
+#####`allow_snmp`
+
+Allows Simple Network Management Protocol (SNMP) access to this IP address.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+
+#####`allow_ssh`
+
+Allows secure shell (SSH) access to this IP address.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+
+#####`allow_telnet`
+
+Allows Telnet access to this IP address.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+
+#####`arp`
+
+Responds to ARP requests for this IP address.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+
+#####`arp_response`
+
+Responds to ARP requests for a Virtual IP (VIP) address on the basis of the states of the virtual servers associated with that VIP. Available settings function as follows:
+
+* NONE - The NetScaler appliance responds to any ARP request for the VIP address, irrespective of the states of the virtual servers associated with the address.
+* ONE VSERVER - The NetScaler appliance responds to any ARP request for the VIP address if at least one of the associated virtual servers is in UP state.
+* ALL VSERVER - The NetScaler appliance responds to any ARP request for the VIP address if all of the associated virtual servers are in UP state.
+
+Default value: 5
+
+#####`dynamic_routing
+
+Allows dynamic routing on this IP address. Specific to Subnet IP (SNIP) address.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'DISABLED'.
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`host_route`
+
+Advertises a route for the VIP address using the dynamic routing protocols running on the NetScaler appliance.
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'TODO: What's the default?'.
+
+#####`host_route_gateway_ip`
+
+IP address of the gateway of the route for this VIP address.
+
+Default value: -1.
+
+#####`host_route_metric`
+
+Integer value to add to or subtract from the cost of the route advertised for the VIP address.
+
+Minimum value = -16777215
+
+#####`icmp`
+
+Responds to ICMP requests for this IP address.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+
+#####`icmp_response`
+
+Responds to ICMP requests for a Virtual IP (VIP) address on the basis of the states of the virtual servers associated with that VIP. Available settings function as follows:
+
+* NONE - The NetScaler appliance responds to any ICMP request for the VIP address, irrespective of the states of the virtual servers associated with the address.
+* ONE VSERVER - The NetScaler appliance responds to any ICMP request for the VIP address if at least one of the associated virtual servers is in UP state.
+* ALL VSERVER - The NetScaler appliance responds to any ICMP request for the VIP address if all of the associated virtual servers are in UP state.
+* VSVR_CNTRLD - The behavior depends on the ICMP VSERVER RESPONSE setting on all the associated virtual servers. 
+
+The following settings can be made for the ICMP VSERVER RESPONSE parameter on a virtual server:
+
+* If you set ICMP VSERVER RESPONSE to PASSIVE on all virtual servers, NetScaler always responds.
+* If you set ICMP VSERVER RESPONSE to ACTIVE on all virtual servers, NetScaler responds if even one virtual server is UP.
+* When you set ICMP VSERVER RESPONSE to ACTIVE on some and PASSIVE on others, NetScaler responds if even one virtual server set to ACTIVE is UP.
+
+**TODO:** The default value doesn't match any of the possible values; explain?
+Default value: 5
+Possible values = NONE, ONE_VSERVER, ALL_VSERVERS, VSVR_CNTRLD
+
+#####`ip_address`
+
+IPv4 address to create on the NetScaler appliance. Cannot be changed after the resource is created. If omitted, this parameter's value defaults to the resource's title.)
+
+Minimum length = 1
+
+#####`ip_type`
+
+Type of the IP address to create on the NetScaler appliance. Cannot be changed after the IP address is created. The following are the different types of NetScaler owned IP addresses:
+
+* A Subnet IP (SNIP) address is used by the NetScaler ADC to communicate with the servers. The NetScaler also uses the subnet IP address when generating its own packets, such as packets related to dynamic routing protocols, or to send monitor probes to check the health of the servers.
+* A Virtual IP (VIP) address is the IP address associated with a virtual server. It is the IP address to which clients connect. An appliance managing a wide range of traffic may have many VIPs configured. Some of the attributes of the VIP address are customized to meet the requirements of the virtual server.
+* A GSLB site IP (GSLBIP) address is associated with a GSLB site. It is not mandatory to specify a GSLBIP address when you initially configure the NetScaler appliance. A GSLBIP address is used only when you create a GSLB site.
+* A Cluster IP (CLIP) address is the management address of the cluster. All cluster configurations must be performed by accessing the cluster through this IP address.
+
+Default value: SNIP
+Possible values = SNIP, VIP, NSIP, GSLBsiteIP, CLIP
+
+#####`netmask	
+
+*Required.* Subnet mask associated with the IP address.
+
+#####`ospf_area`
+
+ID of the area in which the type1 link-state advertisements (LSAs) are to be advertised for this virtual IP (VIP) address by the OSPF protocol running on the NetScaler appliance. If this parameter is not set, the VIP is advertised on all areas.
+
+Default value: -1
+Minimum value = 0
+Maximum value = 4294967294LU
+
+#####`ospf_lsa_type`
+
+Type of LSAs to be used by the OSPF protocol, running on the NetScaler appliance, for advertising the route for this VIP address.
+
+Valid values: 'TYPE1', 'TYPE5', 'DISABLED'. Default value: 'DISABLED'.
+
+
+#####`provider`
+
+The specific backend to use for this `netscaler_nsip` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+
+#####`secure_access_only`
+
+Blocks access to nonmanagement applications on this IP. This option is applicable for MIPs, SNIPs, and NSIP, and is disabled by default. Nonmanagement applications can run on the underlying NetScaler Free BSD operating system.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'DISABLED'.
+
+#####`state`
+
+Enables or disables the IP address.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+
+#####`traffic_domain`
+
+Integer value that uniquely identifies the traffic domain in which you want to configure the entity. If you do not specify an ID, the entity becomes part of the default traffic domain, which has an ID of 0.
+
+Minimum value = 0
+Maximum value = 4094
+
+#####`virtual_router_id`
+
+A positive integer that uniquely identifies a VMAC address for binding to this VIP address. This binding is used to set up NetScaler appliances in an active-active configuration using VRRP.
+
+Minimum value = 1
+Maximum value = 255
+
+#####`virtual_server
+
+Enables or disables the virtual server attribute for this IP address.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+
+#####`virtual_server_rhi_level`
+
+Advertise the route for the Virtual IP (VIP) address on the basis of the state of the virtual servers associated with that VIP.
+
+* NONE - Advertise the route for the VIP address, regardless of the state of the virtual servers associated with the address.
+* ONE VSERVER - Advertise the route for the VIP address if at least one of the associated virtual servers is in UP state.
+* ALL VSERVER - Advertise the route for the VIP address if all of the associated virtual servers are in UP state.
+* VSVR_CNTRLD - Advertise the route for the VIP address according to the RHIstate (RHI STATE) parameter setting on all the associated virtual servers of the VIP address along with their states. 
+
+When Vserver RHI Level (RHI) parameter is set to VSVR_CNTRLD, the following are different RHI behaviors for the VIP address on the basis of RHIstate (RHI STATE) settings on the virtual servers associated with the VIP address:
+
+* If you set RHI STATE to PASSIVE on all virtual servers, the NetScaler ADC always advertises the route for the VIP address.
+* If you set RHI STATE to ACTIVE on all virtual servers, the NetScaler ADC advertises the route for the VIP address if at least one of the associated virtual servers is in UP state.
+*If you set RHI STATE to ACTIVE on some and PASSIVE on others, the NetScaler ADC advertises the route for the VIP address if at least one of the associated virtual servers, whose RHI STATE set to ACTIVE, is in UP state.
+
+Default value: ONE_VSERVER
+Possible values = ONE_VSERVER, ALL_VSERVERS, NONE, VSVR_CNTRLD
+
+#####`virtual_server_rhi_mode`
+
+Advertise the route for the Virtual IP (VIP) address using dynamic routing protocols or using RISE. Valid values:
+
+* DYNAMIC_ROUTING - Advertise the route for the VIP address using dynamic routing protocols (default)
+* RISE - Advertise the route for the VIP address using RISE.
+
+Default value: DYNAMIC_ROUTING.
+
+###Type: netscaler_ntpserver
+
+Manage NetScaler NTP server objects.
+
+#### Parameters
+
+#####`auto_key`
+
+Use the Autokey protocol for key management for this server, with the cryptographic values (for example, symmetric key, host and public certificate files, and sign key) generated by the ntp-keygen utility. To require authentication for communication with the server, you must set either the value of this parameter or the key parameter.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'TODO: Default?'.
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`key`
+
+Key to use for encrypting authentication fields. All packets sent to and received from the server must include authentication fields encrypted by using this key. To require authentication for communication with the server, you must set either the value of this parameter or the autokey parameter.
+
+Minimum value = 1
+Maximum value = 65534
+
+#####`maximum_poll_interval`
+
+Maximum time after which the NTP server must poll the NTP messages. In seconds, expressed as a power of 2.
+
+Minimum value = 4
+Maximum value = 17
+
+#####`minimum_poll_interval`
+
+Minimum time after which the NTP server must poll the NTP messages. In seconds, expressed as a power of 2.
+
+Minimum value = 4
+Maximum value = 17
+
+#####`name`
+
+IP address or fully qualified domain name of the NTP server.
+
+#####`preferred_ntp_server`
+
+Preferred NTP server. The NetScaler appliance chooses this NTP server for time synchronization among a set of correctly operating hosts.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'NO'.
+
+#####`provider`
+
+The specific backend to use for this `netscaler_ntpserver` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+
+###Type: netscaler_ntpsync
+
+Manage NetScaler NTP sync setting.
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`provider`
+
+The specific backend to use for this `netscaler_ntpsync` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform.Available providers are: rest.
+
+#####`state`
+
+NTP status.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. If omitted, this parameter's value defaults to the resource's title. **TODO**: Is this default correct? Or is it ENABLED OR DISABLED?
 
 ###Type: netscaler_responderaction
 
