@@ -29,24 +29,24 @@ The module allows you to manage NetScaler nodes and pool configuration through P
 
 ###Beginning with netscaler
 
-Before you can use the netscaler module, you must create a proxy system able to run `puppet device`.  In order to do so, you will have a Puppet master and a Puppet agent as usual, and the agent will be the "proxy system" for the `puppet device` subcommand.
+Before you can use the netscaler module, you must create a proxy system able to run `puppet device`.  In order to do so, you will have a Puppet master and a Puppet agent as usual, and the agent will be the "proxy system" for `puppet device`.
 
-**NOTE: `puppet device` was designed to interact with admininistrative interfaces in order to run commands that implement types and providers. `puppet device` allows you to write a resource to talk to the device and translates the module into network calls.**
+(The `puppet device` subcommand interacts with administrative interfaces, allowing resources to talk to the device and translating the module into network calls.
 
 **TODO^^^ Run that by Hunter.**
 
 This means you must create a device.conf file in the Puppet conf directory (either /etc/puppet or /etc/puppetlabs/puppet) on the Puppet agent. Within your device.conf, you must have:
 
-**TODO:Hunter?Check this**
+
 ~~~
-[<CERTNAME>]
+[<DEVICE CERTNAME>]
   type netscaler
-  url https://nsroot:<PASSWORD>@<IP ADDRESS or FULLY QUALIFIED HOST NAME>/nitro/v1/
+  url https://<USERNAME>:<PASSWORD>@<IP ADDRESS or FULLY QUALIFIED HOST NAME>/nitro/v1/
 ~~~
 
-In the above example, <PASSWORD> refers to the NetScaler administrator password --- this should be a password that has superuser privileges.
+In the above example, the username and password must be for a user with superuser privileges (i.e., the NetScaler administrator). The default admin username is 'nsroot'. The certname should be the certname of the NetScaler device.
 
-Additionally, you must install the faraday gem on the proxy host (Puppet agent). You can do this by declaring the **TODO:What class?** class on that host. If you do not install the faraday gem, the module will not work.
+Additionally, you must install the faraday gem on the proxy host (Puppet agent). You can do this by declaring the `faraday` class on that host. If you do not install the faraday gem, the module will not work.
 
 ##Usage
 
@@ -63,15 +63,15 @@ In order to successfully set up your web servers, you must know the following in
 * The ports the web servers are listening on.
 * The IP address of the virtual server.
 
-####Step One: Classifying your servers
+####Step One: Classifying your device
 
 In your site.pp file, enter the below code:
 
 **TODO:Check/Update**
 
 ~~~
-node 'certname' {
-netscaler_server { '1_10_server1':
+node 'device certname' {
+  netscaler_server { '1_10_server1':
   ensure  => present,
   address => '1.10.1.1',
   }
@@ -116,39 +116,33 @@ netscaler_csvserver_rewritepolicy_binding { '2_4_csvserver_test1/2_4_rewritepoli
 }
 ~~~
 
-####Step Two: Run your Puppet master
+####Step Two: Run `puppet device`
 
-Run the following to have the Puppet master apply your classifications and configure the NetScaler device: 
+Run the following to have the proxy node apply your classifications and configure the NetScaler device: 
 
 ~~~
-$ FACTER_url=https://<USERNAME>:<PASSWORD>@<NETSCALER1.EXAMPLE.COM> puppet device -v
+$ https://<USERNAME>:<PASSWORD>@<IP ADDRESS or FULLY QUALIFIED HOST NAME>> puppet device -v --user=root
 ~~~
 
 If you do not run this command, clients will not be able to make requests to the web servers.
 
-At this point, your basic web servers should be up and fielding requests.
+At this point, your NetScaler should be ready to handle requests for the web servers.
 
 ###Tips and tricks
 
-####Basic Usage**TODO: Hunter please check**
+####Basic usage
 
 Once you've established a basic configuration, you can explore the providers and their allowed options by running `puppet resource <TYPENAME>` for each type. This will provide a starting point for seeing what's already on your NetScaler. If anything failed to set up properly, it will not show up when you run the command.
 
-To begin with you can simply call the types from the proxy system.
-
-**TODO:Check/Update**
+Call the types from the proxy system.
 
 ~~~
-$ FACTER_url=https://admin:admin@netscaler1.example.com/ puppet resource netscaler_lbvserver
+$ FACTER_url=https://<USERNAME>:<PASSWORD>@<NETSCALER1.EXAMPLE.COM> puppet resource netscaler_lbvserver
 ~~~
 
 ####Roles and profiles
 
-The [above example](#set-up-two-load-balanced-web-servers) is for setting up a simple configuration of two web servers. For anything more complicated, we recommend you use the roles and profiles pattern when classifying nodes or devices for NetScaler.
-
-####Custom HTTP monitors
-
-If you have a '/Common/http_monitor' (available by default), then when you are creating a '/Common/custom_http_monitor' you can simply use `parent_monitor => '/Common/http'` so that you don't have to duplicate all values.
+The [above example](#set-up-two-load-balanced-web-servers) is a proof-of-concept for setting up a simple configuration of two web servers. We recommend using the roles and profiles pattern for anything else.
 
 ##Reference
 
@@ -200,10 +194,6 @@ Valid values are 'present', 'absent'.
 
 Name for the object. Must begin with an ASCII alphabetic or underscore (_) character and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
 
-#####`provider`
-
-The specific backend to use for this `netscaler_csaction` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
-
 #####`target_lb_expression`
 
 Information about this content switching action.
@@ -246,13 +236,9 @@ Name of the messagelog action to use for requests that match this policy.
 
 Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
 
-#####`provider`
-
-The specific backend to use for this `netscaler_cspolicy` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest. 
-
 #####`url`
 
-URL string that is matched with the URL of a request. Can contain a wildcard character. Specify the string value in the following format: [[prefix] [*]] [.suffix].
+URL string that is matched with the URL of a request. Can contain a wildcard character. Specify the string value in the following format: 'prefix.suffix'.
 
 ###Type: netscaler_cspolicylabel
 
@@ -272,26 +258,22 @@ Valid values are 'present', 'absent'.
 
 Protocol supported by the policy label. All policies bound to the policy label must either match the specified protocol or be a subtype of that protocol. Available settings function as follows:
 
-* HTTP - Supports policies that process HTTP traffic. Used to access unencrypted Web sites. This is the default setting.
-* SSL - Supports policies that process HTTPS/SSL encrypted traffic. Used to access encrypted Web sites.
-* TCP - Supports policies that process any type of TCP traffic, including HTTP.
-* SSL_TCP - Supports policies that process SSL-encrypted TCP traffic, including SSL.
-* UDP - Supports policies that process any type of UDP-based traffic, including DNS.
-* DNS - Supports policies that process DNS traffic.
-* ANY - Supports all types of policies except HTTP, SSL, and TCP.
-* SIP_UDP - Supports policies that process UDP based Session Initiation Protocol (SIP) traffic. SIP initiates, manages, and terminates multimedia communications sessions, and has emerged as the standard for Internet telephony (VoIP).
-* RTSP - Supports policies that process Real Time Streaming Protocol (RTSP) traffic. RTSP provides delivery of multimedia and other streaming data, such as audio, video, and other types of streamed media.
-* RADIUS - Supports policies that process Remote Authentication Dial In User Service (RADIUS) traffic. RADIUS supports combined authentication, authorization, and auditing services for network management.
-* MYSQL - Supports policies that process MYSQL traffic.
-* MSSQL - Supports policies that process Microsoft SQL traffic.
+* 'HTTP' - Supports policies that process HTTP traffic. Used to access unencrypted Web sites. This is the default setting.
+* 'SSL' - Supports policies that process HTTPS/SSL encrypted traffic. Used to access encrypted Web sites.
+* 'TCP' - Supports policies that process any type of TCP traffic, including HTTP.
+* 'SSL_TCP' - Supports policies that process SSL-encrypted TCP traffic, including SSL.
+* 'UDP' - Supports policies that process any type of UDP-based traffic, including DNS.
+* 'DNS' - Supports policies that process DNS traffic.
+* 'ANY' - Supports all types of policies except HTTP, SSL, and TCP.
+* 'SIP_UDP' - Supports policies that process UDP based Session Initiation Protocol (SIP) traffic. SIP initiates, manages, and terminates multimedia communications sessions, and has emerged as the standard for Internet telephony (VoIP).
+* 'RTSP' - Supports policies that process Real Time Streaming Protocol (RTSP) traffic. RTSP provides delivery of multimedia and other streaming data, such as audio, video, and other types of streamed media.
+* 'RADIUS' - Supports policies that process Remote Authentication Dial In User Service (RADIUS) traffic. RADIUS supports combined authentication, authorization, and auditing services for network management.
+* 'MYSQL' - Supports policies that process MYSQL traffic.
+* 'MSSQL' - Supports policies that process Microsoft SQL traffic.
 
 #####`name`
 
 Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
-
-#####`provider`
-
-The specific backend to use for this `netscaler_cspolicylabel` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
 
 ###Type: netscaler_cspolicylabel_cspolicy_bind
 
@@ -321,14 +303,10 @@ The title of the bind resource, composed of the title of the cspolicylabel and t
 
 #####`priority`
 
-Specifies the priority of the policy. Values can match `/^\d+$/`.
+Specifies the priority of the policy. Values can be any integer between 1 and 2147483647.
 
 Min = 1
 Max = 2147483647
-
-#####`provider`
-
-The specific backend to use for this `netscaler_cspolicylabel_cspolicy_bind` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
 
 #####`target_lbvserver`
 
@@ -336,7 +314,7 @@ The virtual server name to which content will be switched.
 
 ###Type: netscaler_csvserver
 
-Manages content switching VServer on the NetScaler appliance.
+Manages content switching vserver on the NetScaler appliance.
 
 ####Parameters
 
@@ -446,7 +424,7 @@ Note: This parameter is available at the virtual server level. A similar paramet
 
 Specifies the set of IP addresses expected in the monitoring response from the DNS server if the record type is A or AAAA. Applicable to DNS monitors.
 
-Valid options: An array of IP addresses.
+Valid options: An IP address or an array of IP addresses.
 
 #####`ip_mask`
 
@@ -532,12 +510,10 @@ Valid options: RULE, URL. The default precedence is RULE.
 
   This precedence can also be used if some content (such as images) is the same for all clients, but other content (such as text) is different for different clients. In this case, the images will be served to all clients, but the text will be served to specific clients based on specific attributes, such as Accept-Language.
 
-#####`provider`
-
-The specific backend to use for this `netscaler_csvserver` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
 
 #####`purge_bindings`
-[TODO: need description]
+
+When true, Puppet will purge all unmanaged `netscaler_csvserver_rewritepolicy_bind` and `netscaler_csvserver_responderpolicy_bind` resources associated with this csvserver. Valid options: 'true', 'false'. Default: 'false'.
 
 #####`push`
 
@@ -557,7 +533,7 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', '
 
 #####`push_virtual_server_name`
 
-The type PUSH/SSL_PUSH lbvserver to which the server pushes the updates received on the client-facing non-push lbvserver. **TODO: Clarify?**
+Name of the type PUSH/SSL_PUSH lbvserver to which the server pushes updates received on the client-facing load balancing virtual server.
 
 #####`range`
 
@@ -566,12 +542,6 @@ Number of IP addresses that the appliance must generate and assign to the virtua
 * For a range of n, the last octet of the address specified by the IP Address parameter increments n-1 times.
 * If the last octet exceeds 255, it rolls over to 0 and the third octet increments by 1.
   
-Note: The Range parameter assigns multiple IP addresses to one virtual server. To generate an array of virtual servers, each of which owns only one IP address, use brackets in the IP Address and Name parameters to specify the range. For example:
-  
-~~~
-add lb vserver my_vserver[1-3] HTTP 192.0.2.[1-3] 80
-~~~
-
 Minimum value: 1
 Maximum value: 254
 
@@ -618,11 +588,11 @@ Valid options: DROP, ACCEPT, REDIRECT.
 
 Specifies the type of threshold that, when exceeded, triggers spillover. Available settings function as follows:
 
-* CONNECTION - Spillover occurs when the number of client connections exceeds the threshold.
-* DYNAMICCONNECTION - Spillover occurs when the number of client connections at the virtual server exceeds the sum of the maximum client (Max Clients) settings for bound services. Do not specify a spillover threshold for this setting, because the threshold is implied by the Max Clients settings of bound services.
-* BANDWIDTH - Spillover occurs when the bandwidth consumed by the virtual server's incoming and outgoing traffic exceeds the threshold.
-* HEALTH - Spillover occurs when the percentage of weights of the services that are UP drops below the threshold. For example, if services svc1, svc2, and svc3 are bound to a virtual server, with weights 1, 2, and 3, and the spillover threshold is 50%, spillover occurs if svc1 and svc3 or svc2 and svc3 transition to DOWN.
-* NONE - Spillover does not occur.
+* 'CONNECTION' - Spillover occurs when the number of client connections exceeds the threshold.
+* 'DYNAMICCONNECTION' - Spillover occurs when the number of client connections at the virtual server exceeds the sum of the maximum client (Max Clients) settings for bound services. Do not specify a spillover threshold for this setting, because the threshold is implied by the Max Clients settings of bound services.
+* 'BANDWIDTH' - Spillover occurs when the bandwidth consumed by the virtual server's incoming and outgoing traffic exceeds the threshold.
+* 'HEALTH' - Spillover occurs when the percentage of weights of the services that are UP drops below the threshold. For example, if services svc1, svc2, and svc3 are bound to a virtual server, with weights 1, 2, and 3, and the spillover threshold is 50%, spillover occurs if svc1 and svc3 or svc2 and svc3 transition to DOWN.
+* 'NONE' - Spillover does not occur.
 
 #####`spillover_persistence`
 
@@ -671,15 +641,13 @@ Maximum value = 4094
 
 Name of virtual server IP and port header, for use with the VServer IP Port Insertion parameter.
 
-Minimum length = 1
-
 #####`virtual_server_ip_port_insertion`
 
 The virtual IP and port header insertion option for the vserver. Accepts the following values:
 
-* VIPADDR - Header contains the vserver's IP address and port number without any translation.
-* OFF - The virtual IP and port header insertion option is disabled.
-* V6TOV4MAPPING - Header contains the mapped IPv4 address that corresponds to the IPv6 address of the vserver and the port number. An IPv6 address can be mapped to a user-specified IPv4 address using the set ns ip6 command.
+* 'VIPADDR' - Header contains the vserver's IP address and port number without any translation.
+* 'OFF' - The virtual IP and port header insertion option is disabled.
+* 'V6TOV4MAPPING' - Header contains the mapped IPv4 address that corresponds to the IPv6 address of the vserver and the port number. An IPv6 address can be mapped to a user-specified IPv4 address using the set ns ip6 command.
 
 ###Type: netscaler_csvserver_cspolicy_bind
 
@@ -709,14 +677,7 @@ The title of the bind resource, composed of the title of the csvserver and the t
 
 #####`priority`
 
-The priority of the policy binding. Values can match `/^\d+$/`.
-
-Min = 1
-Max = 2147483647
-
-#####`provider`
-
-The specific backend to use for this`netscaler_csvserver_cspolicy_bind` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+The priority of the policy binding. Values can be any integer between 1 and 2147483647.
 
 #####`target_lbvserver`
 
@@ -754,14 +715,7 @@ The title of the bind resource, composed of the title of the csvserver and the t
 
 #####`priority`
 
-The priority of the policy binding. Values can match `/^\d+$/`.
-
-Min = 1
-Max = 2147483647
-
-#####`provider`
-
-The specific backend to use for this `netscaler_csvserver_responderpolicy_bind` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+The priority of the policy binding. Values can be any integer between 1 and 2147483647.
 
 ###Type: netscaler_csvserver_rewritepolicy_bind
 
@@ -799,14 +753,7 @@ The title of the bind resource, composed of the title of the csvserver and the t
 
 #####`priority`
 
-The priority of the policy binding. Values can match `/^\d+$/`.
-
-Min = 1
-Max = 2147483647
-
-#####`provider'
-
-The specific backend to use for this `netscaler_csvserver_rewritepolicy_bind` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+The priority of the policy binding. Values can be any integer between 1 and 2147483647.
 
 ###Type: netscaler_lbmonitor
  
@@ -843,9 +790,9 @@ Valid options: 'NONE', 'LOG', or 'DOWN'. Default: 'SM_DOWN'.
  
 The following options will have the following impact:
  
-* NONE - Takes no action. 
-* LOG - Logs the event in NSLOG or SYSLOG.
-* DOWN - Marks the service as being down and ensures no traffic is directed to the service until the configured down time has expired. Persistent connections to the service are terminated as soon as the service is marked as DOWN. The event is logged in NSLOG or SYSLOG.
+* 'NONE' - Takes no action. 
+* 'LOG' - Logs the event in NSLOG or SYSLOG.
+* 'DOWN' - Marks the service as being down and ensures no traffic is directed to the service until the configured down time has expired. Persistent connections to the service are terminated as soon as the service is marked as DOWN. The event is logged in NSLOG or SYSLOG.
   
 #####`application_name`
 
@@ -921,9 +868,9 @@ Valid options: integers.
  
 #####`deviation`
 
-Sets the time to add to the learned average response time in dynamic response time monitoring (DRTM). When a deviation is specified, your NetScaler appliance learns the average response time of bound services and adds the deviation to the average. The final value is then continually adjusted to accommodate response time variations over time. Specified in milliseconds, seconds, or minutes.
+Sets the time to add to the learned average response time in dynamic response time monitoring (DRTM). When a deviation is specified, your NetScaler appliance learns the average response time of bound services and adds the deviation to the average. The final value is then continually adjusted to accommodate response time variations over time. Specified in seconds.
 
-Valid options: an integer expressed in milliseconds, seconds, or minutes; maximum = 20939000 seconds.
+Valid options: an integer expressed in seconds; maximum = 20939000 seconds.
  
 #####`dispatcher_ip`
 
@@ -945,9 +892,9 @@ Valid options: a string.
  
 #####`down_time`
 
-Sets the time duration to wait before probing a service that has been marked as DOWN. Expressed in milliseconds, seconds, or minutes.
+Sets the time duration to wait before probing a service that has been marked as DOWN. Expressed in seconds.
 
-Valid option: an integer expressed in milliseconds, seconds, or minutes; minimum = 1 second and maximum = 20939000 seconds. Default: 30 seconds.
+Valid option: an integer expressed in seconds; minimum = 1 second and maximum = 20939000 seconds. Default: 30 seconds.
  
 #####`ensure`
 
@@ -1534,7 +1481,7 @@ If a destination IP address matches more than one IP pattern, the pattern with t
 
 #####`layer2_parameters`
 
-Use Layer 2 parameters (channel number, MAC address, and VLAN ID) in addition to the 4-tuple (<source IP>:<source port>::<destination IP>:<destination port>) that is used to identify a connection. Allows multiple TCP and non-TCP connections with the same 4-tuple to co-exist on the NetScaler appliance.
+Use Layer 2 parameters (channel number, MAC address, and VLAN ID) in addition to the 4-tuple `<source IP>:<source port>::<destination IP>:<destination port>` that is used to identify a connection. Allows multiple TCP and non-TCP connections with the same 4-tuple to co-exist on the NetScaler appliance.
 
 Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
@@ -1542,24 +1489,24 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', '
 
 Load balancing method. The available settings function as follows:
 
-* ROUNDROBIN - Distribute requests in rotation, regardless of the load. Weights can be assigned to services to enforce weighted round robin distribution.
-* LEASTCONNECTION (default) - Select the service with the fewest connections.
-* LEASTRESPONSETIME - Select the service with the lowest average response time.
-* LEASTBANDWIDTH - Select the service currently handling the least traffic.
-* LEASTPACKETS - Select the service currently serving the lowest number of packets per second.
-* CUSTOMLOAD - Base service selection on the SNMP metrics obtained by custom load monitors.
-* LRTM - Select the service with the lowest response time. Response times are learned through monitoring probes. This method also takes the number of active connections into account.
+* 'ROUNDROBIN' - Distribute requests in rotation, regardless of the load. Weights can be assigned to services to enforce weighted round robin distribution.
+* 'LEASTCONNECTION' (default) - Select the service with the fewest connections.
+* 'LEASTRESPONSETIME' - Select the service with the lowest average response time.
+* 'LEASTBANDWIDTH' - Select the service currently handling the least traffic.
+* 'LEASTPACKETS' - Select the service currently serving the lowest number of packets per second.
+* 'CUSTOMLOAD' - Base service selection on the SNMP metrics obtained by custom load monitors.
+* 'LRTM' - Select the service with the lowest response time. Response times are learned through monitoring probes. This method also takes the number of active connections into account.
   
 Also available are a number of hashing methods, in which the appliance extracts a predetermined portion of the request, creates a hash of the portion, and then checks whether any previous requests had the same hash value. If it finds a match, it forwards the request to the service that served those previous requests. The available hashing methods are as follows:
 
-* URLHASH - Create a hash of the request URL (or part of the URL).
-* DOMAINHASH - Create a hash of the domain name in the request (or part of the domain name). The domain name is taken from either the URL or the Host header. If the domain name appears in both locations, the URL is preferred. If the request does not contain a domain name, the load balancing method defaults to LEASTCONNECTION.
-* DESTINATIONIPHASH - Create a hash of the destination IP address in the IP header.
-* SOURCEIPHASH - Create a hash of the source IP address in the IP header.
-* TOKEN - Extract a token from the request, create a hash of the token, and then select the service to which any previous requests with the same token hash value were sent.
-* SRCIPDESTIPHASH - Create a hash of the string obtained by concatenating the source IP address and destination IP address in the IP header.
-* SRCIPSRCPORTHASH - Create a hash of the source IP address and source port in the IP header.
-* CALLIDHASH - Create a hash of the SIP Call-ID header.
+* 'URLHASH' - Create a hash of the request URL (or part of the URL).
+* 'DOMAINHASH' - Create a hash of the domain name in the request (or part of the domain name). The domain name is taken from either the URL or the Host header. If the domain name appears in both locations, the URL is preferred. If the request does not contain a domain name, the load balancing method defaults to LEASTCONNECTION.
+* 'DESTINATIONIPHASH' - Create a hash of the destination IP address in the IP header.
+* 'SOURCEIPHASH' - Create a hash of the source IP address in the IP header.
+* 'TOKEN' - Extract a token from the request, create a hash of the token, and then select the service to which any previous requests with the same token hash value were sent.
+* 'SRCIPDESTIPHASH' - Create a hash of the string obtained by concatenating the source IP address and destination IP address in the IP header.
+* 'SRCIPSRCPORTHASH' - Create a hash of the source IP address and source port in the IP header.
+* 'CALLIDHASH' - Create a hash of the SIP Call-ID header.
 
 #####`lb_method_hash_length`
 
@@ -1578,8 +1525,6 @@ Maximum value = 128
 #####`lb_method_netmask`
 
 IPv4 subnet mask to apply to the destination IP address or source IP address when the load balancing method is DESTINATIONIPHASH or SOURCEIPHASH. 
-
-Minimum length = 1.
 
 #####`listen_policy`
 
@@ -1690,16 +1635,16 @@ Maximum value: 1440
 
 Type of persistence for the virtual server. Available settings function as follows:
 
-* SOURCEIP - Connections from the same client IP address belong to the same persistence session.
-* COOKIEINSERT - Connections that have the same HTTP Cookie, inserted by a Set-Cookie directive from a server, belong to the same persistence session.
-* SSLSESSION - Connections that have the same SSL Session ID belong to the same persistence session.
-* CUSTOMSERVERID - Connections with the same server ID form part of the same session. For this persistence type, set the Server ID (CustomServerID) parameter for each service and configure the Rule parameter to identify the server ID in a request.
-* RULE - All connections that match a user defined rule belong to the same persistence session.
-* URLPASSIVE - Requests that have the same server ID in the URL query belong to the same persistence session. The server ID is the hexadecimal representation of the IP address and port of the service to which the request must be forwarded. This persistence type requires a rule to identify the server ID in the request.
-* DESTIP - Connections to the same destination IP address belong to the same persistence session.
-* SRCIPDESTIP - Connections that have the same source IP address and destination IP address belong to the same persistence session.
-* CALLID - Connections that have the same CALL-ID SIP header belong to the same persistence session.
-* RTSPSID - Connections that have the same RTSP Session ID belong to the same persistence session.
+* 'SOURCEIP' - Connections from the same client IP address belong to the same persistence session.
+* 'COOKIEINSERT' - Connections that have the same HTTP Cookie, inserted by a Set-Cookie directive from a server, belong to the same persistence session.
+* 'SSLSESSION' - Connections that have the same SSL Session ID belong to the same persistence session.
+* 'CUSTOMSERVERID' - Connections with the same server ID form part of the same session. For this persistence type, set the Server ID (CustomServerID) parameter for each service and configure the Rule parameter to identify the server ID in a request.
+* 'RULE' - All connections that match a user defined rule belong to the same persistence session.
+* 'URLPASSIVE' - Requests that have the same server ID in the URL query belong to the same persistence session. The server ID is the hexadecimal representation of the IP address and port of the service to which the request must be forwarded. This persistence type requires a rule to identify the server ID in the request.
+* 'DESTIP' - Connections to the same destination IP address belong to the same persistence session.
+* 'SRCIPDESTIP' - Connections that have the same source IP address and destination IP address belong to the same persistence session.
+* 'CALLID' - Connections that have the same CALL-ID SIP header belong to the same persistence session.
+* 'RTSPSID' - Connections that have the same RTSP Session ID belong to the same persistence session.
 
 #####`port`
 
@@ -1716,10 +1661,6 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', '
 By turning on this option packets destined to a vserver in a cluster will not under go any steering. Turn this option for single packet request response mode or when the upstream device is performing a proper RSS for connection based distribution.
 
 Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
-
-#####`provider`
-
-The specific backend to use for this `netscaler_lbvserver` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
 
 #####`push`
 
@@ -1748,12 +1689,6 @@ Number of IP addresses that the appliance must generate and assign to the virtua
 * For a range of n, the last octet of the address specified by the IP Address parameter increments n-1 times.
 * If the last octet exceeds 255, it rolls over to 0 and the third octet increments by 1.
   
-Note: The Range parameter assigns multiple IP addresses to one virtual server. To generate an array of virtual servers, each of which owns only one IP address, use brackets in the IP Address and Name parameters to specify the range. For example:
-  
-~~~
-add lb vserver my_vserver[1-3] HTTP 192.0.2.[1-3] 80
-~~~
-
 Minimum value: 1
 Maximum value: 254
 
@@ -1792,7 +1727,8 @@ Default syntax expression specifying which part of a server's response to use fo
 
 Example:
 
-~~~  HTTP.RES.HEADER("setcookie").VALUE(0).TYPECAST_NVLIST_T('=',';').VALUE("server1").
+~~~
+HTTP.RES.HEADER("setcookie").VALUE(0).TYPECAST_NVLIST_T('=',';').VALUE("server1").
 ~~~
 
 #####`rhi_state`
@@ -1813,7 +1749,7 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', '
 
 Expression, or name of a named expression, against which traffic is evaluated. Written in the classic or default syntax.
 
-Note: Maximum length of a string literal in the expression is 255 characters. A longer string can be split into smaller strings of up to 255 characters each, and the smaller strings concatenated with the + operator. For example, you can create a 500-character string as follows: '"<string of 255 characters>" + "<string of 245 characters>"'.
+Note: Maximum length of a string literal in the expression is 255 characters. A longer string can be split into smaller strings of up to 255 characters each, and the smaller strings concatenated with the + operator. For example, you can create a 500-character string as follows: '"string of 255 characters" + "string of 245 characters"'.
 
 The following requirements apply only to the NetScaler CLI:
   
@@ -1911,7 +1847,7 @@ Name for the inserted header. The default name is vip-header.
 
 #####`virtual_server_ip_port_insertion`
 
-Insert an HTTP header, whose value is the IP address and port number of the virtual server, before forwarding a request to the server. The format of the header is <vipHeader>: <virtual server IP address>_<port number >, where vipHeader is the name that you specify for the header. If the virtual server has an IPv6 address, the address in the header is enclosed in brackets ([ and ]) to separate it from the port number. If you have mapped an IPv4 address to a virtual server's IPv6 address, the value of this parameter determines which IP address is inserted in the header, as follows:
+Insert an HTTP header, whose value is the IP address and port number of the virtual server, before forwarding a request to the server. The format of the header is `<vipHeader>: <virtual server IP address>_<port number>`, where vipHeader is the name that you specify for the header. If the virtual server has an IPv6 address, the address in the header is enclosed in brackets ([ and ]) to separate it from the port number. If you have mapped an IPv4 address to a virtual server's IPv6 address, the value of this parameter determines which IP address is inserted in the header, as follows:
 
 * VIPADDR - Insert the IP address of the virtual server in the HTTP header regardless of whether the virtual server has an IPv4 address or an IPv6 address. A mapped IPv4 address, if configured, is ignored.
 * V6TOV4MAPPING - Insert the IPv4 address that is mapped to the virtual server's IPv6 address. If a mapped IPv4 address is not configured, insert the IPv6 address.
@@ -1947,14 +1883,7 @@ The title of the bind resource, composed of the title of the lbvserver and the t
 
 #####`priority`
 
-The priority of the policy binding. Values can match `/^\d+$/`.
-
-Min = 1
-Max = 2147483647
-
-#####`provider`
-
-The specific backend to use for this `netscaler_lbvserver_responderpolicy_bind` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+The priority of the policy binding. Values can  be any integer between 1 and 2147483647.
 
 ### netscaler_lbvserver_responderpolicy_bind
 
@@ -1986,14 +1915,7 @@ The title of the bind resource, composed of the title of the lbvserver and the t
 
 #####`priority`
 
-Specifies the priority of the policy binding. Values can match '/^\d+$/'.
-
-Min = 1
-Max = 2147483647
-
-#####`provider`
-
-The specific backend to use for this `netscaler_lbvserver_responderpolicy_bind` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform.Available providers are: rest.
+The priority of the policy binding. Values can  be any integer between 1 and 2147483647.
 
 ###Type: netscaler_lbserver_service_bind
 
@@ -2013,16 +1935,9 @@ Valid values are 'present', 'absent'.
 
 The title of the bind resource, composed of the title of the lbvserver and the title of the service: 'lbvserver_name/service_name'.
 
-#####`provider`
-
-The specific backend to use for this `netscaler_lbvserver_service_bind` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
-
 #####`weight`
 
-Weight to assign to the specified service. Values can match `/^\d+$/`.
-
-Min = 1
-Max = 100
+Weight to assign to the specified service. Value can be any integer between 1 and 100.
 
 ###Type: netscaler_responderaction
 
@@ -2056,13 +1971,9 @@ Expression specifying what to respond with. Typically a URL for redirect policie
 
 Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
 
-#####`provider`
-
-The specific backend to use for this `netscaler_responderaction` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
-
 #####`type`
 
-Type of responder action. Type of responses sent by the policies bound to this policy label.
+Type of responder action. Type of responses sent by the policies bound to this policy label. Valid options: 'noop', 'respondwith', 'redirect', 'sqlresponse_ok', 'sqlresponse_error'.
 
 
 ###Type: netscaler_responderglobal
@@ -2097,14 +2008,7 @@ Name for the responder policy. Must begin with an ASCII alphabetic or underscore
 
 #####`priority`
 
-Specifies the priority of the policy. Values can match '/^\d+$/'.
-
-Min = 1
-Max = 2147483647
-
-#####`provider`
-
-The specific backend to use for this `netscaler_responderglobal` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+Specifies the priority of the policy. Values can be any integer between 1 and 2147483647.
 
 ###Type: netscaler_responderpolicy
 
@@ -2144,17 +2048,13 @@ Name of the messagelog action to use for requests that match this policy.
 
 Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
 
-#####`provider`
-
-The specific backend to use for this `netscaler_responderpolicy` resource. You will seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
-
 #####`undefined_result_action`
 
 Action to perform if the result of policy evaluation is undefined.
 
 ###Type: netscaler_responderpolicylabel
 
-Manages basic NetScaler responder action objects.
+Manages basic NetScaler responder policy label objects.
 
 ####Parameters
 
@@ -2174,13 +2074,9 @@ Valid values are 'present', 'absent'.
 
 Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
 
-#####`provider`
-
-The specific backend to use for this `netscaler_responderpolicylabel` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
-
 #####`type`
 
-Type of responses sent by the policies bound to this policy label.
+Type of responses sent by the policies bound to this policy label. Valid options: HTTP, OTHERTCP, SIP_UDP, MYSQL, MSSQL, NAT, DIAMETER.
 
 ###Type: netscaler_rewriteaction
 
@@ -2218,45 +2114,34 @@ Name for the object. Must begin with an ASCII alphabetic or underscore (_) chara
 
 Pattern to be used for INSERT_BEFORE_ALL, INSERT_AFTER_ALL, REPLACE_ALL, DELETE_ALL action types.
 
-#####`provider`
-
-The specific backend to use for this `netscaler_rewriteaction` resource. You seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
-
 #####`refine_search`
 
-The refineSearch expression specifies how the selected HTTP data can further be refined. These expression always starts with the 'Extend(m,n)' operation, where 'm' specifies number of bytes to the left of selected data and 'n' specifies number of bytes to the right of selected data. refineSearch expressions are only allowed on body-based expression and for actions of type:
-
-* REPLACE_ALL
-* INSERT_AFTER_ALL
-* DELETE_ALL
-* INSERT_BEFORE_ALL.
-
-This can accelerate search using regular expression. For example, if we need to find all the URLs from www.zippo.com in a response body, then rather than writing a regular expression to search this URL pattern, we can search for 'zippo' pattern first and then extend the search space by some bytes and finally check for prefix 'www.zippo.com'. The rewrite command might look like:
-
-~~~
-add rewrite action act1 delete_all 'http.res.body(10000)' -pattern "zippo" -refineSearch "extend(10,10).regex_select(re%<www.zippo.com[^>].*>%)"
-~~~
+The refineSearch expression specifies how the selected HTTP data can further be refined. 
 
 Maximum length of the input expression is 8191. Maximum size of string that can be used inside the expression is 1499.
 
 #####`search`
 
-Search expression takes the following five argumens to use the appropriate methods to search in the specified body or header:
+Search expression takes one of five arguments to use the appropriate methods to search in the specified body or header. For example:
 
-* text(string) - example: `-search text("hello")`.
-* regex(re<delimiter>regular exp<delimiter>) - example: `-search regex(re/^hello/)`.
-* xpath(xp<delimiter>xpath expression<delimiter>) - example: `-search xpath(xp%/a/b%)`.
-* xpath_json(xp<delimiter>xpath expression<delimiter>) - example: `-search xpath_json(xp%/a/b%)`. Note that xpath_json_search takes xpath expression as argument but operates on json file instead of xml file.
-* patset(patset) - example: `-search patset("patset1")`.
+~~~
+search => text("hello")
+~~~
 
-Search expressions are allowed on actions of type:
+or 
 
-* REPLACE_ALL
-* INSERT_AFTER_ALL
-* DELETE_ALL
-* INSERT_BEFORE_ALL.
+~~~
+search => regex(re/^hello/)
+~~~
 
-Search is a super set of pattern. It is advised to use search over pattern.
+
+* `text(string)`. Example: `text("hello")`.
+* `regex(re<delimiter>regular exp<delimiter>)`. Example: `regex(re/^hello/)`.
+* `xpath(xp<delimiter>xpath expression<delimiter>)`. Example: `xpath(xp%/a/b%)`.
+* `xpath_json(xp<delimiter>xpath expression<delimiter>)`. Example: `xpath_json(xp%/a/b%)`. Note that `xpath_json_search` takes xpath expression as argument but operates on json file instead of xml file.
+* `patset(patset)`. Example: `patset("patset1")`.
+
+Search is a superset of pattern.  We recommend using `search` rather than `pattern`. 
 
 #####`target_expression`
 
@@ -2308,7 +2193,6 @@ For each action, use the `<target_expression>` and `<content_expression>` as def
  
  `<content_expression>` = Compound text expression
 
-  
 * `insert_after`: Inserts the value specified by attr after the target text reference.
 
   `<target_expression>` = Advanced text expression
@@ -2327,38 +2211,50 @@ For each action, use the `<target_expression>` and `<content_expression>` as def
 
   `<target_expression>` = Compound text expression
 
-* `replace_all`: Replaces all occurrence of the pattern in the text provided in the target with the text provided in the stringBuilderExpr, with a string defined in the `-pattern` argument or `-search` argument.
+* `replace_all`: Replaces all occurrence of the pattern in the text provided in the target with the text provided in the stringBuilderExpr, with a string defined in the `-pattern`  or `-search` parameters.
 
-  For example, you can replace all occurences of 'abcd with `-pattern efgh`.
 
-  `<target_expression>` = text in a request or a response, for example http.req.body(1000)
+  For example, you can replace all occurrences of 'abcd':
   
-  `<content_expression>` = Compound text expression
+  ~~~
+  replace_all => true,
+  pattern     => 'efgh.*'
+  ~~~
   
-  `-pattern <expression>` = string constant, for example `-pattern efgh` or `-search text("efgh")`
+  or 
+  
+  ~~~
+  replace_all => true,
+  search      => 'aoeu'
+  ~~~
+
+  `<target_expression>` = Text in a request or a response.
+  
+  `<content_expression>` = Compound text expression.
+  
+  `-pattern <expression>` = String constant, for example `pattern => efgh` or `search => text("efgh")`.
 
 * `insert_before_all`: Inserts the value specified by `<content_expression>` before all the occurrence of pattern in the target text reference.
       
-  `<target_expression>` = Advanced text expression
+  `<target_expression>` = Advanced text expression.
   
-  `<content_expression>` = Compound text expression
+  `<content_expression>` = Compound text expression.
   
-  `-pattern <expression>` = string constant or advanced regular expression or
-      `-search regex(<regular expression>)` or `-search text(string constant)`
+   The `pattern` and `search` parameters accept either a string or a regex: `pattern => <expression>`, `search => regex(<regular expression>)` or `search => text(string constant)`.
 
 * `insert_after_all`: Inserts the value specified by `<content_expression>` after all the occurrences of the pattern specified in the target text reference.
       
-  `<target_expression>` = Advanced text expression
+  `<target_expression>` = Advanced text expression.
 
-  `<content_expression>` = Compound text expression
+  `<content_expression>` = Compound text expression.
 
-  `-pattern <expression>` = string constant or advanced regular expression or `-search regex(<regular expression>)` or `-search text(string constant)`
+  The `pattern` and `search` parameters accept either a string or a regex: `pattern => <expression>`, `search => regex(<regular expression>)` or `search => text(string constant)`.
       
 * `delete_all`: Delete all the occurrence of pattern in the target text reference.
       
-  `<target_expression>` = Advanced text expression
+  `<target_expression>` = Advanced text expression.
 
-  `-pattern <expression>` = string constant or advanced regular expression or `-search regex(<regular expression>)` or `-search text(string constant)`
+  The `pattern` and `search` parameters accept either a string or a regex: `pattern => <expression>`, `search => regex(<regular expression>)` or `search => text(string constant)`.
       
 ###Type: netscaler_rewriteglobal
 
@@ -2401,14 +2297,7 @@ Name for the rewrite policy. Must begin with an ASCII alphabetic or underscore (
 
 #####`priority`
 
-Specifies the priority of the policy. Values can match `/^\d+$/`.
-
-Min = 1
-Max = 2147483647
-
-#####`provider`
-
-The specific backend to use for this `netscaler_rewriteglobal` resource. You will seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
+Specifies the priority of the policy. Values can be any integer between 1 and 2147483647.
   
 ###Type: netscaler_rewritepolicy
 
@@ -2434,7 +2323,7 @@ Valid values are 'present', 'absent'.
 
 #####`expression`
 
-Expression to be used by rewrite policy. It has to be a boolean PI rule expression.
+Expression against which traffic is evaluated. Written in default syntax.
 
 #####`log_action`
 
@@ -2443,10 +2332,6 @@ The log action associated with the rewrite policy.
 #####`name`
 
 Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
-
-#####`provider`
-
-The specific backend to use for this `netscaler_rewritepolicy` resource. You will seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
 
 #####`undefined_result_action`
 
@@ -2473,10 +2358,6 @@ Valid values are 'present', 'absent'.
 #####`name`
 
 Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
-
-#####`provider`
-
-The specific backend to use for this `netscaler_rewritepolicylabel` resource. You will seldom need to specify this --- Puppet will usually discover the appropriate provider for your platform. Available providers are: rest.
 
 #####`transform_name`
 
@@ -2516,7 +2397,7 @@ Valid options: a string.
 #####`disable_wait_time`
 Specifies a wait time when disabling a server object. During the wait time, the server object continues to handle established connections but rejects new connections.
  
-Valid options: '/\d+/'.
+Valid options: an integer.
  
 #####`ensure`
 Determines whether the server object is present or absent.
@@ -2764,5 +2645,5 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', '
 #####`weight`
 Specifies the weight to assign to the monitor-service binding. When a monitor is UP, the weight assigned to its binding with the service determines how much the monitor contributes toward keeping the health of the service above the value configured for the [`monitor_threshold`](#monitor_threshold) parameter.
 
-Valid options /^\d+$/ ; minimum = 1 and maximum = 100.
+Valid options: an integer between 1 and 100.
 
