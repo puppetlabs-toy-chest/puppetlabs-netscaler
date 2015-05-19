@@ -175,9 +175,23 @@ The [above example](#set-up-two-load-balanced-web-servers) is a proof-of-concept
 * [`netscaler_rewriteglobal`](#type-netscaler_rewriteglobal`)
 * [`netscaler_rewritepolicy`](#type-netscaler_rewritepolicy`)
 * [`netscaler_rewritepolicylabel`](#type-netscaler_rewritepolicylabel`)
+* [`netscaler_route`](#type-netscaler_route)
 * [`netscaler_server`](#type-netscaler_server)
 * [`netscaler_service`](#type-netscaler_service)
-* [`netscaler_service_lbmonitor-bind`](#type-netscaler_service_lbmonitor-bind)
+* [`netscaler_servicegroup`](#type-netscaler_servicegroup)
+* [`netscaler_servicegroup_lbmonitor_bind`](#type-netscaler_servicegroup_lbmonitor_bind)
+* [`netscaler_servicegroup_member`](#type-netscaler_servicegroup_member)
+* [`netscaler_service_lbmonitor_bind`](#type-netscaler_service_lbmonitor_bind)
+* [`netscaler_snmpalarm`](#type-netscaler_snmpalarm)
+* [`netscaler_sslcertfile`](#type-netscaler_sslcertfile)
+* [`netscaler_sslcertkey`](#type-netscaler_sslcertkey)
+* [`netscaler_sslkeyfile`](#type-netscaler_sslkeyfile)
+* [`netscaler_sslocsresponder`](#type-netscaler_sslocsresponder)
+* [`netscaler_sslvserver`](#type-netscaler_sslvserver)
+* [`netscaler_user`](#type-netscaler_user)
+* [`netscaler_vlan`](#type-netscaler_vlan)
+* [`netscaler_vlan_nsip_bind`](#type-netscaler_vlan_nsip_bind)
+
 
 ###Type: netscaler_csaction
 
@@ -2769,6 +2783,64 @@ Types of transformations allowed by the policies bound to the label. The followi
   * `diameter_req` - DIAMETER requests
   * `diameter_res` - DIAMETER responses
 
+###Type: netscaler_route
+
+The IPv4 network address, netmask and gateway, in the following format:
+
+~~~
+network/netmask:gateway eg 8.8.8.0/255.255.255.0:null
+~~~
+
+#### Parameters
+
+
+#####`advertise`
+
+Advertises this route.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+
+#####`cost1`
+
+Specifies the cost used by the routing algorithms to determine preference for using this route. The lower the cost, the higher the preference. Accepts any positive integer between 0 and 65535.
+
+#####`distance`
+
+Specifies the administrative distance of this route. This determines the preference of this route over other routes with same destination, from different routing protocols. A lower value is preferred. Accepts any integer between 0 and 255. Default value: 1.
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`monitor`
+
+Name of the monitor, of type ARP or PING, configured on the NetScaler appliance to monitor this route.
+
+#####`msr`
+
+Whether to monitor this route using a monitor of type ARP or PING.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+
+#####`name`
+
+Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`protocol`
+
+Routing protocol used for advertising this route. 
+
+Valid options: 'OSPF', 'ISIS', 'RIP', 'BGP'. Default value: ADV_ROUTE_FLAGS.
+
+#####`td`
+Uniquely identifies the traffic domain in which you want to configure the entity. If you do not specify an ID, the entity becomes part of the default traffic domain, which has an ID of 0. Accepts any integer from 0 to 4094.
+
+#####`weight`
+
+Determine preference for this route over others of equal cost. The lower the weight, the higher the preference. Accepts an integer from 1 to 65535.
+
 ###Type: netscaler_server
 
 Manages basic NetScaler server objects, either IP address-based servers or domain-based servers.
@@ -3008,6 +3080,244 @@ Uses the client's IP address as the source IP address when initiating a connecti
 
 Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
 
+###Type: netscaler_servicegroup
+
+Enables you to manage a group of services. For example, if you enable or disable any option, such as compression, health monitoring, or graceful shutdown for a service group, the option is enabled for all the members of the service group.
+
+#### Parameters
+
+#####`appflow_logging`
+
+Enables logging of AppFlow information.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`autoscale_mode`
+
+Auto scale option for a servicegroup. Valid options: **TODO**
+
+#####`cache_type`
+
+Cache type supported by the cache server. Valid options: **TODO**
+
+#####`cacheable`
+
+Uses the transparent cache redirection virtual server to forward requests to the cache server. May not [**TODO**: "May not" as in "can not" or as in "might not"?] be specified if cache_type is 'TRANSPARENT', 'REVERSE', or 'FORWARD'.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`client_idle_timeout`
+
+Specifies the time, in seconds, after which to terminate an idle client connection. 
+
+Max = 31536000. **TODO**: default?
+
+#####`client_ip`
+
+Inserts an HTTP header with the client's IPv4 or IPv6 address as its value, before forwarding a request to the service. Used if the server needs the client's IP address for security, accounting, or other purposes, and setting the Use Source IP parameter is not a viable option.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`client_ip_header`
+
+Name for the HTTP header whose value must be set to the IP address of the client. Used with the Client IP parameter. If you set the Client IP parameter, and you do not specify a name for the header, the appliance uses the header name specified for the global Client IP Header parameter. If the global Client IP Header parameter is not specified, the appliance inserts a header with the name "client-ip."
+
+#####`client_keepalive`
+
+Enables client keep-alive for the service.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. **TODO:** Default?
+
+#####`comments`
+
+Any comments you want associated with this object.
+
+#####`down_state_flush`
+
+Flushes all active transactions associated with a service whose state transitions from UP to DOWN. Do not enable this option for applications that must complete their transactions.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. **TODO**: Default?
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`graceful_shutdown`
+
+Indicates graceful shutdown of the server. System will wait for all outstanding connections to this server to be closed before disabling the server.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'. **TODO**: Default?
+
+#####`health_monitoring`
+
+Monitors the health of this service. Available settings function as follows:
+
+* YES - Send probes to check the health of the service.
+* NO - Do not send probes to check the health of the service. With the NO option, the appliance shows the service as UP at all times.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`http_compression`
+
+Enables compression for the specified service. **TODO**: Valid options? Default?
+
+#####`http_profile`
+
+Name of the HTTP profile that contains HTTP configuration settings for the service group.
+
+#####`max_clients`
+
+Maximum number of simultaneous open connections to the service. Accepts an integer.
+
+Max = 4294967294.
+
+#####`max_requests`
+
+Maximum number of requests that can be sent on a persistent connection to the service. Connection requests beyond this value are rejected. Accepts an integer.
+
+Max = 65535.
+
+#####`maximum_bandwidth`
+
+Maximum bandwidth, in Kbps, allocated to the service. Accepts an integer.
+
+Max = 4294967287.
+
+#####`member_port`
+
+The port for the service group members. Only valid when autoscale_mode is POLICY.
+
+#####`monitor_threshold`
+
+Minimum sum of weights of the monitors that are bound to this service. Used to determine whether to mark a service as UP or DOWN. Accepts an integer.
+
+Max = 65535.
+
+#####`name`
+
+Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`net_profile`
+
+Network profile for the service group. **TODO**: Valid options? Default?
+
+#####`protocol`
+
+*Required*. Protocol in which data is exchanged with the service group. **TODO**: Valid options? Default?
+
+
+#####`server_idle_timeout`
+
+Time, in seconds, after which to terminate an idle server connection. Accepts an integer.
+
+Max = 31536000.
+
+#####`state`
+
+The state of the object. **TODO**: Default?
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`sure_connect`
+
+The state of SureConnect for the service.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`surge_protection`
+
+Enables surge protection for the service.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`tcp_buffering`
+
+Enables TCP buffering for the service.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`tcp_profile`
+
+Name of the TCP profile that contains TCP configuration settings for the service group.
+
+#####`traffic_domain_id`
+
+Uniquely identifies the traffic domain in which you want to configure the entity. If you do not specify an ID, the entity becomes part of the default traffic domain, which has an ID of 0. Accepts an integer from 0 to 4096
+
+#####`use_client_ip`
+
+Whether to use the client's IP address as the source IP address when initiating a connection to the server. When creating a service, if you do not set this parameter, the service inherits the global Use Source IP setting. However, you can override this setting after you create the service.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`use_proxy_port`
+
+Whether to use the proxy port as the source port when initiating connections with the server. With the NO setting, the client-side connection port is used as the source port for the server-side connection.
+
+Note: This parameter is available only when the Use Source IP (USIP) parameter is set to YES.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+
+###Type: netscaler_servicegroup_lbmonitor_bind
+
+Manage a binding between a servicegroup and a loadbalancing monitor.
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`name`
+The title of the bind resource, composed of the title of the service group and the title of the lbmonitor: 'servicegroup_name/lbmonitor_name'.
+
+#####`passive`
+
+Indicates if the monitor is passive. A passive monitor does not remove servicegroup from LB decision when the threshold is breached.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`state`
+
+The configured state (enable/disable) of the bound monitor.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
+
+#####`weight`
+
+Weight to assign to the monitor-servicegroup binding. When a monitor is UP, the weight assigned to its binding with the servicegroup determines how much the monitor contributes toward keeping the health of the servicegroup above the value configured for the Monitor Threshold parameter. Accepts an integer from 1 to 100.
+
+###Type: netscaler_servicegroup_member
+
+Manages a member of a servicegroup.
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`name`
+
+The title of the bind resource, composed of the title of the service group and the title of the server port: 'servicegroup_name/server_name:server_port'.
+
+#####`state`
+
+The configured state (enable/disable) of the service group.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+
+#####`weight`
+
+Weight to assign to the servers in the service group. Specifies the capacity of the servers relative to the other servers in the load balancing configuration. The higher the weight, the higher the percentage of requests sent to the service. Accepts an integer from 1 to 100.
+
 ###Type: netscaler_service_lbmonitor_bind
  
 Manages a binding between a NetScaler service representation object and a load balancing monitor.
@@ -3017,6 +3327,7 @@ Manages a binding between a NetScaler service representation object and a load b
 All parameters, except where otherwise noted, are optional. Their default values are determined by your particular NetScaler setup.
  
 #####`ensure`
+
 Determines whether the monitor-service binding is present or absent.
 
 Valid values are 'present' or 'absent'.
@@ -3026,17 +3337,340 @@ Valid values are 'present' or 'absent'.
 Name for the monitor-service binding. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
 
 #####`passive`
+
 Sets the monitor as passive. A passive monitor does not remove service from LB decision when the threshold is breached.
 
 Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
 
 #####`state`
+
 Determines whether the bound monitor is enabled or disabled.
 
 Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
 
 #####`weight`
+
 Specifies the weight to assign to the monitor-service binding. When a monitor is UP, the weight assigned to its binding with the service determines how much the monitor contributes toward keeping the health of the service above the value configured for the [`monitor_threshold`](#monitor_threshold) parameter.
 
 Valid options: an integer between 1 and 100.
+
+###Type: netscaler_snmpalarm
+
+Manages basic NetScaler network IP objects. **TODO**: is this right?
+
+#### Parameters
+
+#####`alarm_threshold`
+
+Value for the high threshold. The NetScaler appliance generates an SNMP trap message when the value of the attribute associated with the alarm is greater than or equal to the specified high threshold value.
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`logging`
+
+Logging status of the alarm. When logging is enabled, the NetScaler appliance logs every trap message that is generated for this alarm.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: 'ENABLED'.
+
+#####`name`
+
+Name of the SNMP alarm. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`normal_threshold`
+
+Value for the normal threshold. A trap message is generated if the value of the respective attribute falls to or below this value after exceeding the high threshold.
+
+**TODO:** Valid and default values?
+
+#####`severity`
+
+Severity level assigned to trap messages generated by this alarm. The severity levels are, in increasing order of severity: Informational, Warning, Minor, Major, and Critical. 
+
+#####`state`
+
+Current state of the SNMP alarm. The NetScaler appliance generates trap messages only for SNMP alarms that are enabled.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
+
+#####`time_interval`
+
+Interval, in seconds, at which the NetScaler appliance generates SNMP trap messages when the conditions specified in the SNMP alarm are met. Default value: 1. Can be specified for the following alarms:
+
+* SYNFLOOD
+* HA-VERSION-MISMATCH
+* HA-SYNC-FAILURE
+* HA-NO-HEARTBEATS
+* HA-BAD-SECONDARY-STATE
+* CLUSTER-NODE-HEALTH
+* CLUSTER-NODE-QUORUM
+* CLUSTER-VERSION-MISMATCH
+* PORT-ALLOC-FAILED
+* APPFW traps. 
+
+Default trap time intervals: SYNFLOOD and APPFW traps = 1sec, PORT-ALLOC-FAILED = 3600sec(1 hour), Other Traps = 86400sec(1 day).
+
+
+### netscaler_sslcertkey
+
+Configures the Imported Certfile resource.
+
+#### Parameters
+
+#####`bundle`
+
+Parse the certificate chain as a single file after linking the server certificate to its issuer's certificate within the file.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
+
+#####`certificate_filename`
+
+Name of and, optionally, the path to the X509 certificate file that is used to form the certificate-key pair.
+
+#####`certificate_format
+
+Input format of the certificate and the private-key files. The two formats supported by the appliance are: PEM: Privacy Enhanced Mail; DER: Distinguished Encoding.
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`fipskey`
+
+Name of the FIPS key that was created inside the Hardware Security Module (HSM) of a FIPS appliance, or a key that was imported into the HSM.
+
+#####`key_filename`
+
+Name of and, optionally, the path to the private-key file that is used to form the certificate-key pair.
+
+#####`linkcertkeyname`
+
+Name of the Certificate Authority certificate-key pair to which to link a certificate-key pair.
+
+#####`name`
+
+Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`nodomaincheck`
+
+Override the check for matching domain names during a certificate update operation.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
+
+#####`notificationperiod`
+
+Time, in number of days, before certificate expiration, at which to generate an alert that the certificate is about to expire.
+
+#####`notify_when_expires`
+
+Issue an alert when the certificate is about to expire.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
+
+#####`passplain`
+
+Pass phrase used to encrypt the private-key. Required when adding an encrypted private-key in PEM format.
+
+#####`password`
+
+Passphrase that was used to encrypt the private-key.
+
+
+###Type: netscaler_sslkeyfile
+
+Configures the Imported Keyfile resource.
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`name`
+
+Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`source`
+
+The URL specifying the protocol, host, and path, including file name, to the key file to be imported.
+
+###Type: netscaler_sslocspresponder
+
+Configuration for OCSP responser resource.
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`name
+
+Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`url`
+
+The URL of the OCSP responder.
+
+###Type: netscaler_sslvserver
+
+Binds the sslvserver and the certkeyname.
+
+#### Parameters
+
+#####`ca`
+
+The CA certificate.
+
+#####`crlcheck`
+
+The state of the CRL check parameter.
+
+Valid options: Mandatory, Optional.
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`name`
+
+Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`ocspcheck`
+
+The state of the OCSP check parameter.
+
+Valid options: Mandatory, Optional.
+
+#####`skipcaname`
+
+Indicates whether this particular CA certificate's CA_Name needs to be sent to the SSL client while requesting for client certificate in a SSL handshake.
+
+**TODO**: Valid values? Default?
+
+#####`snicert`
+
+The name of the CertKey. Use this option to bind Certkey(s) that will be used in SNI processing.
+
+
+###Type: netscaler_user
+
+Configures the system user resource.
+
+#### Parameters
+
+#####`cli_prompt`
+
+String to display at the command-line prompt. Can consist of letters, numbers, hyphen (-), period (.), hash (#), space ( ), at (@), equal (=), colon (:), underscore (_), and the following variables:
+
+* %u - Will be replaced by the user name.
+* %h - Will be replaced by the hostname of the NetScaler appliance.
+* %t - Will be replaced by the current time in 12-hour format.
+* %T - Will be replaced by the current time in 24-hour format.
+* %d - Will be replaced by the current date.
+* %s - Will be replaced by the state of the NetScaler appliance.
+
+Note: The 63-character limit for the length of the string does not apply to the characters that replace the variables.
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`external_authentication`
+
+Whether to use external authentication servers for the system user authentication or not.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+
+#####`idle_time_out`
+
+CLI session inactivity timeout, in seconds. If Restrictedtimeout argument of system parameter is enabled, Timeout can have values in the range [300-86400] seconds. If Restrictedtimeout argument of system parameter is disabled, Timeout can have values in the range [0, 10-100000000] seconds. Default value is 900 seconds.
+
+#####`logging_privilege`
+
+Specifies user logging privileges.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: DISABLED.
+
+#####`name`
+
+Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
+
+#####`password`
+
+Password with which the user logs on. Required for any user account that does not exist on an external authentication server. If you are not using an external authentication server, all user accounts must have a password. If you are using an external authentication server, you must provide a password for local user accounts that do not exist on the authentication server.
+
+### netscaler_vlan
+
+Manages basic NetScaler network IP objects. **TODO**: Is this right?
+
+#### Parameters
+
+#####`alias_name`
+
+A name for the VLAN. Must begin with a letter, a number, or the underscore symbol, and can consist of from 1 to 31 letters, numbers, and the hyphen (-), period (.) pound (#), space ( ), at sign (@), equals (=), colon (:), and underscore (_) characters.
+
+You should choose a name that helps identify the VLAN. However, you cannot perform any VLAN operation by specifying this name instead of the VLAN ID.
+
+Maximum length = 31.
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`ipv6_dynamic_routing`
+
+Enables all IPv6 dynamic routing protocols on this VLAN. Note: For the ENABLED setting to work, you must configure IPv6 dynamic routing protocols from the VTYSH command line.
+
+Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: DISABLED.
+
+#####`maximum_transmission_unit`
+
+Specifies the maximum transmission unit (MTU), in bytes. The MTU is the largest packet size, excluding 14 bytes of ethernet header and 4 bytes of crc, that can be transmitted and received over this VLAN.
+
+Default value: 0
+Minimum value = 500
+Maximum value = 9216
+
+#####`name`
+
+Uniquely identifies a VLAN. Accepts an integer from 1 to 4094.
+
+### netscaler_vlan_nsip_bind
+
+Manages a binding between a vlan and a NetScaler IP address.
+
+#### Parameters
+
+#####`ensure`
+
+The basic state that the resource should be in. 
+
+Valid values are 'present', 'absent'.
+
+#####`name`
+The title of the bind resource, composed of the title of the VLAN and the NetScaler IP address. 'vlan_id/ip_address'
+
+#####`netmask`
+
+Subnet mask for the network address defined for this VLAN.
+
+#####`td`
+
+Uniquely identifies the traffic domain in which you want to configure the entity. If you do not specify an ID, the entity becomes part of the default traffic domain, which has an ID of 0. Accepts an integer from 0 to 4094.
 
