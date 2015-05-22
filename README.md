@@ -31,7 +31,7 @@ The module allows you to manage NetScaler nodes and pool configuration through P
 
 This module uses `puppet device` instead of `puppet agent` to manage the devices. The `puppet device` subcommand interacts with administrative interfaces to implement types and providers. This allows resources to talk to the device and translate the module into network calls.
 
-Before you can use the netscaler module, you must create a proxy system able to run `puppet device`. In order to do so, you will have a Puppet master and a Puppet agent as usual, and the agent will be the "proxy system" for `puppet device`.
+Before you can use the netscaler module, you must create a proxy system able to run `puppet device`. In order to do so, you'll need a Puppet master and a Puppet agent as usual, and one node as the "proxy system" for `puppet device`.
 
 This means you must create a device.conf file in the Puppet conf directory (either /etc/puppet or /etc/puppetlabs/puppet) on the Puppet agent. Within your device.conf, you must have:
 
