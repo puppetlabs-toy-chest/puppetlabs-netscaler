@@ -29,11 +29,9 @@ The module allows you to manage NetScaler nodes and pool configuration through P
 
 ###Beginning with netscaler
 
-Before you can use the netscaler module, you must create a proxy system able to run `puppet device`.  In order to do so, you will have a Puppet master and a Puppet agent as usual, and the agent will be the "proxy system" for `puppet device`.
+This module uses `puppet device` instead of `puppet agent` to manage the devices. The `puppet device` subcommand interacts with administrative interfaces to implement types and providers. This allows resources to talk to the device and translate the module into network calls.
 
-(The `puppet device` subcommand interacts with administrative interfaces, allowing resources to talk to the device and translating the module into network calls.
-
-**TODO^^^ Run that by Hunter.**
+Before you can use the netscaler module, you must create a proxy system able to run `puppet device`. In order to do so, you will have a Puppet master and a Puppet agent as usual, and the agent will be the "proxy system" for `puppet device`.
 
 This means you must create a device.conf file in the Puppet conf directory (either /etc/puppet or /etc/puppetlabs/puppet) on the Puppet agent. Within your device.conf, you must have:
 
@@ -67,50 +65,48 @@ In order to successfully set up your web servers, you must know the following in
 
 In your site.pp file, enter the below code:
 
-**TODO:Check/Update**
-
 ~~~
 node 'device certname' {
-  netscaler_server { '1_10_server1':
+  netscaler_server { 'server1':
   ensure  => present,
   address => '1.10.1.1',
   }
-netscaler_service { '1_10_service1':
+netscaler_service { 'service1':
   ensure      => 'present',
-  server_name => '1_10_server1',
+  server_name => 'server1',
   port        => '80',
   protocol    => 'HTTP',
   comments    => 'This is a comment'
 }
-netscaler_lbvserver { '1_10_lbvserver1':
+netscaler_lbvserver { 'lbvserver1':
   ensure       => 'present',
   service_type => 'HTTP',
   ip_address   => '1.10.1.2',
   port         => '8080',
   state        => true,
 }
-netscaler_lbvserver_service_binding { '1_10_lbvserver1/1_10_service1':
+netscaler_lbvserver_service_binding { 'lbvserver1/service1':
   ensure => 'present',
   weight => '100',
 }
-netscaler_rewritepolicy { '2_4_rewritepolicy_test1':
+netscaler_rewritepolicy { 'rewritepolicy_test1':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
   comments                => 'comment',
   expression              => 'HTTP.REQ.URL.SUFFIX.EQ("")',
   undefined_result_action => 'DROP',
 }
-netscaler_csvserver { '2_4_csvserver_test1':
+netscaler_csvserver { 'csvserver_test1':
   ensure        => 'present',
   service_type  => 'HTTP',
   state         => true,
   ip_address    => '2.4.1.1',
   port          => '8080',
 }
-netscaler_csvserver_rewritepolicy_binding { '2_4_csvserver_test1/2_4_rewritepolicy_test1':
+netscaler_csvserver_rewritepolicy_binding { 'csvserver_test1/rewritepolicy_test1':
   ensure               => present,
   priority             => 1,
-  invoke_vserver_label => '2_4_csvserver_test1',
+  invoke_vserver_label => 'csvserver_test1',
   choose_type          => 'Request',
 }
 }
@@ -121,7 +117,7 @@ netscaler_csvserver_rewritepolicy_binding { '2_4_csvserver_test1/2_4_rewritepoli
 Run the following to have the proxy node apply your classifications and configure the NetScaler device: 
 
 ~~~
-$ https://<USERNAME>:<PASSWORD>@<IP ADDRESS or FULLY QUALIFIED HOST NAME>> puppet device -v --user=root
+$ puppet device -v --user=root
 ~~~
 
 If you do not run this command, clients will not be able to make requests to the web servers.
@@ -345,19 +341,19 @@ All parameters, except where otherwise noted, are optional. Their default values
 
 Enable logging appflow flow information. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`authentication`
 
 This option toggles on or off the application of authentication of incoming users to the vserver. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`authentication_401`
 
 This option toggles on or off the HTTP 401 response based authentication. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`authentication_fqdn`
 
@@ -379,7 +375,7 @@ Name of the backup virtual server to which to forward requests if the primary vi
 
 The option to specify whether a virtual server used for content switching will route requests to the cache redirection virtual server before sending it to the configured servers. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`case_sensitive`
 
@@ -389,7 +385,7 @@ If case sensitivity of a content switching virtual server is set to 'ON', the UR
 
 If case sensitivity is set to 'OFF', the URLs /a/1.html and /A/1.HTML are treated the same and are switched to the same target. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`client_timeout`
 
@@ -413,13 +409,13 @@ The virtual server name to which content will be switched.
 
 When this argument is enabled, traffic will continue reaching backup vservers even after primary comes UP from DOWN state. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`down_state_flush`
 
 Perform delayed clean up of connections on this vserver.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`ensure`
 
@@ -463,7 +459,7 @@ If a destination IP address matches more than one IP pattern, the pattern with t
 
 Identifies a connection. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`listen_policy`
 
@@ -540,7 +536,7 @@ When true, Puppet will purge all unmanaged `netscaler_csvserver_rewritepolicy_bi
 
 Processes traffic on bound Push vserver.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`push_label_expression`
 
@@ -550,7 +546,7 @@ Specifies the expression to extract the label in response from server. The strin
 
 Specifies if multiple web 2.0 connections from the same client can connect to this vserver and expect updates.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`push_virtual_server_name`
 
@@ -570,7 +566,7 @@ Maximum value: 254
 
 Rewrite the port and change the protocol to ensure successful HTTP redirects from services.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`redirect_url`
 URL to which to redirect traffic if the virtual server becomes unavailable.
@@ -591,7 +587,7 @@ Valid options: PASSIVE, ACTIVE.
 
 Enables natting for RTSP data connection.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`service_type`
 
@@ -619,7 +615,7 @@ Specifies the type of threshold that, when exceeded, triggers spillover. Availab
 
 If spillover occurs, maintain source IP address based persistence for both primary and backup virtual servers.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`spillover_persistence_timeout`
 
@@ -639,13 +635,13 @@ Maximum value: 4294967287
 
 The initial state, enabled or disabled, of the virtual server.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`state_update`
 
 To enable the state update for a CSW vserver.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`tcp_profile_name`
 
@@ -1422,13 +1418,13 @@ Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', D
 
 #####`authentication`
 
-Enable or disable user authentication. Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Enable or disable user authentication. Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`authentication_401`
 
 Enable or disable user authentication with HTTP 401 responses.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`authentication_fqdn`
 
@@ -1457,13 +1453,13 @@ Name of the backup virtual server to which to forward requests if the primary vi
 
 If this option is enabled while resolving DNS64 query AAAA queries are not sent to back end dns server.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`cacheable`
 
 Route cacheable requests to a cache redirection virtual server. The load balancing virtual server can forward requests only to a transparent cache redirection virtual server that has an IP address and port combination of *:80, so such a cache redirection virtual server must be configured on the appliance. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`client_timeout`
 
@@ -1504,7 +1500,7 @@ Maximum value: 25400
 
 Enable database specific load balancing for MySQL and MSSQL service types.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`db_profile_name`
 
@@ -1514,20 +1510,20 @@ Name of the DB profile whose settings are to be applied to the virtual server.
 
 If the primary virtual server goes down, do not allow it to return to primary status until manually enabled.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`dns64`
 
 This argument is for enabling/disabling the dns64 on lbvserver. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 
 #####`down_state_flush`
 
 Flush all active transactions associated with a virtual server whose state transitions from UP to DOWN. Do not enable this option for applications that must complete their transactions.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`ensure`
 
@@ -1574,7 +1570,7 @@ If a destination IP address matches more than one IP pattern, the pattern with t
 
 Use Layer 2 parameters (channel number, MAC address, and VLAN ID) in addition to the 4-tuple `<source IP>:<source port>::<destination IP>:<destination port>` that is used to identify a connection. Allows multiple TCP and non-TCP connections with the same 4-tuple to co-exist on the NetScaler appliance.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`lb_method`
 
@@ -1631,7 +1627,7 @@ Maximum value: 101
 
 This option is used to retain vlan information of incoming packet when macmode is enabled.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`max_autoscale_members`
 
@@ -1745,19 +1741,19 @@ Type of persistence for the virtual server. Available settings function as follo
 
 **TODO: Check first sentence** Use priority queuing on the virtual server, based persistence types, for IPv6 virtual servers.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`process_local`
 
 By turning on this option packets destined to a vserver in a cluster will not under go any steering. Turn this option for single packet request response mode or when the upstream device is performing a proper RSS for connection based distribution.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`push`
 
 Process traffic with the push virtual server that is bound to this load balancing virtual server.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`push_label_expression`
 
@@ -1767,7 +1763,7 @@ Expression for extracting a label from the server's response. Can be either an e
 
 Allow multiple Web 2.0 connections from the same client to connect to the virtual server and expect updates.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`push_virtual_server_name`
 
@@ -1787,13 +1783,13 @@ Maximum value: 254
 
 When set to 'YES', this option causes the DNS replies from this vserver to have the RA bit turned on. Typically one would set this option to YES, when the vserver is load balancing a set of DNS servers that support recursive queries. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`redirect_port_rewrite`
 
 Rewrite the port and change the protocol to ensure successful HTTP redirects from services.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`redirect_url`
 
@@ -1834,7 +1830,7 @@ Route Health Injection (RHI) functionality of the NetSaler appliance for adverti
 
 Use network address translation (NAT) for RTSP data connections.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`rule`
 
@@ -1858,7 +1854,7 @@ Valid options: HTTP, FTP, TCP, UDP, SSL, SSL_BRIDGE, SSL_TCP, DTLS, NNTP, DNS, D
 
 Perform load balancing on a per-packet basis, without establishing sessions. Recommended for load balancing of intrusion detection system (IDS) servers and scenarios involving direct server return (DSR), where session information is unnecessary.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`skip_persistency`
 
@@ -1886,7 +1882,7 @@ Specifies the type of threshold that, when exceeded, triggers spillover. Availab
 
 If spillover occurs, maintain source IP address based persistence for both primary and backup virtual servers.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`spillover_persistence_timeout`
 
@@ -1906,13 +1902,13 @@ Maximum value: 4294967287
 
 State of the load balancing virtual server.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`sure_connect`
 
 Use SureConnect on the virtual server.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`tcp_profile_name`
 
@@ -2069,7 +2065,7 @@ All parameters, except where otherwise noted, are optional. Their default values
 
 Allows File Transfer Protocol (FTP) access to this IP address.
 
-Valid options: Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+Valid options: Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
 
 #####`allow_gui`
 
@@ -2081,31 +2077,31 @@ Valid options: 'ENABLED', 'SECUREONLY', 'DISABLED'. Default value: 'ENABLED'.
 
 Allows access to management applications on this IP address. 
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'DISABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'DISABLED'.
 
 #####`allow_snmp`
 
 Allows Simple Network Management Protocol (SNMP) access to this IP address.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
 
 #####`allow_ssh`
 
 Allows secure shell (SSH) access to this IP address.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
 
 #####`allow_telnet`
 
 Allows Telnet access to this IP address.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
 
 #####`arp`
 
 Responds to ARP requests for this IP address.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
 
 #####`arp_response`
 
@@ -2121,7 +2117,7 @@ Default value: 5
 
 Allows dynamic routing on this IP address. Specific to Subnet IP (SNIP) address.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'DISABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'DISABLED'.
 
 #####`ensure`
 
@@ -2132,7 +2128,7 @@ Valid values are 'present', 'absent'.
 #####`host_route`
 
 Advertises a route for the VIP address using the dynamic routing protocols running on the NetScaler appliance.
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'TODO: What's the default?'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'TODO: What's the default?'.
 
 #####`host_route_gateway_ip`
 
@@ -2150,7 +2146,7 @@ Minimum value = -16777215
 
 Responds to ICMP requests for this IP address.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
 
 #####`icmp_response`
 
@@ -2216,13 +2212,13 @@ The specific backend to use for this `netscaler_nsip` resource. You seldom need 
 
 Blocks access to nonmanagement applications on this IP. This option is applicable for MIPs, SNIPs, and NSIP, and is disabled by default. Nonmanagement applications can run on the underlying NetScaler Free BSD operating system.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'DISABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'DISABLED'.
 
 #####`state`
 
 Enables or disables the IP address.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
 
 #####`traffic_domain`
 
@@ -2242,7 +2238,7 @@ Maximum value = 255
 
 Enables or disables the virtual server attribute for this IP address.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'ENABLED'.
 
 #####`virtual_server_rhi_level`
 
@@ -2281,7 +2277,7 @@ Manage NetScaler NTP server objects.
 
 Use the Autokey protocol for key management for this server, with the cryptographic values (for example, symmetric key, host and public certificate files, and sign key) generated by the ntp-keygen utility. To require authentication for communication with the server, you must set either the value of this parameter or the key parameter.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'TODO: Default?'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'TODO: Default?'.
 
 #####`ensure`
 
@@ -2318,7 +2314,7 @@ IP address or fully qualified domain name of the NTP server.
 
 Preferred NTP server. The NetScaler appliance chooses this NTP server for time synchronization among a set of correctly operating hosts.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'NO'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default value: 'NO'.
 
 #####`provider`
 
@@ -2344,7 +2340,7 @@ The specific backend to use for this `netscaler_ntpsync` resource. You seldom ne
 
 NTP status.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. If omitted, this parameter's value defaults to the resource's title. **TODO**: Is this default correct? Or is it ENABLED OR DISABLED?
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. If omitted, this parameter's value defaults to the resource's title. **TODO**: Is this default correct? Or is it ENABLED OR DISABLED?
 
 ###Type: netscaler_responderaction
 
@@ -2358,7 +2354,7 @@ All parameters, except where otherwise noted, are optional. Their default values
 
 Bypass the safety check, allowing potentially unsafe expressions.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`comments`
 
@@ -2497,7 +2493,7 @@ All parameters, except where otherwise noted, are optional. Their default values
 
 Bypass the safety check and allow unsafe expressions.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`comments`
 
@@ -2798,7 +2794,7 @@ network/netmask:gateway eg 8.8.8.0/255.255.255.0:null
 
 Advertises this route.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`cost1`
 
@@ -2822,7 +2818,7 @@ Name of the monitor, of type ARP or PING, configured on the NetScaler appliance 
 
 Whether to monitor this route using a monitor of type ARP or PING.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`name`
 
@@ -3312,7 +3308,7 @@ The title of the bind resource, composed of the title of the service group and t
 
 The configured state (enable/disable) of the service group.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`weight`
 
@@ -3374,7 +3370,7 @@ Valid values are 'present', 'absent'.
 
 Logging status of the alarm. When logging is enabled, the NetScaler appliance logs every trap message that is generated for this alarm.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: 'ENABLED'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: 'ENABLED'.
 
 #####`name`
 
@@ -3394,7 +3390,7 @@ Severity level assigned to trap messages generated by this alarm. The severity l
 
 Current state of the SNMP alarm. The NetScaler appliance generates trap messages only for SNMP alarms that are enabled.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
 
 #####`time_interval`
 
@@ -3424,7 +3420,7 @@ Configures the Imported Certfile resource.
 
 Parse the certificate chain as a single file after linking the server certificate to its issuer's certificate within the file.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
 
 #####`certificate_filename`
 
@@ -3460,7 +3456,7 @@ Name for the object. Must begin with an ASCII alphabetic or underscore (_) chara
 
 Override the check for matching domain names during a certificate update operation.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
 
 #####`notificationperiod`
 
@@ -3470,7 +3466,7 @@ Time, in number of days, before certificate expiration, at which to generate an 
 
 Issue an alert when the certificate is about to expire.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: **TODO**?.
 
 #####`passplain`
 
@@ -3593,7 +3589,7 @@ Valid values are 'present', 'absent'.
 
 Whether to use external authentication servers for the system user authentication or not.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
 #####`idle_time_out`
 
@@ -3603,7 +3599,7 @@ CLI session inactivity timeout, in seconds. If Restrictedtimeout argument of sys
 
 Specifies user logging privileges.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: DISABLED.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: DISABLED.
 
 #####`name`
 
@@ -3637,7 +3633,7 @@ Valid values are 'present', 'absent'.
 
 Enables all IPv6 dynamic routing protocols on this VLAN. Note: For the ENABLED setting to work, you must configure IPv6 dynamic routing protocols from the VTYSH command line.
 
-Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: DISABLED.
+Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'. Default: DISABLED.
 
 #####`maximum_transmission_unit`
 
