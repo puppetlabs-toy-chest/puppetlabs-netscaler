@@ -51,7 +51,7 @@
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
         "6",
-        "7",
+        "7"
       ]
     },
     {
@@ -61,7 +61,7 @@
         "12.04",
         "14.04"
       ]
-    },
+    }
   ],
   "requirements": [
     {
@@ -73,7 +73,5 @@
       "version_requirement": "3.x"
     }
   ],
-  "dependencies": [
-  
-  ]
+  "dependencies": []
 }
