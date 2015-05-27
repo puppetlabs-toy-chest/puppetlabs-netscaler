@@ -1733,7 +1733,7 @@ Type of persistence for the virtual server. Available settings function as follo
 
 #####`priority_queuing`
 
-**TODO: Check first sentence** Use priority queuing on the virtual server, based persistence types, for IPv6 virtual servers.
+Use priority queuing on the virtual server, based persistence types, for IPv6 virtual servers.
 
 Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', 'OFF'.
 
