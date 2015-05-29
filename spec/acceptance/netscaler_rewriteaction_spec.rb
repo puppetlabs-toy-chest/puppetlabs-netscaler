@@ -69,7 +69,30 @@ netscaler_rewriteaction { '2_9_rewriteaction_test4':
     run_device(:allow_changes => false)
   end
 
-  it 'makes and deletes a rewriteaction' do
+  it 'makes and deletes javascript rewriteaction' do
+    pp=<<-EOS
+netscaler_rewriteaction { 'my_rw_default_insert_after_body':
+  ensure              => 'present',
+  bypass_safety_check => 'NO',
+  content_expression  => '"<script language=\\'javascript1.1\\' type=\\"text/javascript\\">" + " /*Script contents copyright Puppetlabs 2015, and implementation" + " covered by international intellectual property laws.*/" + "\\nfunction  _aaatm_NSST(e){if(document.readyState==\\"complete\\"){_aaatm_NSLG();}}" + "if(window.addEventListener){window.addEventListener(\\'load\\',_aaatm_NSLG(),false);} else" + " if(window.attachEvent&&document.attachEvent){document.attachEvent(\\'onreadystatechange\\',_aaatm_NSST);}" + "function _aaatm_NSLG(m){setTimeout(\\"_aaatm_NSLG1()\\", 5000);}\\n" + "function _aaatm_NSLG1(){var o=new Image();if(o){o.src=\\'/cgi/tmlogout\\';}}" + "</script>"',
+  target_expression   => 'HTTP.RES.BODY(0)',
+  type                => 'insert_after',
+}
+    EOS
+
+    pp2=<<-EOS
+netscaler_rewriteaction { 'my_rw_contains_javascript':
+  ensure              => 'absent',
+}
+    EOS
+    make_site_pp(pp)
+    run_device(:allow_changes => true)
+    make_site_pp(pp2)
+    run_device(:allow_changes => true)
+    run_device(:allow_changes => false)
+  end
+
+  it 'makes and deletes another rewriteaction' do
     pp=<<-EOS
 netscaler_rewriteaction { '2_9_rewriteaction_test5':
   ensure              => 'present',
