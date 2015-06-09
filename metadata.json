@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-netscaler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "puppetlabs",
   "summary": "Enables Puppet configuration of Citrix NetScaler devices through types and REST-based providers",
   "license": "Apache-2.0",
@@ -14,9 +14,9 @@
   ],
   "operatingsystem_support": [
     {
-      "operatingsystem": "Netscaler 10.6",
+      "operatingsystem": "Netscaler",
       "operatingsystemrelease": [
-        "10.6"
+        "10.5"
       ]
     }
   ],
