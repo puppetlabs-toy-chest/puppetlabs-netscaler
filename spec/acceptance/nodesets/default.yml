@@ -4,6 +4,7 @@ HOSTS:
     roles:
       - "master"
       - "default"
+      - "dashboard"
     platform: "debian-7-amd64"
     hypervisor: "vcloud"
     template: "debian-7-x86_64"
