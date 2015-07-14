@@ -9,7 +9,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
     require 'uri'
     require 'faraday'
     require 'puppet/util/network_device/transport/do_not_encoder'
-    @connection = Faraday.new(url: url, ssl: { verify: false }) do |builder| 
+    @connection = Faraday.new({:url => url, :ssl => { :verify => false }}) do |builder|
       builder.request :retry, {
         :max                 => 10,
         :interval            => 0.05,

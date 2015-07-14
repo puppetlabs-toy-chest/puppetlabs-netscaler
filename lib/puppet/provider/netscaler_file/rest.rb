@@ -2,7 +2,7 @@ require 'puppet/provider/netscaler'
 require 'base64'
 require 'json'
 
-Puppet::Type.type(:netscaler_file).provide(:rest, parent: Puppet::Provider::Netscaler) do
+Puppet::Type.type(:netscaler_file).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
   def netscaler_api_type
     "systemfile"
   end

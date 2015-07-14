@@ -1,7 +1,7 @@
 require 'puppet/provider/netscaler'
 require 'json'
 
-Puppet::Type.type(:netscaler_csvserver).provide(:rest, parent: Puppet::Provider::Netscaler) do
+Puppet::Type.type(:netscaler_csvserver).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
   def self.instances
     instances = []
     cs_vservers = Puppet::Provider::Netscaler.call('/config/csvserver')

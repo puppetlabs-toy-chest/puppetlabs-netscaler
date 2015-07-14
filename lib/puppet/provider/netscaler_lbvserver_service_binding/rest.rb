@@ -1,6 +1,6 @@
 require 'puppet/provider/netscaler_binding'
 
-Puppet::Type.type(:netscaler_lbvserver_service_binding).provide(:rest, parent: Puppet::Provider::NetscalerBinding) do
+Puppet::Type.type(:netscaler_lbvserver_service_binding).provide(:rest, {:parent => Puppet::Provider::NetscalerBinding}) do
   def netscaler_api_type
     "lbvserver_service_binding"
   end
