@@ -1,6 +1,6 @@
 require 'puppet/provider/netscaler_binding'
 
-Puppet::Type.type(:netscaler_vlan_nsip_binding).provide(:rest, parent: Puppet::Provider::NetscalerBinding) do
+Puppet::Type.type(:netscaler_vlan_nsip_binding).provide(:rest, {:parent => Puppet::Provider::NetscalerBinding}) do
   def netscaler_api_type
     "vlan_nsip_binding"
   end

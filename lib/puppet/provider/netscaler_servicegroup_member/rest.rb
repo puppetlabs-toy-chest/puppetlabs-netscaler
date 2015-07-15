@@ -1,6 +1,6 @@
 require 'puppet/provider/netscaler_binding'
 
-Puppet::Type.type(:netscaler_servicegroup_member).provide(:rest, parent: Puppet::Provider::Netscaler) do
+Puppet::Type.type(:netscaler_servicegroup_member).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
   def netscaler_api_type
     "servicegroup_servicegroupmember_binding"
   end

@@ -2,7 +2,7 @@ require 'puppet/provider/netscaler'
 
 require 'json'
 
-Puppet::Type.type(:netscaler_route).provide(:rest, parent: Puppet::Provider::Netscaler) do
+Puppet::Type.type(:netscaler_route).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
   def netscaler_api_type
     "route"
   end
