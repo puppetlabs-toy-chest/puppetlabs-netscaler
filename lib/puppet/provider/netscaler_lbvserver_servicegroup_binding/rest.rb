@@ -13,10 +13,10 @@ Puppet::Type.type(:netscaler_lbvserver_servicegroup_binding).provide(:rest, {:pa
     lbvservers.each do |lbvserver|
       binds = Puppet::Provider::Netscaler.call("/config/lbvserver_servicegroup_binding/#{lbvserver['name']}") || []
       binds.each do |bind|
-        instances << new(
+        instances << new({
           :ensure => :present,
           :name   => "#{bind['name']}/#{bind['servicegroupname']}",
-        )
+        })
       end
     end
 

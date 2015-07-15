@@ -13,14 +13,14 @@ Puppet::Type.type(:netscaler_csvserver_cspolicy_binding).provide(:rest, {:parent
     csvservers.each do |csvserver|
       binds = Puppet::Provider::Netscaler.call("/config/csvserver_cspolicy_binding/#{csvserver['name']}") || []
       binds.each do |bind|
-        instances << new(
+        instances << new({
           :ensure           => :present,
           :name             => "#{bind['name']}/#{bind['policyname']}",
           :priority         => bind['priority'],
           :goto_expression  => bind['gotopriorityexpression'],
           :label_name       => bind['labelname'],
           :target_lbvserver => bind['targetlbvserver'],
-        )
+        })
       end
     end
 

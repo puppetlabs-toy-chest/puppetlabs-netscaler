@@ -14,7 +14,7 @@ Puppet::Type.type(:netscaler_route).provide(:rest, {:parent => Puppet::Provider:
     return [] if routes.nil?
 
     routes.each do |route|
-      instances << new(
+      instances << new({
         :ensure    => :present,
         :name      => "#{route['network']}/#{route['netmask']}:#{route['gateway']}",
         :td        => route['td'],
@@ -25,7 +25,7 @@ Puppet::Type.type(:netscaler_route).provide(:rest, {:parent => Puppet::Provider:
         :protocol  => route['protocol'],
         :msr       => route['msr'],
         :monitor   => route['monitor'],
-      )
+      })
     end
     instances
   end

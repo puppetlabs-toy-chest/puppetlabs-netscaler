@@ -14,7 +14,7 @@ Puppet::Type.type(:netscaler_user).provide(:rest, {:parent => Puppet::Provider::
     return [] if users.nil?
 
     users.each do |user|
-        instances << new(
+        instances << new({
           :ensure                  => :present,
           :name                    => user['username'],
           :password                => user['password'],
@@ -22,7 +22,7 @@ Puppet::Type.type(:netscaler_user).provide(:rest, {:parent => Puppet::Provider::
           :cli_prompt              => user['promptstring'],
           :idle_time_out           => user['timeout'].to_s,
           :logging_privilege       => user['logging'],
-        )
+        })
     end
 
     instances

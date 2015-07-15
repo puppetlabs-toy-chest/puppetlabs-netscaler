@@ -16,7 +16,7 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, {:parent => Puppet::Prov
       binds = Puppet::Provider::Netscaler.call("/config/sslvserver_sslcertkey_binding/#{sslvserver['vservername']}") || []
 
       binds.each do |bind|
-        instances << new(
+        instances << new({
           :ensure     => :present,
           :name       => "#{bind['vservername']}/#{bind['certkeyname']}",
           :crlcheck   => bind['crlcheck'],
@@ -24,7 +24,7 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, {:parent => Puppet::Prov
           :snicert    => bind['snicert'],
           :skipcaname => bind['skipcaname'],
           :ocspcheck  => bind['ocspcheck'],
-        )
+        })
       end
     end
 

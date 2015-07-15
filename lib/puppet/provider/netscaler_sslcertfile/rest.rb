@@ -13,11 +13,11 @@ Puppet::Type.type(:netscaler_sslcertfile).provide(:rest, {:parent => Puppet::Pro
     return [] if sslcertfiles.nil? || sslcertfiles[0].empty?
 
     sslcertfiles.each do |sslcertfile|
-      instances << new(
+      instances << new({
         :ensure => :present,
         :name   => sslcertfile['name'],
         :source => sslcertfile['src'],
-      )
+      })
     end
 
     instances

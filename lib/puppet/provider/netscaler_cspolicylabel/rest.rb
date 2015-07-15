@@ -12,11 +12,11 @@ Puppet::Type.type(:netscaler_cspolicylabel).provide(:rest, {:parent => Puppet::P
     return [] if cspolicylabels.nil?
 
     cspolicylabels.each do |cspolicylabel|
-      instances << new(
+      instances << new({
         :ensure     => :present,
         :name       => cspolicylabel['labelname'],
         :label_type => cspolicylabel['cspolicylabeltype'],
-      )
+      })
     end
 
     instances

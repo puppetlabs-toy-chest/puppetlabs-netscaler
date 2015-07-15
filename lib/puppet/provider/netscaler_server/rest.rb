@@ -12,7 +12,7 @@ Puppet::Type.type(:netscaler_server).provide(:rest, {:parent => Puppet::Provider
     return [] if servers.nil?
 
     servers.each do |server|
-      instances << new(
+      instances << new({
         :ensure                 => :present,
         :name                   => server['name'],
         :address                => server['ipaddress'] || server['domain'],
@@ -23,7 +23,7 @@ Puppet::Type.type(:netscaler_server).provide(:rest, {:parent => Puppet::Provider
         :ipv6_domain            => server['ipaddress'] ? nil : server['ipv6address'],
         :state                  => server['state'],
         :comments               => server['comment'],
-      )
+      })
     end
 
     instances

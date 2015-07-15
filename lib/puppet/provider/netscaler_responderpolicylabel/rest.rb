@@ -12,12 +12,12 @@ Puppet::Type.type(:netscaler_responderpolicylabel).provide(:rest, {:parent => Pu
     return [] if responderpolicylabels.nil?
 
     responderpolicylabels.each do |responderpolicylabel|
-      instances << new(
+      instances << new({
         :ensure   => :present,
         :name     => responderpolicylabel['labelname'],
         :type     => responderpolicylabel['policylabeltype'],
         :comments => responderpolicylabel['comment'],
-      )
+      })
     end
 
     instances

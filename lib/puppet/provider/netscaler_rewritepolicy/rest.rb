@@ -12,7 +12,7 @@ Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, {:parent => Puppet::P
     return [] if rewritepolicies.nil?
 
     rewritepolicies.each do |rewritepolicy|
-    instances << new(
+    instances << new({
       :ensure                  => :present,
       :name                    => rewritepolicy['name'],
       :expression              => rewritepolicy['rule'],
@@ -20,7 +20,7 @@ Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, {:parent => Puppet::P
       :undefined_result_action => rewritepolicy['undefaction'],
       :comments                => rewritepolicy['comment'],
       :log_action              => rewritepolicy['logaction'],
-    )
+    })
     end
 
     instances

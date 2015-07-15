@@ -11,7 +11,7 @@ Puppet::Type.type(:netscaler_nsip).provide(:rest, {:parent => Puppet::Provider::
     return [] if ips.nil?
 
     ips.each do |ip|
-      instances << new(
+      instances << new({
         :ensure                   => :present,
         :name                     => ip['ipaddress'],
         :netmask                  => ip['netmask'],
@@ -39,7 +39,7 @@ Puppet::Type.type(:netscaler_nsip).provide(:rest, {:parent => Puppet::Provider::
         :allow_gui                => ip['gui'],
         :allow_management_access  => ip['mgmtaccess'],
         :secure_access_only       => ip['restrictaccess'],
-      )
+      })
     end
 
     instances

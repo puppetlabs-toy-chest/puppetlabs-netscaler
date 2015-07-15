@@ -18,7 +18,7 @@ Puppet::Type.type(:netscaler_servicegroup).provide(:rest, {:parent => Puppet::Pr
         autoscale_val = service['autoscale']
       end
 
-      instances << new(
+      instances << new({
         :ensure              => :present,
         ## Create-only attributes
         :name                => service['servicegroupname'], #create
@@ -62,7 +62,7 @@ Puppet::Type.type(:netscaler_servicegroup).provide(:rest, {:parent => Puppet::Pr
         #service['weight']
         ## Unknown unset attributes
         #service['riseapbrstatsmsgcode'] # Is this even valid?
-      )
+      })
     end
 
     instances

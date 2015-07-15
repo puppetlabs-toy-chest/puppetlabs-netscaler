@@ -16,11 +16,11 @@ Puppet::Type.type(:netscaler_file).provide(:rest, {:parent => Puppet::Provider::
     files.each do |file|
       file_contents = Puppet::Provider::Netscaler.call("/config/systemfile", {'args'=>"filelocation:%2Fnsconfig%2F,filename:#{file['filename']}"}) || [] 
       file_contents.each do |file_content|
-        instances << new(
+        instances << new({
           :ensure   => :present,
           :name     => file_content['filename'],
           :encoding => file_content['fileencoding'],
-        )
+        })
       end
     end
 

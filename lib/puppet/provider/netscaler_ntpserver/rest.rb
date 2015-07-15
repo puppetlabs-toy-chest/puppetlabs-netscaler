@@ -11,7 +11,7 @@ Puppet::Type.type(:netscaler_ntpserver).provide(:rest, {:parent => Puppet::Provi
     return [] if servers.nil?
 
     servers.each do |server|
-      instances << new(
+      instances << new({
         :ensure                => :present,
         :name                  => server['serverip'] || server['servername'],
         :minimum_poll_interval => server['minpoll'],
@@ -19,7 +19,7 @@ Puppet::Type.type(:netscaler_ntpserver).provide(:rest, {:parent => Puppet::Provi
         :auto_key              => server['autokey'],
         :key                   => server['key'],
         :preferred_ntp_server  => server['preferredntpserver'],
-      )
+      })
     end
 
     instances

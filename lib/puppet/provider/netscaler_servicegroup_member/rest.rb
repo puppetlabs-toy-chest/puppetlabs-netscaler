@@ -13,14 +13,14 @@ Puppet::Type.type(:netscaler_servicegroup_member).provide(:rest, {:parent => Pup
     servicegroups.each do |servicegroup|
       binds = Puppet::Provider::Netscaler.call("/config/servicegroup_servicegroupmember_binding/#{servicegroup['servicegroupname']}") || []
       binds.each do |bind|
-        instances << new(
+        instances << new({
           :ensure    => :present,
           :name      => "#{bind['servicegroupname']}/#{bind['servername']}:#{bind['port']}",
           :weight    => bind['weight'],
           :server_id => bind['serverid'],
           :hash_id   => bind['hashid'],
           :state     => bind['state'],
-        )
+        })
       end
     end
 
