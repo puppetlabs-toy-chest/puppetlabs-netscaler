@@ -10,10 +10,10 @@ Puppet::Type.type(:netscaler_ntpsync).provide(:rest, {:parent => Puppet::Provide
     setting = Puppet::Provider::Netscaler.call('/config/ntpsync')
     return [] if setting.nil? or setting.empty?
 
-    instances << new(
+    instances << new({
       :ensure => :present,
       :name   => setting['state'],
-    )
+    })
 
     instances
   end

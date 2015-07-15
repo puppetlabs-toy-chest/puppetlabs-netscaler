@@ -12,7 +12,7 @@ Puppet::Type.type(:netscaler_responderpolicy).provide(:rest, {:parent => Puppet:
     return [] if  responderpolicys.nil?
 
     responderpolicys.each do |responderpolicy|
-      instances << new(
+      instances << new({
         :ensure                  => :present,
         :name                    => responderpolicy['name'],
         :expression              => responderpolicy['rule'],
@@ -21,7 +21,7 @@ Puppet::Type.type(:netscaler_responderpolicy).provide(:rest, {:parent => Puppet:
         :comments                => responderpolicy['comment'],
         :log_action              => responderpolicy['logaction'],
         :appflow_action          => responderpolicy['appflowaction'],
-      )
+      })
     end
 
     instances

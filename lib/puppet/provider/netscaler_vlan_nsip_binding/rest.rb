@@ -13,12 +13,12 @@ Puppet::Type.type(:netscaler_vlan_nsip_binding).provide(:rest, {:parent => Puppe
     services.each do |service|
       binds = Puppet::Provider::Netscaler.call("/config/vlan_nsip_binding/#{service['id']}") || []
       binds.each do |bind|
-        instances << new(
+        instances << new({
           :ensure  => :present,
           :name    => "#{bind['id']}/#{bind['ipaddress']}",
           :netmask => bind['netmask'],
           :td      => bind['td'],
-        )
+        })
       end
     end
 

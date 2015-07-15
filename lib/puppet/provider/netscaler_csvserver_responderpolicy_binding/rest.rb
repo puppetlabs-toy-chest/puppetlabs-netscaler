@@ -19,14 +19,14 @@ Puppet::Type.type(:netscaler_csvserver_responderpolicy_binding).provide(:rest, {
           when 'policylabel'
             policylabel = bind['labelname']
         end
-        instances << new(
+        instances << new({
           :ensure               => :present,
           :name                 => "#{bind['name']}/#{bind['policyname']}",
           :priority             => bind['priority'],
           :goto_expression      => bind['gotopriorityexpression'],
           :invoke_policy_label  => policylabel,
           :invoke_vserver_label => vserverlabel,
-        )
+        })
       end
     end
 

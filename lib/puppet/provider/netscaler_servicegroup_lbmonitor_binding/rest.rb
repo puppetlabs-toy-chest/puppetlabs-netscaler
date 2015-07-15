@@ -13,13 +13,13 @@ Puppet::Type.type(:netscaler_servicegroup_lbmonitor_binding).provide(:rest, {:pa
     servicegroups.each do |servicegroup|
       binds = Puppet::Provider::Netscaler.call("/config/servicegroup_lbmonitor_binding/#{servicegroup['servicegroupname']}") || []
       binds.each do |bind|
-        instances << new(
+        instances << new({
           :ensure  => :present,
           :name    => "#{bind['servicegroupname']}/#{bind['monitor_name']}",
           :weight  => bind['weight'],
           :state   => bind['monstate'],
           :passive => bind['passive'],
-        )
+        })
       end
     end
 

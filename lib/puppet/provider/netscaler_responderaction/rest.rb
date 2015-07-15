@@ -12,14 +12,14 @@ Puppet::Type.type(:netscaler_responderaction).provide(:rest, {:parent => Puppet:
     return [] if responderactions.nil?
 
     responderactions.each do |responderaction|
-      instances << new(
+      instances << new({
         :ensure              => :present,
         :name                => responderaction['name'],
         :type                => responderaction['type'],
         :expression          => responderaction['target'],
         :bypass_safety_check => responderaction['bypasssafetycheck'],
         :comments            => responderaction['comment'],
-      )
+      })
     end
 
     instances

@@ -12,12 +12,12 @@ Puppet::Type.type(:netscaler_rewritepolicylabel).provide(:rest, {:parent => Pupp
     return [] if rewritepolicylabels.nil?
 
     rewritepolicylabels.each do |rewritepolicylabel|
-      instances << new(
+      instances << new({
         :ensure         => :present,
         :name           => rewritepolicylabel['labelname'],
         :transform_name => rewritepolicylabel['transform'],
         :comments       => rewritepolicylabel['comment'],
-      )
+      })
     end
 
     instances

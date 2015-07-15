@@ -12,7 +12,7 @@ Puppet::Type.type(:netscaler_lbmonitor).provide(:rest, {:parent => Puppet::Provi
     return [] if monitors.nil?
 
     monitors.each do |monitor|
-      instances << new(
+      instances << new({
         :ensure                         => :present,
         ## Standard
         :name                           => monitor['monitorname'],
@@ -123,7 +123,7 @@ Puppet::Type.type(:netscaler_lbmonitor).provide(:rest, {:parent => Puppet::Provi
         #service['weight']
         ## Unknown unset attributes
         #service['riseapbrstatsmsgcode'] # Is this even valid?
-      )
+      })
     end
 
     instances

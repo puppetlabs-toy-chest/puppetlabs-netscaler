@@ -13,7 +13,7 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, {:parent => Puppet::Provi
         default_lbvserver = lbvserver_binds[0]['lbvserver']
       end
 
-      instances << new(
+      instances << new({
         :ensure                             => :present,
         :name                               => cs_vserver['name'],
         :traffic_domain                     => cs_vserver['td'],
@@ -69,7 +69,7 @@ Puppet::Type.type(:netscaler_csvserver).provide(:rest, {:parent => Puppet::Provi
         :rhi_state                          => cs_vserver['rhistate'],
         :authentication_profile_name        => cs_vserver['authnprofile'],
         :default_lbvserver                  => default_lbvserver ? default_lbvserver : nil,
-      )
+      })
     end
 
     instances

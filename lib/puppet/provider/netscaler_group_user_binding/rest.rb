@@ -16,10 +16,10 @@ Puppet::Type.type(:netscaler_group_user_binding).provide(:rest, {:parent => Pupp
     groups.each do |group|
       group_user_bindings = Puppet::Provider::Netscaler.call("/config/systemgroup_systemuser_binding/#{group['groupname']}") || []
       group_user_bindings.each do |group_user_binding|
-        instances << new(
+        instances << new({
           :ensure => :present,
           :name   => "#{group_user_binding['groupname']}/#{group_user_binding['username']}",
-        )
+        })
       end
     end
 

@@ -8,7 +8,7 @@ Puppet::Type.type(:netscaler_lbvserver).provide(:rest, {:parent => Puppet::Provi
     return [] if lb_vservers.nil?
 
     lb_vservers.each do |lb_vserver|
-      instances << new(
+      instances << new({
         :ensure                                 => :present,
         :name                                   => lb_vserver['name'],
         :service_type                           => lb_vserver['servicetype'],
@@ -94,7 +94,7 @@ Puppet::Type.type(:netscaler_lbvserver).provide(:rest, {:parent => Puppet::Provi
         :dns64                                  => lb_vserver['dns64'],
         :bypass_aaaa                            => lb_vserver['bypassaaaa'],
         :recursion_available                    => lb_vserver['recursionavailable'],
-      )
+      })
     end
 
     instances

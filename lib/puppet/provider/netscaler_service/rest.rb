@@ -12,7 +12,7 @@ Puppet::Type.type(:netscaler_service).provide(:rest, {:parent => Puppet::Provide
     return [] if services.nil?
 
     services.each do |service|
-      instances << new(
+      instances << new({
         :ensure              => :present,
         ## Create-only attributes
         :name                => service['name'],           #create
@@ -60,7 +60,7 @@ Puppet::Type.type(:netscaler_service).provide(:rest, {:parent => Puppet::Provide
         #service['weight']
         ## Unknown unset attributes
         #service['riseapbrstatsmsgcode'] # Is this even valid?
-      )
+      })
     end
 
     instances

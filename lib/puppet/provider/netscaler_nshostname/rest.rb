@@ -12,11 +12,11 @@ Puppet::Type.type(:netscaler_nshostname).provide(:rest, {:parent => Puppet::Prov
 
     hostnames.each do |hostname|
       if ! hostname.empty?
-        instances << new(
+        instances << new({
           :ensure     => :present,
           :name       => hostname['hostname'],
           :owner_node => hostname['ownernode'],
-        )
+        })
       end
     end
 

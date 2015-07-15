@@ -11,7 +11,7 @@ Puppet::Type.type(:netscaler_snmpalarm).provide(:rest, {:parent => Puppet::Provi
     return [] if alarms.nil?
 
     alarms.each do |alarm|
-      instances << new(
+      instances << new({
         :ensure           => :present,
         :name             => alarm['trapname'],
         :alarm_threshold  => alarm['thresholdvalue'],
@@ -20,7 +20,7 @@ Puppet::Type.type(:netscaler_snmpalarm).provide(:rest, {:parent => Puppet::Provi
         :time_interval    => alarm['time'],
         :state            => alarm['state'],
         :logging          => alarm['logging'],
-      )
+      })
     end
 
     instances

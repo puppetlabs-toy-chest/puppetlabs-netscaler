@@ -11,13 +11,13 @@ Puppet::Type.type(:netscaler_vlan).provide(:rest, {:parent => Puppet::Provider::
     return [] if vlans.nil?
 
     vlans.each do |vlan|
-      instances << new(
+      instances << new({
         :ensure                    => :present,
         :name                      => vlan['id'],
         :alias_name                => vlan['aliasname'],
         :ipv6_dynamic_routing      => vlan['ipv6dynamicrouting'],
         :maximum_transmission_unit => vlan['mtu'],
-      )
+      })
     end
 
     instances

@@ -12,7 +12,7 @@ Puppet::Type.type(:netscaler_rewriteaction).provide(:rest, {:parent => Puppet::P
     return [] if rewriteactions.nil?
 
     rewriteactions.each do |rewriteaction|
-    instances << new(
+    instances << new({
       :ensure              => :present,
       :name                => rewriteaction['name'],
       :type                => rewriteaction['type'],
@@ -23,7 +23,7 @@ Puppet::Type.type(:netscaler_rewriteaction).provide(:rest, {:parent => Puppet::P
       :bypass_safety_check => rewriteaction['bypasssafetycheck'],
       :refine_search       => rewriteaction['refinesearch'],
       :comments            => rewriteaction['comment'],
-    )
+    })
 end
 
     instances

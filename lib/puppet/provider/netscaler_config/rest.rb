@@ -10,7 +10,7 @@ Puppet::Type.type(:netscaler_config).provide(:rest, {:parent => Puppet::Provider
     config = Puppet::Provider::Netscaler.call('/config/nsconfig')
     return [] if config.nil?
 
-      instances << new(
+      instances << new({
         :ensure                  => :present,
         :name                    => 'default',
         :ipaddress               => config['ipaddress'],
@@ -35,7 +35,7 @@ Puppet::Type.type(:netscaler_config).provide(:rest, {:parent => Puppet::Provider
         :grantquotaspillover     => config['grantquotaspillover'],
         :exclusivequotaspillover => config['exclusivequotaspillover'],
         :nwfwmode                => config['nwfwmode'],
-      )
+      })
 
     instances
   end

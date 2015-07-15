@@ -24,7 +24,7 @@ Puppet::Type.type(:netscaler_rewriteglobal).provide(:rest, {:parent => Puppet::P
           when 'policylabel'
             policylabel = bind['labelname']
         end
-        instances << new(
+        instances << new({
           :ensure               => :present,
           :name                 => bind['name'],
           :connection_type      => labeltype,
@@ -32,7 +32,7 @@ Puppet::Type.type(:netscaler_rewriteglobal).provide(:rest, {:parent => Puppet::P
           :goto_expression      => bind['gotopriorityexpression'],
           :invoke_policy_label  => policylabel,
           :invoke_vserver_label => vserverlabel,
-        )
+        })
       end
     end
 

@@ -14,12 +14,12 @@ Puppet::Type.type(:netscaler_group).provide(:rest, {:parent => Puppet::Provider:
     return [] if groups.nil?
 
     groups.each do |group|
-        instances << new(
+        instances << new({
           :ensure        => :present,
           :name          => group['groupname'],
           :cli_prompt    => group['promptstring'],
           :idle_time_out => group['timeout'].to_s,
-        )
+        })
     end
 
     instances

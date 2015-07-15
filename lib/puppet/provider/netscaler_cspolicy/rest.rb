@@ -12,7 +12,7 @@ Puppet::Type.type(:netscaler_cspolicy).provide(:rest, {:parent => Puppet::Provid
     return [] if  cspolicys.nil?
 
     cspolicys.each do |cspolicy|
-      instances << new(
+      instances << new({
         :ensure     => :present,
         :name       => cspolicy['policyname'],
         :action     => cspolicy['action'],
@@ -20,7 +20,7 @@ Puppet::Type.type(:netscaler_cspolicy).provide(:rest, {:parent => Puppet::Provid
         :url        => cspolicy['url'],
         :domain     => cspolicy['domain'],
         :expression => cspolicy['rule'],
-      )
+      })
     end
 
     instances

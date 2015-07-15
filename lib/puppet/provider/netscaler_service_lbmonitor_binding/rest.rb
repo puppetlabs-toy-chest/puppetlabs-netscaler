@@ -13,13 +13,13 @@ Puppet::Type.type(:netscaler_service_lbmonitor_binding).provide(:rest, {:parent 
     services.each do |service|
       binds = Puppet::Provider::Netscaler.call("/config/service_lbmonitor_binding/#{service['name']}") || []
       binds.each do |bind|
-        instances << new(
+        instances << new({
           :ensure => :present,
           :name   => "#{bind['name']}/#{bind['monitor_name']}",
           :weight => bind['weight'],
           :state  => bind['monitor_state'] == 'DISABLED' ? 'DISABLED' : 'ENABLED',
           #:passive => bind['passive'],
-        )
+        })
       end
     end
 

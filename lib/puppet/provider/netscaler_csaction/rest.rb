@@ -12,13 +12,13 @@ Puppet::Type.type(:netscaler_csaction).provide(:rest, {:parent => Puppet::Provid
     return [] if csactions.nil?
 
     csactions.each do |csaction|
-      instances << new(
+      instances << new({
         :ensure               => :present,
         :name                 => csaction['name'],
         :target_lbvserver     => csaction['targetlbvserver'],
         :target_lb_expression => csaction['targetvserverexpr'],
         :comments             => csaction['comment'],
-      )
+      })
     end
 
     instances

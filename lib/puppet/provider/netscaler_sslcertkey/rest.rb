@@ -12,7 +12,7 @@ Puppet::Type.type(:netscaler_sslcertkey).provide(:rest, {:parent => Puppet::Prov
     return [] if sslcertkeys.nil?
 
     sslcertkeys.each do |sslcertkey|
-      instances << new(
+      instances << new({
         :ensure               => :present,
         :name                 => sslcertkey['certkey'],
         :certificate_filename => sslcertkey['cert'],
@@ -26,7 +26,7 @@ Puppet::Type.type(:netscaler_sslcertkey).provide(:rest, {:parent => Puppet::Prov
         :bundle               => sslcertkey['bundle'],
         :linkcert_keyname     => sslcertkey['linkcertkeyname'],
         :nodomain_check       => sslcertkey['nodomaincheck'],
-      )
+      })
     end
 
     instances

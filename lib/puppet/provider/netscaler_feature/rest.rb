@@ -18,10 +18,10 @@ Puppet::Type.type(:netscaler_feature).provide(:rest, {:parent => Puppet::Provide
       name = Puppet::Type::Netscaler_feature.rest_name_map[feature[0]]
 
       if (name != nil)  
-        instances << new(
+        instances << new({
           :name   => name,
           :ensure => feature[1] ? :present : :absent,
-        )
+        })
       end
     end
 
