@@ -14,7 +14,7 @@ Puppet::Type.newtype(:netscaler_csvserver_rewritepolicy_binding) do
     desc "Type of invocation when invoking a vserver. Available settings functions are Request and Response. This property is not applicable for use in conjunction with invoking a Policy Label." 
 
     validate do |value|
-      if ! [:Request,:Response,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+      if ! [:Request,:Response,].any?{ |s| s.to_s.eql? value }
         fail ArgumentError, "Valid options: Request, Response"
       end
     end

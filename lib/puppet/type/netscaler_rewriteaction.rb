@@ -78,7 +78,7 @@ Puppet::Type.newtype(:netscaler_rewriteaction) do
         -search regex(<regular expression>) or -search text(string constant)"
 
     validate do |value|
-      if ! [:noop,:delete,:insert_http_header,:delete_http_header,:corrupt_http_header,:insert_before,:insert_after,:replace,:replace_http_res,:delete_all,:replace_all,:insert_before_all,:insert_after_all,:clientless_vpn_encode,:clientless_vpn_encode_all,:clientless_vpn_decode,:clientless_vpn_decode_all,:insert_sip_header,:delete_sip_header,:corrupt_sip_header,:replace_sip_res,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+      if ! [:noop,:delete,:insert_http_header,:delete_http_header,:corrupt_http_header,:insert_before,:insert_after,:replace,:replace_http_res,:delete_all,:replace_all,:insert_before_all,:insert_after_all,:clientless_vpn_encode,:clientless_vpn_encode_all,:clientless_vpn_decode,:clientless_vpn_decode_all,:insert_sip_header,:delete_sip_header,:corrupt_sip_header,:replace_sip_res,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: noop, delete, insert_http_header, delete_http_header, corrupt_http_header, insert_before, insert_after, replace, replace_http_res, delete_all, replace_all, insert_before_all, insert_after_all, clientless_vpn_encode, clientless_vpn_encode_all, clientless_vpn_decode, clientless_vpn_decode_all, insert_sip_header, delete_sip_header, corrupt_sip_header, replace_sip_res"
       end
     end

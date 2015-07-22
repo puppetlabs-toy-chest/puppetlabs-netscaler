@@ -23,7 +23,7 @@ Puppet::Type.newtype(:netscaler_responderpolicylabel) do
         :MSSQL, 
         :NAT, 
         :DIAMETER,
-      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
+      ].any?{ |s| s.to_s.eql? value }
         fail ArgumentError, "Valid options: HTTP, OTHERTCP, SIP_UDP, MYSQL, MSSQL, NAT, DIAMETER" 
       end
     end

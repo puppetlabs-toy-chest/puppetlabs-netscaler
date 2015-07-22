@@ -54,7 +54,7 @@ Possible values = OSPF, ISIS, RIP, BGP"
         :ISIS,
         :RIP,
         :BGP,
-      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
+      ].any?{ |s| s.to_s.eql? value }
         fail ArgumentError, "Valid options: ADV_ROUTE_FLAGS, OSPF, ISIS, RIP, BGP"
       end 
     end

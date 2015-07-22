@@ -40,7 +40,7 @@ Puppet::Type.newtype(:netscaler_rewritepolicylabel) do
         :sipudp_res, 
         :diameter_req, 
         :diameter_res
-      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
+      ].any?{ |s| s.to_s.eql? value }
         fail ArgumentError, "Valid options: http_req, http_res, othertcp_req, othertcp_res, url, text, clientless_vpn_req, clientless_vpn_res, sipudp_req, sipudp_res, diameter_req, diameter_res" 
       end
     end

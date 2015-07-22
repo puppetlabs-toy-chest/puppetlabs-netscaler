@@ -21,7 +21,7 @@ Puppet::Type.newtype(:netscaler_responderaction) do
         :redirect,
         :sqlresponse_ok,
         :sqlresponse_error,
-      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
+      ].any?{ |s| s.to_s.eql? value }
         fail ArgumentError, "Valid options: noop, respondwith, redirect,  sqlresponse_ok, sqlresponse_error" 
       end
     end
