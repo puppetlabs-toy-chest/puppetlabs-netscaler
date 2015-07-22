@@ -14,7 +14,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   desc "Protocol used by the service (also called the service type). Valid options: HTTP, FTP, TCP, UDP, SSL, SSL_BRIDGE, SSL_TCP, DTLS, NNTP, DNS, DHCPRA, ANY, SIP_UDP, DNS_TCP, RTSP, PUSH, SSL_PUSH, RADIUS, RDP, MYSQL, MSSQL, DIAMETER, SSL_DIAMETER, TFTP, ORACLE."
 
     validate do |value|
-      if ! [:HTTP,:FTP,:TCP,:UDP,:SSL,:SSL_BRIDGE,:SSL_TCP,:DTLS,:NNTP,:DNS,:DHCPRA,:ANY,:SIP_UDP,:DNS_TCP,:RTSP,:PUSH,:SSL_PUSH,:RADIUS,:RDP,:MYSQL,:MSSQL,:DIAMETER,:SSL_DIAMETER,:TFTP,:ORACLE,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+      if ! [:HTTP,:FTP,:TCP,:UDP,:SSL,:SSL_BRIDGE,:SSL_TCP,:DTLS,:NNTP,:DNS,:DHCPRA,:ANY,:SIP_UDP,:DNS_TCP,:RTSP,:PUSH,:SSL_PUSH,:RADIUS,:RDP,:MYSQL,:MSSQL,:DIAMETER,:SSL_DIAMETER,:TFTP,:ORACLE,].any?{ |s| s.to_s.eql? value }
         fail ArgumentError, "Valid options: HTTP, FTP, TCP, UDP, SSL, SSL_BRIDGE, SSL_TCP, DTLS, NNTP, DNS, DHCPRA, ANY, SIP_UDP, DNS_TCP, RTSP, PUSH, SSL_PUSH, RADIUS, RDP, MYSQL, MSSQL, DIAMETER, SSL_DIAMETER, TFTP, ORACLE"
       end
     end
@@ -73,7 +73,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   * RTSPSID - Connections that have the same RTSP Session ID belong to the same persistence session."
 
       validate do |value|
-        if ! [:SOURCEIP,:COOKIEINSERT,:SSLSESSION,:RULE,:URLPASSIVE,:CUSTOMSERVERID,:DESTIP,:SRCIPDESTIP,:CALLID,:RTSPSID,:DIAMETER,:NONE,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:SOURCEIP,:COOKIEINSERT,:SSLSESSION,:RULE,:URLPASSIVE,:CUSTOMSERVERID,:DESTIP,:SRCIPDESTIP,:CALLID,:RTSPSID,:DIAMETER,:NONE,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: SOURCEIP, COOKIEINSERT, SSLSESSION, RULE, URLPASSIVE, CUSTOMSERVERID, DESTIP, SRCIPDESTIP, CALLID, RTSPSID, DIAMETER, NONE"
         end
       end
@@ -95,7 +95,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     desc "Backup persistence type for the virtual server. Becomes operational if the primary persistence mechanism fails. Valid options: SOURCEIP, NONE."
 
       validate do |value|
-        if ! [:SOURCEIP,:NONE,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:SOURCEIP,:NONE,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: SOURCEIP, NONE"
         end
       end
@@ -134,7 +134,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   * CALLIDHASH - Create a hash of the SIP Call-ID header."
 
       validate do |value|
-        if ! [:ROUNDROBIN,:LEASTCONNECTION,:LEASTRESPONSETIME,:URLHASH,:DOMAINHASH,:DESTINATIONIPHASH,:SOURCEIPHASH,:SRCIPDESTIPHASH,:LEASTBANDWIDTH,:LEASTPACKETS,:TOKEN,:SRCIPSRCPORTHASH,:LRTM,:CALLIDHASH,:CUSTOMLOAD,:LEASTREQUEST,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:ROUNDROBIN,:LEASTCONNECTION,:LEASTRESPONSETIME,:URLHASH,:DOMAINHASH,:DESTINATIONIPHASH,:SOURCEIPHASH,:SRCIPDESTIPHASH,:LEASTBANDWIDTH,:LEASTPACKETS,:TOKEN,:SRCIPSRCPORTHASH,:LRTM,:CALLIDHASH,:CUSTOMLOAD,:LEASTREQUEST,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: ROUNDROBIN, LEASTCONNECTION, LEASTRESPONSETIME, URLHASH, DOMAINHASH, DESTINATIONIPHASH, SOURCEIPHASH, SRCIPDESTIPHASH, LEASTBANDWIDTH, LEASTPACKETS, TOKEN, SRCIPSRCPORTHASH, LRTM, CALLIDHASH, CUSTOMLOAD, LEASTREQUEST"
         end
       end
@@ -237,7 +237,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   You can use either the IPTUNNEL or the TOS option to implement Direct Server Return (DSR)."
 
       validate do |value|
-        if ! [:IP,:MAC,:IPTUNNEL,:TOS,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:IP,:MAC,:IPTUNNEL,:TOS,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: IP, MAC, IPTUNNEL, TOS"
         end
       end
@@ -289,7 +289,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   * DISABLED - Connection failover does not occur."
 
       validate do |value|
-        if ! [:DISABLED,:STATEFUL,:STATELESS,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:DISABLED,:STATEFUL,:STATELESS,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: DISABLED, STATEFUL, STATELESS"
         end
       end
@@ -325,7 +325,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   * NONE - Spillover does not occur."
 
       validate do |value|
-        if ! [:CONNECTION,:DYNAMICCONNECTION,:BANDWIDTH,:HEALTH,:NONE,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:CONNECTION,:DYNAMICCONNECTION,:BANDWIDTH,:HEALTH,:NONE,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: CONNECTION, DYNAMICCONNECTION, BANDWIDTH, HEALTH, NONE"
         end
       end
@@ -373,7 +373,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     desc "Action to be performed if spillover is to take effect, but no backup chain to spillover is usable or exists. Valid options: DROP, ACCEPT, REDIRECT."
 
       validate do |value|
-        if ! [:DROP,:ACCEPT,:REDIRECT,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:DROP,:ACCEPT,:REDIRECT,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: DROP, ACCEPT, REDIRECT"
         end
       end
@@ -404,7 +404,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   * OFF - Disable header insertion."
 
       validate do |value|
-        if ! [:OFF,:VIPADDR,:V6TOV4MAPPING,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:OFF,:VIPADDR,:V6TOV4MAPPING,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: OFF, VIPADDR, V6TOV4MAPPING"
         end
       end
@@ -472,7 +472,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     desc "Oracle server version. Valid options: 10G, 11G."
 
       validate do |value|
-        if ! [:'10G',:'11G',].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:'10G',:'11G',].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: 10G, 11G"
         end
       end
@@ -484,7 +484,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     desc "For a load balancing virtual server of type MSSQL, the Microsoft SQL Server version. Set this parameter if you expect some clients to run a version different from the version of the database. This setting provides compatibility between the client-side and server-side connections by ensuring that all communication conforms to the server's version. Valid options: 70, 2000, 2000SP1, 2005, 2008, 2008R2, 2012."
 
       validate do |value|
-        if ! [:'70',:'2000',:'2000SP1',:'2005',:'2008',:'2008R2',:'2012',].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:'70',:'2000',:'2000SP1',:'2005',:'2008',:'2008R2',:'2012',].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: 70, 2000, 2000SP1, 2005, 2008, 2008R2, 2012"
         end
       end
@@ -536,7 +536,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   Note: This parameter is available at the virtual server level. A similar parameter, ICMP Response, is available at the IP address level, for IPv4 addresses of type VIP. To set that parameter, use the add ip command in the CLI or the Create IP dialog box in the GUI."
 
       validate do |value|
-        if ! [:PASSIVE,:ACTIVE,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:PASSIVE,:ACTIVE,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: PASSIVE, ACTIVE"
         end
       end
@@ -551,7 +551,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   * If you set RHI STATE to ACTIVE on some and PASSIVE on others, the NetScaler ADC advertises the route for the VIP address if at least one of the associated virtual servers, whose RHI STATE set to ACTIVE, is in UP state."
 
       validate do |value|
-        if ! [:PASSIVE,:ACTIVE,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:PASSIVE,:ACTIVE,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: PASSIVE, ACTIVE"
         end
       end
@@ -572,7 +572,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
   Possible values = PER_SECOND, PERCENT"
 
       validate do |value|
-        if ! [:PER_SECOND,:PERCENT,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:PER_SECOND,:PERCENT,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: PER_SECOND, PERCENT"
         end
       end
@@ -626,7 +626,7 @@ Puppet::Type.newtype(:netscaler_lbvserver) do
     desc "This argument decides the behavior incase the service which is selected from an existing persistence session has reached threshold. Valid options: Bypass, ReLb, None."
 
       validate do |value|
-        if ! [:Bypass,:ReLb,:None,].any?{ |s| s.casecmp(value.to_sym) == 0 }
+        if ! [:Bypass,:ReLb,:None,].any?{ |s| s.to_s.eql? value }
           fail ArgumentError, "Valid options: Bypass, ReLb, None"
         end
       end

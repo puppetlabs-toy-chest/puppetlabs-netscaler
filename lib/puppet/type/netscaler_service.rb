@@ -52,7 +52,7 @@ Puppet::Type.newtype(:netscaler_service) do
         :DIAMETER,
         :SSL_DIAMETER,
         :TFTP,
-      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
+      ].any?{ |s| s.to_s.eql? value }
         fail ArgumentError, "Valid options: HTTP, FTP, TCP, UDP, SSL, SSL_BRIDGE, SSL_TCP, DTLS, NNTP, RPCSVR, DNS, ADNS, SNMP, RTSP, DHCPRA, ANY, SIP_UDP, DNS_TCP, ADNS_TCP, MYSQL, MSSQL, ORACLE, RADIUS, RDP, DIAMETER, SSL_DIAMETER, TFTP"
       end
     end
@@ -127,7 +127,7 @@ Minimum value: 1"
         :TRANSPARENT,
         :REVERSE,
         :FORWARD,
-      ].any?{ |s| s.casecmp(value.to_sym) == 0 }
+      ].any?{ |s| s.to_s.eql? value }
         fail ArgumentError, "Valid options: SERVER, TRANSPARENT, REVERSE, FORWARD"
       end
     end

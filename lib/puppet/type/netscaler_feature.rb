@@ -48,7 +48,7 @@ Puppet::Type.newtype(:netscaler_feature) do
     desc 'Feature name'
 
     validate do |value|
-      if ! Puppet::Type::Netscaler_feature.rest_name_map.values.any?{ |s| s.casecmp(value) == 0 }
+      if ! Puppet::Type::Netscaler_feature.rest_name_map.values.any?{ |s| s <=> value == 0 }
         fail ArgumentError, "Valid options: " + Puppet::Type::Netscaler_feature.rest_name_map.values.to_s
       end
     end    
