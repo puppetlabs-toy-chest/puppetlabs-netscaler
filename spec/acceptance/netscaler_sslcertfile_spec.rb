@@ -5,7 +5,7 @@ describe 'sslcertfile' do
     pp=<<-EOS
 netscaler_sslcertfile { 'monkey':
   ensure      => 'present',
-  source      => 'https://www.geotrust.com/uk/resources/root_certificates/certificates/GeoTrust_Primary_CA.pem',
+  source      => 'https://www.geotrust.com/resources/root_certificates/certificates/GeoTrust_Global_CA.pem',
 }
     EOS
     make_site_pp(pp)
@@ -17,7 +17,7 @@ netscaler_sslcertfile { 'monkey':
     pp=<<-EOS
 netscaler_sslcertfile { 'monkey':
   ensure      => 'absent',
-  source      => 'https://www.geotrust.com/uk/resources/root_certificates/certificates/GeoTrust_Primary_CA.pem',
+  source      => 'https://www.geotrust.com/resources/root_certificates/certificates/GeoTrust_Global_CA.pem',
 }
     EOS
     make_site_pp(pp)

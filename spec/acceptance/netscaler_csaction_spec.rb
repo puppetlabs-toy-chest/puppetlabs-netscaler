@@ -5,13 +5,13 @@ describe 'csaction' do
     pp = <<-EOS
 netscaler_lbvserver { 'csaction_lbvs1':
   ensure       => present,
-  service_type => 'http',
+  service_type => 'HTTP',
   ip_address   => '15.14.13.12',
   port         => '80',
 }
 netscaler_lbvserver { 'csaction_lbvs2':
   ensure       => present,
-  service_type => 'http',
+  service_type => 'HTTP',
   ip_address   => '15.14.13.12',
   port         => '81',
 }
