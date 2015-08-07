@@ -10,8 +10,7 @@ class Puppet::Util::NetworkDevice::Netscaler::Device
   def initialize(url, options = {})
     @autoloader = Puppet::Util::Autoload.new(
       self,
-      "puppet/util/network_device/transport",
-      :wrap => false
+      "puppet/util/network_device/transport"
     )
     if @autoloader.load("netscaler")
       @transport = Puppet::Util::NetworkDevice::Transport::Netscaler.new(url,options[:debug])
