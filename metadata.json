@@ -4,8 +4,8 @@
   "author": "puppetlabs",
   "summary": "Enables Puppet configuration of Citrix NetScaler devices through types and REST-based providers",
   "license": "Apache-2.0",
-  "source": "https://forge.puppetlabs.com/puppetlabs/netscaler",
-  "project_page": "https://forge.puppetlabs.com/puppetlabs/netscaler",
+  "source": "https://github.com/puppetlabs/puppetlabs-netscaler",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-netscaler",
   "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
   "tags": [
     "netscaler",
