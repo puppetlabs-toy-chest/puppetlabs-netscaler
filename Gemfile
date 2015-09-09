@@ -14,7 +14,7 @@ end
 
 group :system_tests do
   gem 'beaker-rspec',  :require => false
-  gem 'beaker', '2.10.0', :require => false
+  gem 'beaker', '2.23.0', :require => false
   gem 'serverspec',    :require => false
 end
 
