@@ -27,10 +27,36 @@ def run_device(options={:allow_changes => true})
   end
 end
 
+def device_facts_ok(max_retries)
+  1.upto(max_retries) do |retries|
+    on master, puppet('device','-v','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] } do |result|
+      return if result.stdout =~ /Notice: Finished catalog run/
+
+      counter = 10 * retries
+      logger.debug "Unable to get a successful catalog run, Sleeping #{counter} seconds for retry #{retries}"
+      sleep counter
+    end
+  end
+  raise Puppet::Error, "Could not get a successful catalog run."
+end
+
+def wait_for_api(max_retries)
+  1.upto(max_retries) do |retries|
+    on(master, "curl -kIL https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/config/nsconfig", { :acceptable_exit_codes => [0,1] }) do |result|
+      return if result.stdout =~ /502 Bad Gateway/
+
+      counter = 10 * retries
+      logger.debug "Unable to connect to Netscaler REST API, retrying in #{counter} seconds..." 
+      sleep counter
+    end
+  end
+  raise Puppet::Error, "Could not connect to API."
+end
+
 def run_resource(resource_type, resource_title=nil)
   device_host = hosts_as('netscaler').first
   options = {:ENV => {
-    'FACTER_url' => "https://nsroot:#{device_host[:ssh][:password]}@#{device_host['ip']}/nitro/v1/"
+    'FACTER_url' => "https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first['ip']}/nitro/v1/"
   } }
   if resource_title
     on(default, puppet('resource', resource_type, resource_title, '--trace', options), { :acceptable_exit_codes => 0 }).stdout
@@ -96,5 +122,9 @@ EOS
     apply_manifest("include netscaler")
     on default, puppet('device','-v','--waitforcert','0','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','netscaler'), {:acceptable_exit_codes => [0,24] }
+    #Queries the Netscaler REST API & Puppet Master until they have been initialized
+    wait_for_api(10)
+    #Verify Facts can be retreived 
+    device_facts_ok(3)
   end
 end
