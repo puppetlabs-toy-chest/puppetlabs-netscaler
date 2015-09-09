@@ -42,8 +42,8 @@ end
 
 def wait_for_api(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -kIL https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/config/nsconfig", { :acceptable_exit_codes => [0,1] }) do |result|
-      return if result.stdout =~ /502 Bad Gateway/
+    on(master, "curl -kIL https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/nitro/v1/config/nsconfig", { :acceptable_exit_codes => [0,1] }) do |result|
+      return if result.stdout =~ /200 OK/
 
       counter = 10 * retries
       logger.debug "Unable to connect to Netscaler REST API, retrying in #{counter} seconds..." 
