@@ -34,7 +34,7 @@ def device_facts_ok(max_retries)
 
       counter = 10 * retries
       logger.debug "Unable to get a successful catalog run, Sleeping #{counter} seconds for retry #{retries}"
-      sleep counter
+      sleep counter * 6
     end
   end
   raise Puppet::Error, "Could not get a successful catalog run."
