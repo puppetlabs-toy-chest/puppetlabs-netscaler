@@ -123,8 +123,7 @@ EOS
     on default, puppet('device','-v','--waitforcert','0','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','netscaler'), {:acceptable_exit_codes => [0,24] }
     #Queries the Netscaler REST API & Puppet Master until they have been initialized
-    #wait_for_api(10)
-    sleep 60
+    wait_for_api(10)
     #Verify Facts can be retreived 
     device_facts_ok(3)
   end
