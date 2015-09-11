@@ -34,7 +34,7 @@ def device_facts_ok(max_retries)
 
       counter = 10 * retries
       logger.debug "Unable to get a successful catalog run, Sleeping #{counter} seconds for retry #{retries}"
-      sleep counter * 6
+      sleep counter
     end
   end
   raise Puppet::Error, "Could not get a successful catalog run."
@@ -42,12 +42,12 @@ end
 
 def wait_for_api(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -kIL https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/nitro/v1/config/nsconfig", { :acceptable_exit_codes => [0,1] }) do |result|
+    on(master, "curl -skIL https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/nitro/v1/config/nsconfig", { :acceptable_exit_codes => [0,1] }) do |result|
       return if result.stdout =~ /200 OK/
 
       counter = 10 * retries
       logger.debug "Unable to connect to Netscaler REST API, retrying in #{counter} seconds..." 
-      sleep counter
+      sleep counter * 6
     end
   end
   raise Puppet::Error, "Could not connect to API."
