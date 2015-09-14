@@ -42,7 +42,7 @@ end
 
 def wait_for_api(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -skIL http://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/nitro/v1/config/nsconfig", { :acceptable_exit_codes => [0,1] }) do |result|
+    on(master, "curl -skIL https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/nitro/v1/config/nsconfig", { :acceptable_exit_codes => [0,1] }) do |result|
       return if result.stdout =~ /200 OK/
 
       counter = 10 * retries
