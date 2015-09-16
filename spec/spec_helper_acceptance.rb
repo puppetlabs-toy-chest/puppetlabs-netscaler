@@ -4,12 +4,26 @@ $:.unshift File.join(File.dirname(__FILE__),  'fixtures', 'lib')
 require 'beaker-rspec'
 require 'beaker/hypervisor/netscaler' #from spec/fixtures/lib
 
+def wait_for_master(max_retries)
+  1.upto(max_retries) do |retries|
+    on(master, "curl -skIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
+      return if result.stdout =~ /400 Bad Request/
+
+      counter = 2 ** retries
+      logger.debug "Unable to reach Puppet Master, Sleeping #{counter} seconds for retry #{retries}..."
+      sleep counter
+    end
+  end
+  raise Puppet::Error, "Could not connect to Puppet Master."
+end
+
 def make_site_pp(pp, path = File.join(master['puppetpath'], 'manifests'))
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, "site.pp"), pp)
   on master, "chown -R #{master['user']}:#{master['group']} #{path}"
   on master, "chmod -R 0755 #{path}"
   on master, "service #{master['puppetservice']} restart"
+  wait_for_master(3)
 end
 
 def run_device(options={:allow_changes => true})
