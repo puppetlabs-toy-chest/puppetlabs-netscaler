@@ -19,7 +19,7 @@ HOSTS:
     user: "nsroot"
     ssh:
       password: 'nsroot'
-    ports: 443
+    additional_ports: 443
 CONFIG:
   type: "foss"
   ec2_yaml: "spec/acceptance/nodesets/ec2.yaml"
