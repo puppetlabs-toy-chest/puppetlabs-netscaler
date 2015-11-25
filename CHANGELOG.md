@@ -1,3 +1,8 @@
+## Supported Release 1.1.2
+###Summary
+
+Small release for support of newer PE versions. This increments the version of PE in the metadata.json file.
+
 ## 2015-08-18 - Supported Release 1.1.1
 ### Summary
 Bugfix for Puppet 4 compatibility
