@@ -1,3 +1,7 @@
+## 2015-08-18 - Supported Release 1.1.1
+### Summary
+Bugfix for Puppet 4 compatibility
+
 ## 2015-07-29 - Supported Release 1.1.0
 ### Summary
 Small release for support of newer Puppet versions and accumulated patches
