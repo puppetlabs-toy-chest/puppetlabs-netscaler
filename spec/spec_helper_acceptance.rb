@@ -6,15 +6,28 @@ require 'beaker/hypervisor/netscaler' #from spec/fixtures/lib
 
 def wait_for_master(max_retries)
   1.upto(max_retries) do |retries|
-    on(master, "curl -skIL https://puppet:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
+    on(master, "curl -skIL https://#{master.hostname}:8140", { :acceptable_exit_codes => [0,1,7] }) do |result|
       return if result.stdout =~ /400 Bad Request/
 
       counter = 2 ** retries
-      logger.debug "Unable to reach Puppet Master, Sleeping #{counter} seconds for retry #{retries}..."
+      logger.debug "Unable to reach Puppet Master, #{master.hostname}, Sleeping #{counter} seconds for retry #{retries}..."
       sleep counter
     end
   end
   raise Puppet::Error, "Could not connect to Puppet Master."
+end
+
+def wait_for_api(max_retries)
+  1.upto(max_retries) do |retries|
+    on(master, "curl -skIL --retry 3 https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/nitro/v1/config/nsconfig ", { :acceptable_exit_codes => [0,1] }) do |result|
+      return if result.stdout =~ /200 OK/
+
+      counter = 10 * retries
+      logger.debug "Unable to connect to Netscaler REST API, retrying in #{counter} seconds..." 
+      sleep counter * 6
+    end
+  end
+  raise Puppet::Error, "Could not connect to API."
 end
 
 def make_site_pp(pp, path = File.join(master['puppetpath'], 'manifests'))
@@ -32,6 +45,7 @@ def run_device(options={:allow_changes => true})
   else
     acceptable_exit_codes = [0,2]
   end
+  wait_for_api(5)
   on(default, puppet('device','--verbose','--color','false','--user','root','--trace','--server',master.to_s), { :acceptable_exit_codes => acceptable_exit_codes }) do |result|
     if options[:allow_changes] == false
       expect(result.stdout).to_not match(%r{^Notice: /Stage\[main\]})
@@ -52,19 +66,6 @@ def device_facts_ok(max_retries)
     end
   end
   raise Puppet::Error, "Could not get a successful catalog run."
-end
-
-def wait_for_api(max_retries)
-  1.upto(max_retries) do |retries|
-    on(master, "curl -skIL https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/nitro/v1/config/nsconfig", { :acceptable_exit_codes => [0,1] }) do |result|
-      return if result.stdout =~ /200 OK/
-
-      counter = 10 * retries
-      logger.debug "Unable to connect to Netscaler REST API, retrying in #{counter} seconds..." 
-      sleep counter * 6
-    end
-  end
-  raise Puppet::Error, "Could not connect to API."
 end
 
 def run_resource(resource_type, resource_title=nil)
@@ -90,6 +91,7 @@ unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
         install_puppet_from_deb host, {}
         # Why do we still have templatedir in the puppet.conf?
         on host, "sed -i 's/templatedir=.*//' /etc/puppet/puppet.conf"
+        on host, "sed -i -e \"0,/re/s/localhost/localhost puppet/\" /etc/hosts"
       end
     end
     pp=<<-EOS
@@ -104,9 +106,6 @@ unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
     agents.each do |host|
       sign_certificate_for(host)
     end
-    #on master, "service firewalld stop"
-    #foss_opts = { :default_action => 'gem_install' }
-    #install_puppet(foss_opts) #installs on all hosts
   end
 end
 
