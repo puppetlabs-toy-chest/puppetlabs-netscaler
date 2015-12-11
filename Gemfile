@@ -14,7 +14,9 @@ end
 
 group :system_tests do
   gem 'beaker-rspec',  :require => false
-  gem 'beaker', '2.23.0', :require => false
+  if beaker_version = ENV['BEAKER_VERSION']
+    gem 'beaker', *location_for(beaker_version)
+  end
   gem 'serverspec',    :require => false
 end
 
