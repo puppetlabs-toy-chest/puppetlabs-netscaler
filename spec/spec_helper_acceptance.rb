@@ -17,19 +17,6 @@ def wait_for_master(max_retries)
   raise Puppet::Error, "Could not connect to Puppet Master."
 end
 
-def wait_for_api(max_retries)
-  1.upto(max_retries) do |retries|
-    on(master, "curl -skIL --retry 3 https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('netscaler').first["ip"]}/nitro/v1/config/nsconfig ", { :acceptable_exit_codes => [0,1] }) do |result|
-      return if result.stdout =~ /200 OK/
-
-      counter = 10 * retries
-      logger.debug "Unable to connect to Netscaler REST API, retrying in #{counter} seconds..." 
-      sleep counter * 6
-    end
-  end
-  raise Puppet::Error, "Could not connect to API."
-end
-
 def make_site_pp(pp, path = File.join(master['puppetpath'], 'manifests'))
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, "site.pp"), pp)
@@ -45,7 +32,6 @@ def run_device(options={:allow_changes => true})
   else
     acceptable_exit_codes = [0,2]
   end
-  wait_for_api(5)
   on(default, puppet('device','--verbose','--color','false','--user','root','--trace','--server',master.to_s), { :acceptable_exit_codes => acceptable_exit_codes }) do |result|
     if options[:allow_changes] == false
       expect(result.stdout).to_not match(%r{^Notice: /Stage\[main\]})
@@ -81,31 +67,20 @@ def run_resource(resource_type, resource_title=nil)
 end
 
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
-  if default.is_pe?
-    install_pe #takes forever
-  else
-    hosts.each do |host|
-      if host['platform'] =~ /^el-7/
-        install_puppet_from_rpm host, {:release => '7', :family => 'el'}
-      elsif host['platform'].match(/^(deb|ubu)/)
-        install_puppet_from_deb host, {}
-        # Why do we still have templatedir in the puppet.conf?
-        on host, "sed -i 's/templatedir=.*//' /etc/puppet/puppet.conf"
-        on host, "sed -i -e \"0,/re/s/localhost/localhost puppet/\" /etc/hosts"
-      end
-    end
-    pp=<<-EOS
-    $pkg = $::osfamily ? {
-      'Debian' => 'puppetmaster',
-      'RedHat' => 'puppet-server',
-    }
-    package { $pkg: ensure => present, }
-    -> service { 'puppetmaster': ensure => running, }
-    EOS
-    apply_manifest_on(master,pp)
-    agents.each do |host|
-      sign_certificate_for(host)
-    end
+  hosts.each do |host|
+    install_puppet_from_rpm host, {:release => '7', :family => 'el'}
+  end
+  pp=<<-EOS
+  $pkg = $::osfamily ? {
+    'Debian' => 'puppetmaster',
+    'RedHat' => 'puppet-server',
+  }
+  package { $pkg: ensure => present, }
+  -> service { 'puppetmaster': ensure => running, }
+  EOS
+  apply_manifest_on(master,pp)
+  agents.each do |host|
+    sign_certificate_for(host)
   end
 end
 
@@ -135,8 +110,6 @@ EOS
     apply_manifest("include netscaler")
     on default, puppet('device','-v','--waitforcert','0','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','netscaler'), {:acceptable_exit_codes => [0,24] }
-    #Queries the Netscaler REST API & Puppet Master until they have been initialized
-    wait_for_api(10)
     #Verify Facts can be retreived 
     device_facts_ok(3)
   end
