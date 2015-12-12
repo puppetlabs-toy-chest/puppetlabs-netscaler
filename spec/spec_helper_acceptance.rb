@@ -67,9 +67,7 @@ def run_resource(resource_type, resource_title=nil)
 end
 
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
-  hosts.each do |host|
-    install_puppet_from_rpm host, {:release => '7', :family => 'el'}
-  end
+  install_puppet_from_rpm master, {:release => '7', :family => 'el'}
   pp=<<-EOS
   $pkg = $::osfamily ? {
     'Debian' => 'puppetmaster',
@@ -97,6 +95,7 @@ RSpec.configure do |c|
     #puppet_module_install_on(master, {:source => proj_root, :module_name => 'f5'}) #This doesn't seem to work?
     hosts.each do |host|
       if ! host['platform'].match(/netscaler/)
+        install_package host, 'rsync'
         rsync_to host, proj_root, "#{host['distmoduledir']}/netscaler", {:ignore => [".bundle"]}
         on host, puppet('plugin','download','--server',master.to_s)
       end
