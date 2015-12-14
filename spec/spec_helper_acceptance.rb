@@ -92,14 +92,7 @@ RSpec.configure do |c|
   # Configure all nodes in nodeset
   c.before :suite do
     # Install module and dependencies
-    #puppet_module_install_on(master, {:source => proj_root, :module_name => 'f5'}) #This doesn't seem to work?
-    hosts.each do |host|
-      if ! host['platform'].match(/netscaler/)
-        install_package host, 'rsync'
-        rsync_to host, proj_root, "#{host['distmoduledir']}/netscaler", {:ignore => [".bundle"]}
-        on host, puppet('plugin','download','--server',master.to_s)
-      end
-    end
+    copy_module_to(master, :source => proj_root, :module_name => 'netscaler')
     device_conf=<<-EOS
 [netscaler]
 type netscaler
@@ -107,7 +100,8 @@ url https://nsroot:#{hosts_as('netscaler').first[:ssh][:password]}@#{hosts_as('n
 EOS
     create_remote_file(default, File.join(default[:puppetpath], "device.conf"), device_conf)
     apply_manifest("include netscaler")
-    on default, puppet('device','-v','--waitforcert','0','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
+    on master, puppet('plugin','download','--server',master.to_s)
+    on master, puppet('device','-v','--waitforcert','0','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] }
     on master, puppet('cert','sign','netscaler'), {:acceptable_exit_codes => [0,24] }
     #Verify Facts can be retreived 
     device_facts_ok(3)
