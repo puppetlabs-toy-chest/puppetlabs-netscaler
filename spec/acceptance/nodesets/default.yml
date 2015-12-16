@@ -13,8 +13,8 @@ HOSTS:
     roles:
       - "netscaler"
     vmname: "netscaler-platinum-10.5-10mb"
-    hypervisor: "netscaler"
-    platform: "aix-netscaler-platinum-10.5-10mb"
+    hypervisor: "ec2"
+    platform: "netscaler-10.5-55.8"
     snapshot: "default"
     amisize: "m3.large"
     user: "nsroot"
