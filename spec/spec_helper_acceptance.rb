@@ -2,7 +2,6 @@
 $:.unshift File.join(File.dirname(__FILE__),  'fixtures', 'lib')
 
 require 'beaker-rspec'
-require 'beaker/hypervisor/netscaler' #from spec/fixtures/lib
 
 def wait_for_master(max_retries)
   1.upto(max_retries) do |retries|

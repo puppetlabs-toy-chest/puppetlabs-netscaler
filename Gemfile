@@ -1,15 +1,5 @@
 source ENV['GEM_SOURCE'] || "https://rubygems.org"
 
-def location_for(place, fake_version = nil)
-  if place =~ /^(git:[^#]*)#(.*)/
-    [fake_version, { :git => $1, :branch => $2, :require => false }].compact
-  elsif place =~ /^file:\/\/(.*)/
-    ['>= 0', { :path => File.expand_path($1), :require => false }]
-  else
-    [place, { :require => false }]
-  end
-end
-
 group :development, :unit_tests do
   gem 'rake',                    :require => false
   gem 'rspec-puppet',            :require => false
@@ -24,9 +14,7 @@ end
 
 group :system_tests do
   gem 'beaker-rspec',  :require => false
-  if beaker_version = ENV['BEAKER_VERSION']
-    gem 'beaker', *location_for(beaker_version)
-  end
+  gem 'beaker', '2.32.0', :require => false
   gem 'serverspec',    :require => false
 end
 
