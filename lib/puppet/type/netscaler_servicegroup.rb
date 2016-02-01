@@ -1,6 +1,6 @@
-require 'puppet/parameter/netscaler_name'
-require 'puppet/property/netscaler_truthy'
-require 'puppet/property/netscaler_traffic_domain'
+require_relative('../../puppet/parameter/netscaler_name')
+require_relative('../../puppet/property/netscaler_truthy')
+require_relative('../../puppet/property/netscaler_traffic_domain')
 
 Puppet::Type.newtype(:netscaler_servicegroup) do
   @doc = 'Configuring a service group enables you to manage a group of services as easily as a single service. For example, if you enable or disable any option, such as compression, health monitoring or graceful shutdown, for a service group, the option gets enabled for all the members of the service group.'

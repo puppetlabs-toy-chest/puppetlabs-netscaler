@@ -1,4 +1,4 @@
-require 'puppet/property/netscaler_truthy'
+require_relative('../../puppet/property/netscaler_truthy')
 
 Puppet::Type.newtype(:netscaler_ntpsync) do
   @doc = 'Manage netscaler NTP sync setting.'

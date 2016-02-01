@@ -1,6 +1,6 @@
-require 'puppet/parameter/netscaler_name'
-require 'puppet/property/netscaler_truthy'
-require 'puppet/property/netscaler_traffic_domain'
+require_relative('../../puppet/parameter/netscaler_name')
+require_relative('../../puppet/property/netscaler_truthy')
+require_relative('../../puppet/property/netscaler_traffic_domain')
 
 Puppet::Type.newtype(:netscaler_service) do
   @doc = 'Manage service on the NetScaler appliance. If the service is domain based, before you create the service, create the server entry by using the add server command. Then, in this command, specify the Server parameter.'

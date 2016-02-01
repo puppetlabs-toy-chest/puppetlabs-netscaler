@@ -1,6 +1,6 @@
-require 'puppet/parameter/netscaler_name'
-require 'puppet/property/netscaler_truthy'
-require 'puppet/property/netscaler_traffic_domain'
+require_relative('../../puppet/parameter/netscaler_name')
+require_relative('../../puppet/property/netscaler_truthy')
+require_relative('../../puppet/property/netscaler_traffic_domain')
 
 Puppet::Type.newtype(:netscaler_responderpolicy) do
   @doc = 'Manage basic netscaler responder policy objects.'

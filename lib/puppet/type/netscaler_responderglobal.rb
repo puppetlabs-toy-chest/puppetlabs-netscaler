@@ -1,4 +1,4 @@
-require 'puppet/property/netscaler_truthy'
+require_relative('../../puppet/property/netscaler_truthy')
 
 Puppet::Type.newtype(:netscaler_responderglobal) do
   @doc = 'Activates the specified responder policy for all requests sent to the NetScaler appliance.'
