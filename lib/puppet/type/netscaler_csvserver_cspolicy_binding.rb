@@ -1,4 +1,4 @@
-require 'puppet/property/netscaler_truthy'
+require_relative('../../puppet/property/netscaler_truthy')
 
 Puppet::Type.newtype(:netscaler_csvserver_cspolicy_binding) do
   @doc = 'Manage a binding between a content switching vserver and a content switching policy.'

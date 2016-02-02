@@ -1,5 +1,5 @@
-require 'puppet/parameter/netscaler_name'
-require 'puppet/property/netscaler_truthy'
+require_relative('../../puppet/parameter/netscaler_name')
+require_relative('../../puppet/property/netscaler_truthy')
 
 Puppet::Type.newtype(:netscaler_ntpserver) do
   @doc = 'Manage netscaler NTP server objects.'

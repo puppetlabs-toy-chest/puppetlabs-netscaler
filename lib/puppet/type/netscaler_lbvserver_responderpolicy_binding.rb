@@ -1,4 +1,4 @@
-require 'puppet/property/netscaler_truthy'
+require_relative('../../puppet/property/netscaler_truthy')
 
 Puppet::Type.newtype(:netscaler_lbvserver_responderpolicy_binding) do
   @doc = 'Manage a binding between a loadbalancing vserver and a responder policy.'

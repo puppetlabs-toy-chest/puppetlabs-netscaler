@@ -1,4 +1,4 @@
-require 'puppet/property/netscaler_truthy'
+require_relative('../../puppet/property/netscaler_truthy')
 
 Puppet::Type.newtype(:netscaler_service_lbmonitor_binding) do
   @doc = 'Manage a binding between a service and a loadbalancing monitor.'
