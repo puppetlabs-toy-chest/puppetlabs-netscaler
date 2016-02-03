@@ -1,3 +1,14 @@
+## Supported Release 1.2.0
+### Summary
+This release fixes an annoying bug of puppet device failing to load plugins on the first run, and also adds a new resource.
+
+### Features
+- Add netscaler\_lbvserver\_rewritepolicy\_binding resource
+
+### Fixes
+- Fix puppet failing to load plugins on first run
+- Fix gem provider on puppet >= 4
+
 ## Supported Release 1.1.2
 ###Summary
 

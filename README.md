@@ -146,18 +146,19 @@ The [above example](#set-up-two-load-balanced-web-servers) is a proof-of-concept
 * [`netscaler_csaction`](#type-netscaler_csaction)
 * [`netscaler_cspolicy`](#type-netscaler_cspolicy)
 * [`netscaler_cspolicylabel`](#type-netscaler_cspolicylabel)
-* [`netscaler_cspolicylabel_cspolicy_bind`](#type-netscaler_cspolicylabel_cspolicy_bind)
+* [`netscaler_cspolicylabel_cspolicy_binding`](#type-netscaler_cspolicylabel_cspolicy_binding)
 * [`netscaler_csvserver`](#type-netscaler_csvserver)
-* [`netscaler_csvserver_cspolicy_bind`](#type-netscaler_cspolicy_bind)
-* [`netscaler_csvserver_responderpolicy_bind`](#type-netscaler_csvserver_responderpolicy_bind)
-* [`netscaler_csvserver_rewritepolicy_bind`](#type-netscaler_csvserver_rewritepolicy_bind)
+* [`netscaler_csvserver_cspolicy_binding`](#type-netscaler_cspolicy_binding)
+* [`netscaler_csvserver_responderpolicy_binding`](#type-netscaler_csvserver_responderpolicy_binding)
+* [`netscaler_csvserver_rewritepolicy_binding`](#type-netscaler_csvserver_rewritepolicy_binding)
 * [`netscaler_feature`](#type-netscaler_feature)
 * [`netscaler_file`](#type-netscaler_file)
-* [`netscaler_group_user_bind`](#type-netscaler_group_user_bind)
+* [`netscaler_group_user_binding`](#type-netscaler_group_user_binding)
 * [`netscaler_lbmonitor`](#type-netscaler_lbmonitor)
 * [`netscaler_lbvserver`](#type-netscaler_lbvserver)
-* [`netscaler_lbvserver_responderpolicy_bind`](#type-netscaler_lbvserver_responderpolicy_bind)
-* [`netscaler_lbvserver_service_bind`](#type-netscaler_lbvserver_service_bind)
+* [`netscaler_lbvserver_responderpolicy_binding`](#type-netscaler_lbvserver_responderpolicy_binding)
+* [`netscaler_lbvserver_rewritepolicy_binding`](#type-netscaler_lbvserver_rewritepolicy_binding)
+* [`netscaler_lbvserver_service_binding`](#type-netscaler_lbvserver_service_binding)
 * [`netscaler_nshostname`](#type-netscaler_nshostname)
 * [`netscaler_nsip`](#type-netscaler_nsip)
 * [`netscaler_ntpserver`](#type-netscaler_ntpserver)
@@ -174,9 +175,9 @@ The [above example](#set-up-two-load-balanced-web-servers) is a proof-of-concept
 * [`netscaler_server`](#type-netscaler_server)
 * [`netscaler_service`](#type-netscaler_service)
 * [`netscaler_servicegroup`](#type-netscaler_servicegroup)
-* [`netscaler_servicegroup_lbmonitor_bind`](#type-netscaler_servicegroup_lbmonitor_bind)
+* [`netscaler_servicegroup_lbmonitor_binding`](#type-netscaler_servicegroup_lbmonitor_binding)
 * [`netscaler_servicegroup_member`](#type-netscaler_servicegroup_member)
-* [`netscaler_service_lbmonitor_bind`](#type-netscaler_service_lbmonitor_bind)
+* [`netscaler_service_lbmonitor_binding`](#type-netscaler_service_lbmonitor_binding)
 * [`netscaler_snmpalarm`](#type-netscaler_snmpalarm)
 * [`netscaler_sslcertfile`](#type-netscaler_sslcertfile)
 * [`netscaler_sslcertkey`](#type-netscaler_sslcertkey)
@@ -185,7 +186,7 @@ The [above example](#set-up-two-load-balanced-web-servers) is a proof-of-concept
 * [`netscaler_sslvserver`](#type-netscaler_sslvserver)
 * [`netscaler_user`](#type-netscaler_user)
 * [`netscaler_vlan`](#type-netscaler_vlan)
-* [`netscaler_vlan_nsip_bind`](#type-netscaler_vlan_nsip_bind)
+* [`netscaler_vlan_nsip_binding`](#type-netscaler_vlan_nsip_binding)
 
 
 ###Type: netscaler_csaction
@@ -291,7 +292,7 @@ Protocol supported by the policy label. All policies bound to the policy label m
 
 Name for the object. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
 
-###Type: netscaler_cspolicylabel_cspolicy_bind
+###Type: netscaler_cspolicylabel_cspolicy_binding
 
 Manages a binding between a content switching vserver and a content switching policy.
 
@@ -529,7 +530,7 @@ Valid options: RULE, URL. The default precedence is RULE.
 
 #####`purge_bindings`
 
-When true, Puppet will purge all unmanaged `netscaler_csvserver_rewritepolicy_bind` and `netscaler_csvserver_responderpolicy_bind` resources associated with this csvserver. Valid options: 'true', 'false'. Default: 'false'.
+When true, Puppet will purge all unmanaged `netscaler_csvserver_rewritepolicy_binding` and `netscaler_csvserver_responderpolicy_binding` resources associated with this csvserver. Valid options: 'true', 'false'. Default: 'false'.
 
 #####`push`
 
@@ -665,7 +666,7 @@ The virtual IP and port header insertion option for the vserver. Accepts the fol
 * 'OFF' - The virtual IP and port header insertion option is disabled.
 * 'V6TOV4MAPPING' - Header contains the mapped IPv4 address that corresponds to the IPv6 address of the vserver and the port number. An IPv6 address can be mapped to a user-specified IPv4 address using the set ns ip6 command.
 
-###Type: netscaler_csvserver_cspolicy_bind
+###Type: netscaler_csvserver_cspolicy_binding
 
 Manages a binding between a content switching vserver and a content switching policy.
 
@@ -699,7 +700,7 @@ The priority of the policy binding. Values can be any integer between 1 and 2147
 
 The virtual server name to which content will be switched.
 
-###Type: netscaler_csvserver_responderpolicy_bind
+###Type: netscaler_csvserver_responderpolicy_binding
 
 Manages a binding between a content switching vserver and a responder policy.
 
@@ -733,7 +734,7 @@ The title of the bind resource, composed of the title of the csvserver and the t
 
 The priority of the policy binding. Values can be any integer between 1 and 2147483647.
 
-###Type: netscaler_csvserver_rewritepolicy_bind
+###Type: netscaler_csvserver_rewritepolicy_binding
 
 Manages a binding between a content switching vserver and a rewrite policy.
 
@@ -816,7 +817,7 @@ Valid values are 'present', 'absent'.
 The name for the file. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.
 
 
-###Type: netscaler_group_user_bind
+###Type: netscaler_group_user_binding
 
 The group and user binding, in the following format: 
 
@@ -1934,7 +1935,7 @@ Insert an HTTP header, whose value is the IP address and port number of the virt
 * V6TOV4MAPPING - Insert the IPv4 address that is mapped to the virtual server's IPv6 address. If a mapped IPv4 address is not configured, insert the IPv6 address.
 * OFF - Disable header insertion.
 
-###Type: netscaler_lbvserver_responderpolicy_bind
+###Type: netscaler_lbvserver_responderpolicy_binding
 
 Manages a binding between a load balancing vserver and a responder policy.
 
@@ -1966,7 +1967,7 @@ The title of the bind resource, composed of the title of the lbvserver and the t
 
 The priority of the policy binding. Values can  be any integer between 1 and 2147483647.
 
-### netscaler_lbvserver_responderpolicy_bind
+### netscaler_lbvserver_responderpolicy_binding
 
 Manage a binding between a load balancing vserver and a responder policy.
 
@@ -2000,7 +2001,45 @@ The title of the bind resource, composed of the title of the lbvserver and the t
 
 The priority of the policy binding. Values can  be any integer between 1 and 2147483647.
 
-###Type: netscaler_lbserver_service_bind
+### netscaler\_lbvserver\_rewritepolicy_binding
+
+Manage a binding between a loadbalancing vserver and a rewrite policy.
+
+#### Parameters
+
+All parameters, except where otherwise noted, are optional. Their default values are determined by your particular NetScaler setup.
+
+##### `ensure`
+
+The basic state that the resource should be in.
+
+Valid values are 'present', 'absent'.
+
+##### `goto_expression`
+
+Specifies the priority of the next policy to be evaluated if the current policy rule evaluates to true.
+
+##### `invoke_policy_label`
+
+Label of the policy to invoke if the bound policy evaluates to true.
+
+##### `invoke_vserver_label`
+
+Label of the vserver to invoke if the bound policy evaluates to true.
+
+##### `bind_point`
+
+Bind point to which the policy should be bound.
+
+#####`name`
+
+The title of the bind resource, composed of the title of the lbvserver and the title of the policy: 'lbvserver_name/policy_name'.
+
+#####`priority`
+
+The priority of the policy binding. Values can  be any integer between 1 and 65536.
+
+###Type: netscaler_lbserver_service_binding
 
 Manages a binding between a load balancing vserver and a service.
 
@@ -3242,7 +3281,7 @@ Note: This parameter is available only when the `use_client_ip` property is enab
 Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
 
 
-###Type: netscaler_servicegroup_lbmonitor_bind
+###Type: netscaler_servicegroup_lbmonitor_binding
 
 Manage a binding between a servicegroup and a loadbalancing monitor.
 
@@ -3303,7 +3342,7 @@ Valid options: 'yes', 'no', true, false, 'enabled', 'disabled', 'ENABLED', 'DISA
 
 Weight to assign to the servers in the service group. Specifies the capacity of the servers relative to the other servers in the load balancing configuration. The higher the weight, the higher the percentage of requests sent to the service. Accepts an integer from 1 to 100.
 
-###Type: netscaler_service_lbmonitor_bind
+###Type: netscaler_service_lbmonitor_binding
  
 Manages a binding between a NetScaler service representation object and a load balancing monitor.
  
@@ -3644,7 +3683,7 @@ Maximum value = 9216
 
 Uniquely identifies a VLAN. Accepts an integer from 1 to 4094.
 
-### netscaler_vlan_nsip_bind
+### netscaler_vlan_nsip_binding
 
 Manages a binding between a vlan and a NetScaler IP address.
 
