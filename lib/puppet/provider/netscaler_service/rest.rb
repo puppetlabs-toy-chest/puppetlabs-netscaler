@@ -46,8 +46,8 @@ Puppet::Type.type(:netscaler_service).provide(:rest, {:parent => Puppet::Provide
         :tcp_buffering       => service['tcpb'],           #create, set, unset
         :use_proxy_port      => service['useproxyport'],   #create, set, unset
         :use_source_ip       => service['usip'],           #create, set, unset
+        :use_compression     => service['cmp'],            #create, set, unset
         ## Unknown create, set, & unset attributes
-        #service['cmp']
         #service['pathmonitor']
         #service['pathmonitorindv']
         #service['rtspsessionidremap']
@@ -91,6 +91,7 @@ Puppet::Type.type(:netscaler_service).provide(:rest, {:parent => Puppet::Provide
       :tcp_buffering       => :tcpb,
       :traffic_domain_id   => :td,
       :use_source_ip       => :usip,
+      :use_compression     => :cmp,
     }
   end
 
