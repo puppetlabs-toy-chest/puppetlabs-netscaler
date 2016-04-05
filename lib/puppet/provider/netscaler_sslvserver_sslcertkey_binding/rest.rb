@@ -2,9 +2,12 @@ require 'puppet/provider/netscaler'
 
 require 'json'
 
-Puppet::Type.type(:netscaler_sslvserver).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
-  def netscaler_api_type
+Puppet::Type.type(:netscaler_sslvserver_sslcertkey_binding).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+	def self.netscaler_api_type
     "sslvserver_sslcertkey_binding"
+  end
+  def netscaler_api_type
+		self.class.netscaler_api_type
   end
 
   def self.instances
@@ -13,7 +16,7 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, {:parent => Puppet::Prov
     return [] if sslvservers.nil?
 
     sslvservers.each do |sslvserver|
-      binds = Puppet::Provider::Netscaler.call("/config/sslvserver_sslcertkey_binding/#{sslvserver['vservername']}") || []
+      binds = Puppet::Provider::Netscaler.call("/config/#{netscaler_api_type}/#{sslvserver['vservername']}") || []
 
       binds.each do |bind|
         instances << new({
