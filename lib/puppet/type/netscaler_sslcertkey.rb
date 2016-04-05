@@ -32,10 +32,10 @@ Puppet::Type.newtype(:netscaler_sslcertkey) do
     desc "Input format of the certificate and the private-key files. The two formats supported by the appliance are: PEM - Privacy Enhanced Mail DER - Distinguished Encoding"
     validate do |value|
       if ! [
-        :PEM, 
+        :PEM,
         :DER,
       ].include? value.to_sym
-        fail ArgumentError, "Valid options: PEM, DER" 
+        fail ArgumentError, "Valid options: PEM, DER"
       end
     end
   end
@@ -56,7 +56,7 @@ Puppet::Type.newtype(:netscaler_sslcertkey) do
     truthy_property("Parse the certificate chain as a single file after linking the server certificate to its issuer's certificate within the file.", "YES", "NO")
   end
 
-  newproperty(:linkcertkeyname) do
+  newproperty(:linkcert_keyname) do
     desc "Name of the Certificate Authority certificate-key pair to which to link a certificate-key pair."
   end
 

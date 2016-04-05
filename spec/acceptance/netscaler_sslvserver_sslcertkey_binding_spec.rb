@@ -1,8 +1,8 @@
 require 'spec_helper_acceptance'
 
-describe 'sslvserver' do
+describe 'sslvserver_sslcertkey_binding' do
   #we need to upload a key and cert file, for this test to work
-#  it 'makes a sslvserver' do
+#  it 'makes a sslvserver_sslcertkey_binding' do
 #    pp=<<-EOS
 #netscaler_file { 'server.cert':
 #        ensure       => 'present',
@@ -58,20 +58,20 @@ describe 'sslvserver' do
 #        port         => '8080',
 #        state        => true,
 #}
-#netscaler_sslvserver { 'lbvserver_ssl/test_sslcertkey':
+#netscaler_sslvserver_sslcertkey_binding { 'lbvserver_ssl/test_sslcertkey':
 #  ensure => 'present',
-#} 
+#}
 #    EOS
 #    make_site_pp(pp)
 #    run_device(:allow_changes => true)
 #    run_device(:allow_changes => false)
 #  end
 #
-#  it 'deletes a sslvserver' do
+#  it 'deletes a sslvserver_sslcertkey_binding' do
 #    pp=<<-EOS
-#netscaler_sslvserver { 'lbvserver_ssl/test_sslcertkey':
+#netscaler_sslvserver_sslcertkey_binding { 'lbvserver_ssl/test_sslcertkey':
 #  ensure => 'absent',
-#} 
+#}
 #    EOS
 #    make_site_pp(pp)
 #    run_device(:allow_changes => true)
