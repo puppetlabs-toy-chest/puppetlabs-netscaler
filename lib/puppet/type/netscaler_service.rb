@@ -161,7 +161,7 @@ Max = 4294967294"
   end
 
   newproperty(:max_requests) do
-    desc "Maximum number of requests that can be sent on a persistent connection to the service. 
+    desc "Maximum number of requests that can be sent on a persistent connection to the service.
 Note: Connection requests beyond this value are rejected.
 
 Max = 65535"
@@ -230,6 +230,10 @@ Note: This parameter is available only when the Use Source IP (USIP) parameter i
 
   newproperty(:use_source_ip, :parent => Puppet::Property::NetscalerTruthy) do
     truthy_property("Use the client's IP address as the source IP address when initiating a connection to the server. When creating a service, if you do not set this parameter, the service inherits the global Use Source IP setting (available in the enable ns mode and disable ns mode CLI commands, or in the System > Settings > Configure modes > Configure Modes dialog box). However, you can override this setting after you create the service.", 'YES', 'NO')
+  end
+
+  newproperty(:use_compression, :parent => Puppet::Property::NetscalerTruthy) do
+    truthy_property("Enable compression for the service.", 'YES', 'NO')
   end
 
   newproperty(:client_keepalive, :parent => Puppet::Property::NetscalerTruthy) do

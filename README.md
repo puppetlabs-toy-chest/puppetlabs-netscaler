@@ -3092,6 +3092,11 @@ Uses the client's IP address as the source IP address when initiating a connecti
 
 Valid options: 'yes', 'no', 'true', 'false', 'enabled', 'disabled', 'ENABLED', 'DISABLED', 'YES', 'NO', 'on', 'off', 'ON', or 'OFF'.
 
+#####`use_compression`
+Enable compression for the service.
+
+Possible values: YES, NO
+
 ###Type: netscaler_servicegroup
 
 Enables you to manage a group of services. For example, if you enable or disable any option, such as compression, health monitoring, or graceful shutdown for a service group, the option is enabled for all the members of the service group.
