@@ -2,6 +2,7 @@
 $:.unshift File.join(File.dirname(__FILE__),  'fixtures', 'lib')
 
 require 'beaker-rspec'
+require 'beaker/puppet_install_helper'
 
 def wait_for_master(max_retries)
   1.upto(max_retries) do |retries|
@@ -19,10 +20,12 @@ end
 def make_site_pp(pp, path = File.join(master['puppetpath'], 'manifests'))
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, "site.pp"), pp)
-  on master, "chown -R #{puppet_user(master)}:#{puppet_group(master)} #{path}"
-  on master, "chmod -R 0755 #{path}"
-  on master, "service #{(master['puppetservice']||'puppetserver')} restart"
-  wait_for_master(3)
+  if ENV['PUPPET_INSTALL_TYPE'] == 'foss'
+    on master, "chown -R #{puppet_user(master)}:#{puppet_group(master)} #{path}"
+    on master, "chmod -R 0755 #{path}"
+    on master, "service #{(master['puppetservice']||'puppetserver')} restart"
+    wait_for_master(3)
+  end
 end
 
 def run_device(options={:allow_changes => true})
@@ -43,7 +46,7 @@ end
 def device_facts_ok(max_retries)
   1.upto(max_retries) do |retries|
     on master, puppet('device','-v','--user','root','--server',master.to_s), {:acceptable_exit_codes => [0,1] } do |result|
-      return if result.stdout =~ /Notice: Finished catalog run/
+      return if result.stdout =~ %r{Notice: (Finished|Applied) catalog}
 
       counter = 10 * retries
       logger.debug "Unable to get a successful catalog run, Sleeping #{counter} seconds for retry #{retries}"
@@ -65,15 +68,24 @@ def run_resource(resource_type, resource_title=nil)
 end
 
 unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
-  install_puppet_from_rpm master, {:release => '7', :family => 'el'}
-  pp=<<-EOS
-  $pkg = $::osfamily ? {
-    'Debian' => 'puppetmaster',
-    'RedHat' => 'puppet-server',
-  }
-  package { $pkg: ensure => present, }
-  -> service { 'puppetmaster': ensure => running, }
-  EOS
+  run_puppet_install_helper_on master
+
+  if ENV['PUPPET_INSTALL_TYPE'] == 'pe'
+    pp=<<-EOS
+    package { 'puppetserver': ensure => present, }
+    -> service { 'puppetserver': ensure => running, }
+    EOS
+  else
+    pp=<<-EOS
+    $pkg = $::osfamily ? {
+      'Debian' => 'puppetmaster',
+      'RedHat' => 'puppet-server',
+    }
+    package { $pkg: ensure => present, }
+    -> service { 'puppetmaster': ensure => running, }
+    EOS
+  end
+
   apply_manifest_on(master,pp)
   agents.each do |host|
     sign_certificate_for(host)
