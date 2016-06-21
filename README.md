@@ -183,7 +183,7 @@ The [above example](#set-up-two-load-balanced-web-servers) is a proof-of-concept
 * [`netscaler_sslcertkey`](#type-netscaler_sslcertkey)
 * [`netscaler_sslkeyfile`](#type-netscaler_sslkeyfile)
 * [`netscaler_sslocsresponder`](#type-netscaler_sslocsresponder)
-* [`netscaler_sslvserver`](#type-netscaler_sslvserver)
+* [`netscaler_sslvserver_sslcertkey_binding`](#type-netscaler_sslvserver_sslcertkey_binding)
 * [`netscaler_user`](#type-netscaler_user)
 * [`netscaler_vlan`](#type-netscaler_vlan)
 * [`netscaler_vlan_nsip_binding`](#type-netscaler_vlan_nsip_binding)
@@ -3556,9 +3556,9 @@ Name for the object. Must begin with an ASCII alphabetic or underscore (_) chara
 
 The URL of the OCSP responder.
 
-###Type: netscaler_sslvserver
+###Type: netscaler_sslvserver_sslcertkey_binding
 
-Binds the sslvserver and the certkeyname.
+Binds the sslvserver and the certkey.
 
 ####Parameters
 
