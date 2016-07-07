@@ -11,19 +11,29 @@ Puppet::Type.type(:netscaler_lbmonitor).provide(:rest, {:parent => Puppet::Provi
     monitors = Puppet::Provider::Netscaler.call('/config/lbmonitor')
     return [] if monitors.nil?
 
+    unit_map = {
+      'SEC' => 1,
+      'MIN' => 60
+    }
+
     monitors.each do |monitor|
+      interval = monitor['interval'].to_i * unit_map[monitor['units3']]
+      resptimeout = monitor['resptimeout'].to_i * unit_map[monitor['units4']]
+      downtime = monitor['downtime'].to_i * unit_map[monitor['units2']]
+      deviation = monitor['deviation'].to_i * unit_map[monitor['units1']]
+      
       instances << new({
         :ensure                         => :present,
         ## Standard
         :name                           => monitor['monitorname'],
         :type                           => monitor['type'],
-        :interval                       => monitor['interval'].to_i,
+        :interval                       => interval,
         :destination_ip                 => monitor['destip'],
-        :response_timeout               => monitor['resptimeout'],
+        :response_timeout               => resptimeout,
         :destination_port               => monitor['destport'],
-        :down_time                      => monitor['downtime'],
+        :down_time                      => downtime,
         #:dynamic_timeout                      => monitor['dynamicresponsetimeout'],
-        :deviation                      => monitor['deviation'],
+        :deviation                      => deviation,
         #:dynamic_interval                     => monitor['dynamicinterval'],
         :retries                        => monitor['retries'],
         :resp_timeout_threshold         => monitor['resptimoutthresh'],
