@@ -1,5 +1,5 @@
-require 'puppet/util/network_device/netscaler'
-require 'puppet/util/network_device/transport/netscaler'
+require_relative '../../puppet/util/network_device/netscaler'
+require_relative '../../puppet/util/network_device/transport/netscaler'
 require 'json'
 
 class Puppet::Provider::Netscaler < Puppet::Provider

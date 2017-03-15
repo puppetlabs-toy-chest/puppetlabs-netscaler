@@ -1,4 +1,4 @@
-require 'puppet/provider/netscaler'
+require_relative '../../../puppet/provider/netscaler'
 
 require 'json'
 

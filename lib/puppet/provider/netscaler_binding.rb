@@ -1,4 +1,4 @@
-require 'puppet/provider/netscaler'
+require_relative '../../puppet/provider/netscaler'
 
 class Puppet::Provider::NetscalerBinding < Puppet::Provider::Netscaler
   def flush

@@ -1,4 +1,4 @@
-require 'puppet/provider/netscaler_binding'
+require_relative '../../../puppet/provider/netscaler_binding'
 
 Puppet::Type.type(:netscaler_rewriteglobal).provide(:rest, {:parent => Puppet::Provider::NetscalerBinding}) do
   def netscaler_api_type
