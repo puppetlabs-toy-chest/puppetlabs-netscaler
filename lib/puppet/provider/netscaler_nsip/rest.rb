@@ -1,4 +1,4 @@
-require 'puppet/provider/netscaler'
+require_relative '../../../puppet/provider/netscaler'
 
 Puppet::Type.type(:netscaler_nsip).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
   def netscaler_api_type

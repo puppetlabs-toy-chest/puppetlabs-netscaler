@@ -1,4 +1,4 @@
-require 'puppet/provider/netscaler'
+require_relative '../../../puppet/provider/netscaler'
 require 'json'
 
 Puppet::Type.type(:netscaler_sslcertkey).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
