@@ -1,10 +1,33 @@
+# Requires that ~/.fog have aws_access_key_id and aws_secret_access_key
 HOSTS:
-  ubuntu-1404-x64:
+  "puppet":
     roles:
-      - agent
-      - default
-    platform: ubuntu-14.04-amd64
-    hypervisor: vagrant
-    box: puppetlabs/ubuntu-14.04-64-nocm
+      - "master"
+      - "default"
+    vmname: "centos-7-x86-64-west"
+    hypervisor: "ec2"
+    platform: "el-7-x86_64"
+    snapshot: "ebs"
+    amisize: m3.xlarge
+  "netscaler":
+    roles:
+      - "netscaler"
+    vmname: "netscaler-platinum-10.5-10mb"
+    hypervisor: "ec2"
+    platform: "netscaler-10.5-55.8"
+    snapshot: "default"
+    amisize: "m3.large"
+    user: "nsroot"
+    ssh:
+      password: 'nsroot'
+    additional_ports: 443
 CONFIG:
-  type: foss
+  type: "foss"
+  ec2_yaml: "spec/acceptance/nodesets/ec2.yaml"
+  log_level: "debug"
+  ssh:
+    keys: "~/.ssh/id_rsa-acceptance"
+  datastore: "instance0"
+  folder: "Delivery/Quality Assurance/Enterprise/Dynamic"
+  resourcepool: "delivery/Quality Assurance/Enterprise/Dynamic"
+  pooling_api: "http://vcloud.delivery.puppetlabs.net/"
