@@ -1,0 +1,12 @@
+---
+appveyor.yml:
+  unmanaged: true
+
+# The module isn't setup for travis based docker CI
+.travis.yml:
+  docker_sets:
+
+NOTICE:
+  copyright_holders:
+    - name: 'Puppet, Inc.'
+      begin: 2014
