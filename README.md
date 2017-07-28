@@ -26,7 +26,7 @@ The module allows you to manage NetScaler nodes and pool configuration through P
 
 ### Beginning with devices
 
-Devices are managed via the `puppet device` [subcommand](https://docs.puppet.com/puppet/latest/man/device.html). Before you can use this module, you need to configure a Puppet agent to act as a proxy to run the `puppet device` subcommand.
+Devices, including NetScaler devices, are managed via the `puppet device` [subcommand](https://docs.puppet.com/puppet/latest/man/device.html). Before you can use this module, you need to configure a Puppet agent to act as a proxy to run the `puppet device` subcommand.
 
 #### Step 1: Configure a proxy Puppet agent
 
