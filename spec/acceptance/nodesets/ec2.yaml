@@ -20,11 +20,11 @@ AMI:
     :image:
       :ebs: "ami-a042f4d8"
     :region: "us-west-2"
-  "netscaler-standard-10.5-10mb":
+  "netscaler-standard-11.1-10mb":
     :image:
-      :default: "ami-39396a09"
+      :default: "ami-6ecc4816"
     :region: "us-west-2"
-  "netscaler-platinum-10.5-10mb":
+  "netscaler-platinum-11.1-10mb":
     :image:
-      :default: "ami-75341345"
+      :default: "ami-42cc483a"
     :region: "us-west-2"
